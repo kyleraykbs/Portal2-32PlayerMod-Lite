@@ -30,6 +30,9 @@ Config_UseCustomDevModels <- false
 // Set false if you want to disable the prompt that appears once at the start at every play session.
 Config_FirstRunPrompt <- true
 
+// Set to true if you want to disable cutscenes (can make for some funny moments, Portal Stories: Mel only)
+Config_TrollFaceMode <- false
+
 // Set true/false if you want to randomize every Turret 's models and colors and the Frankenturret's colors.
 // The second one when true will make the models and colors constantly change instead of once.
 //! Don't turn Config_RandomTurretLoop on while the map is running or the game will crash because the models
@@ -200,13 +203,23 @@ try {
 }
 
 try {
+    if (typeof(Config_TrollFaceMode) != "bool") {
+        Config_TrollFaceMode <- false
+        ConfigValueError("Invalid", "Config_TrollFaceMode")
+    }
+} catch (exception) {
+    Config_TrollFaceMode <- false
+    ConfigValueError("Undefined", "Config_TrollFaceMode")
+}
+
+try {
     if (typeof(Config_FirstRunPrompt) != "bool") {
         Config_FirstRunPrompt <- true
-        ConfigValueError("Invalid", "Config_RandomTurret")
+        ConfigValueError("Invalid", "Config_FirstRunPrompt")
     }
 } catch (exception) {
     Config_FirstRunPrompt <- true
-    ConfigValueError("Undefined", "Config_RandomTurret")
+    ConfigValueError("Undefined", "Config_FirstRunPrompt")
 }
 
 try {

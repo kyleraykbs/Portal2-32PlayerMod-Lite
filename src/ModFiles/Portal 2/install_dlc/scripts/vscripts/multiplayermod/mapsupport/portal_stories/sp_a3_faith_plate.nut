@@ -35,16 +35,18 @@ function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSO
         // remove death fade
         Entities.FindByName(null, "Death_Fade").Destroy()
 
-        // elevator cutscene setup
-        EntFire("AutoInstance2-elevator_1_player_teleport", "AddOutput", "OnStartTouch !self:RunScriptCode:StartScene():1")
-        elevator_viewcontrol <- Entities.CreateByClassname("point_viewcontrol_multiplayer")
-        elevator_viewcontrol.__KeyValueFromString("targetname", "elevator_viewcontrol")
-        elevator_viewcontrol.__KeyValueFromString("fov", "120")
-        elevator_viewcontrol.SetOrigin(Vector(3472, 4128, 436))
-        EntFire("elevator_viewcontrol", "setparent", "AutoInstance2-elevator_1", 0, null)
-        elevator_viewcontrol.SetAngles(0, 90, 0)
-        EntFire("AutoInstance2-elevator_1_path_3", "AddOutput", "OnPass elevator_viewcontrol:Disable::1.9")
-        EntFire("AutoInstance2-elevator_1_player_teleport", "Enable")
+        if (!Config_TrollFaceMode) {
+            // elevator cutscene setup
+            EntFire("AutoInstance2-elevator_1_player_teleport", "AddOutput", "OnStartTouch !self:RunScriptCode:StartScene():1")
+            elevator_viewcontrol <- Entities.CreateByClassname("point_viewcontrol_multiplayer")
+            elevator_viewcontrol.__KeyValueFromString("targetname", "elevator_viewcontrol")
+            elevator_viewcontrol.__KeyValueFromString("fov", "120")
+            elevator_viewcontrol.SetOrigin(Vector(3472, 4128, 436))
+            EntFire("elevator_viewcontrol", "setparent", "AutoInstance2-elevator_1", 0, null)
+            elevator_viewcontrol.SetAngles(0, 90, 0)
+            EntFire("AutoInstance2-elevator_1_path_3", "AddOutput", "OnPass elevator_viewcontrol:Disable::1.9")
+            EntFire("AutoInstance2-elevator_1_player_teleport", "Enable")
+        }
 
         // Make "trap" not close up
         Cooridor_1_Floor_Panels_Open_Relay <- Entities.FindByName(null, "Cooridor_1_Floor_Panels_Open_Relay")

@@ -7,6 +7,7 @@
 
 function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSOnPlayerJoin, MSOnDeath, MSOnRespawn) {
     if (MSInstantRun) {
+        tploop <- -1
         // Offset coop repsawn nodes for elevators (left and right side)
         GlobalSpawnClass.m_bUseAutoSpawn <- false
         UTIL_Team.Spawn_PortalGun(true)
@@ -17,17 +18,19 @@ function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSO
 
 
 
-        // delete elevator spawn
-        Entities.FindByClassnameNearest("info_player_start", Vector(-1983.74, -3288.72, -498), 128).Destroy()
+        // delete elevator start trigger
         Entities.FindByName(null, "intro_elevator_1_interior_start_trigger").Destroy()
 
         // stop the intro sequence and prepare for cutscene
         Entities.FindByClassnameNearest("logic_auto", Vector(-1936, -3144, -295), 32).Destroy()
-        EntFireByHandle(Entities.FindByClassnameNearest("trigger_once", Vector(-1200 -3200 -96), 32), "AddOutput", "OnTrigger intro_elevator_train:StartForward::0", 0, null, null)
-        EntFire("cs_virgil_154", "AddOutput", "OnCompletion !self:RunScriptCode:EndScene():1")
         Entities.FindByName(null, "fall_fade-proxy").Destroy()
-        Entities.FindByClassname(null, "info_player_start").SetOrigin(Vector(-2312, -3201, -181)) 
-
+        
+        if (GetMapName().find("sp_") != null) { // why the hell are they different lol
+            Entities.FindByClassnameNearest("info_player_start", Vector(1120, -816, 132), 128).Destroy()
+        } else {
+            Entities.FindByClassnameNearest("info_player_start", Vector(-1497, -2070, 516), 128).Destroy()
+        }
+        
 
         // make doors not close
         Entities.FindByClassnameNearest("trigger_once", Vector(-570, -2636, -48.01), 32).Destroy()
@@ -66,10 +69,42 @@ function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSO
     }
     
     if (MSPostPlayerSpawn) {
-        EntFire("p2mm_servercommand", "Command", "script StartScene()", 0.1)
-        
+        EntFire("cs_virgil_151", "Start", null, 1)
+	    EntFire("intro_elevator_train", "StartForward", null, 1.2)
+	    EntFire("lift_shake", "StartShake")
+        EntFire("intro_elevator_train", "MoveToPathNode", "AutoInstance1-@elevator_1_bottom_path_1", 0.1)
+        EntFire("intro_light_elevator_dynamic", "TurnOn")
+
+        if (Config_TrollFaceMode) {
+            Entities.FindByName(null, "intro_elevator").__KeyValueFromString("targetname", "intro_elevator_p2mmoverride")
+            EntFireByHandle(Entities.FindByClassname(null, "info_player_start"), "setparent", "intro_elevator_p2mmoverride", 0, null, null)
+            EntFire("intro_lift_flicker_timer", "AddOutput intro_elevator:Skin:3", "OnTimer ", 0)
+            EntFire("intro_lift_flicker_timer", "AddOutput intro_elevator:Skin:2:0.5", "OnTimer ", 0)
+            EntFire("cs_virgil_154", "AddOutput", "OnCompletion !self:RunScriptCode:EndSceneAlternate():1")
+            tploop = 0
+        } else {
+            Entities.FindByClassname(null, "info_player_start").SetOrigin(Vector(-2312, -3201, -181)) 
+            for (local p; p = Entities.FindByClassname(p, "player");) {
+                p.SetOrigin(Vector(-2312, -3201, -181))
+            }
+            EntFire("cs_virgil_154", "AddOutput", "OnCompletion !self:RunScriptCode:EndScene():1")
+            EntFire("p2mm_servercommand", "Command", "script StartScene()", 0.1)
+        }
+    }
+
+    if (MSLoop) {
+        if (tploop > -1) {
+            if (tploop < 1) {
+                for (local p; p = Entities.FindByClassname(p, "player");) {
+                    p.SetOrigin(Vector(p.GetOrigin().x p.GetOrigin().y p.GetOrigin().z + 1))
+                }
+                tploop = 60
+                }
+            tploop--
+        }
     }
 }
+
 function StartScene() {
     EntFire("elevator_viewcontrol", "Enable")
     elevator_viewcontrol <- Entities.CreateByClassname("point_viewcontrol_multiplayer")
@@ -78,12 +113,8 @@ function StartScene() {
     elevator_viewcontrol.SetOrigin(Vector(-1983.74, -3288.72, -462))
     EntFire("elevator_viewcontrol", "setparent", "intro_elevator_train", 0, null)
     elevator_viewcontrol.SetAngles(0, 90, 0)
-    EntFire("cs_virgil_151", "Start", null, 1)
-	EntFire("intro_elevator_train", "StartForward", null, 1.2)
-	EntFire("lift_shake", "StartShake")
-    EntFire("intro_elevator_train", "MoveToPathNode", "AutoInstance1-@elevator_1_bottom_path_1", 0.1)
-    EntFire("intro_light_elevator_dynamic", "TurnOn")
 }
+
 function EndScene() {
     EntFire("elevator_viewcontrol", "Disable")
     for (local p; p = Entities.FindByClassname(p, "player");) {
@@ -93,6 +124,27 @@ function EndScene() {
     Entities.FindByClassname(null, "info_player_start").SetOrigin(Vector(-1198, -3202, -40)) 
 
 }
+
+function EndSceneAlternate() {
+	EntFire("intro_elevator_train", "StartForward", "", 1.2)
+	EntFire("lift_rotate", "Start", "", 1.2)
+	EntFire("lift_shake", "StartShake", "", 0)
+	EntFire("lift_crash_noise_2", "PlaySound", "", 0.9)
+	EntFire("lift_crash_noise_3", "PlaySound", "", 1)
+	EntFire("intro_light_elevator_dynamic", "TurnOff", "", 0)
+	EntFire("cs_virgil_155", "Start", "", 1)
+
+    // i sure do love race conditions ;D
+    EntFire("info_player_start", "setparent", "", 0, null)
+    EntFire("p2mm_servercommand", "Command", "script Entities.FindByClassname(null, \"info_player_start\").SetOrigin(Vector(-1198, -3202, -40))", 0.1)
+    EntFire("p2mm_servercommand", "Command", "script tploop = -1", 2.4)
+
+    // there is a death trigger, but incase a player blocks the path of the elevator (making everyone stuck) we have to do this
+    for (local p; p = Entities.FindByClassname(p, "player");) {
+        EntFireByHandle(p, "sethealth", "-100", 3, p, p)
+    }
+}
+
 function Checkpoint(point) {
     switch(point) {
         case 1:
