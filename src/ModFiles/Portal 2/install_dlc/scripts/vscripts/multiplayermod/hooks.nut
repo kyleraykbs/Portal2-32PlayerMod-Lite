@@ -956,23 +956,11 @@ function OnPlayerJoin(p) {
         }
     }
 
-    if (GetGameMainDir() == "portal_stories") {
-        EntFireByHandle(p, "RunScriptCode", "SetPSMelModel(caller)", 0, p, p)
-    }
-
     // Set fog controller
     if (g_bHasSpawned) {
         if (usefogcontroller) {
             EntFireByHandle(p, "setfogcontroller", defaultfog, 0, null, null)
         }
-    }
-}
-
-function SetPSMelModel(p) {
-    if (p.GetTeam() == TEAM_BLUE) {
-        SetPlayerModel(p, "models/portal_stories/player/mel.mdl")
-    } else {
-        SetPlayerModel(p, "models/player/chell/player.mdl")
     }
 }
 
