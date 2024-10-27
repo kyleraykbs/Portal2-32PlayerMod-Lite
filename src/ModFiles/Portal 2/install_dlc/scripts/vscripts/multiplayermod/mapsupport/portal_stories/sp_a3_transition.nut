@@ -22,6 +22,17 @@ function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSO
         EntFire("InstanceAuto40-light_elevator_dynamic", "TurnOn")
         Entities.FindByClassname(null, "info_player_start").SetOrigin(Vector(0, -2224, 64))
 
+        EntFire("trap_player_rl", "AddOutput", "OnTrigger lift_train:StartForward::2.01")
+
+        Entities.FindByName(null, "exit_lift").__KeyValueFromString("targetname", "exit_lift_p2mmoverride")
+        Entities.FindByName(null, "exit_tube_glass").__KeyValueFromString("targetname", "exit_tube_glass_p2mmoverride")
+        EntFire("trap_player_rl", "AddOutput", "OnTrigger exit_lift_p2mmoverride:SetAnimation:doorclose")
+        EntFire("trap_player_rl", "AddOutput", "OnTrigger exit_tube_glass_p2mmoverride:SetAnimation:close")
+        EntFire("cs_aegis_21", "AddOutput", "OnCompletion exit_lift_p2mmoverride:SetAnimation:dooropen")
+        EntFire("cs_aegis_21", "AddOutput", "OnCompletion exit_tube_glass_p2mmoverride:SetAnimation:open")
+        EntFire("lift_track_3", "AddOutput", "OnPass !self:RunScriptCode:KillTrapped():5")
+        EntFire("lift_blocker", "Disable")
+
         // make doors not close
         Entities.FindByName(null, "@entry_door").__KeyValueFromString("targetname", "entry_door_p2mmoverride")
         Entities.FindByName(null, "door1").__KeyValueFromString("targetname", "door1_p2mmoverride")
@@ -75,26 +86,7 @@ function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSO
         } else EntFire("exit_lift_trigger", "AddOutput", "OnTrigger p2mm_servercommand:Command:changelevel st_a4_overgrown:1.5", 0, null)
 
     }
-    
-    function EndScene() {
-        EntFire("elevatorvcontrol", "Disable")
-        local tp = Entities.FindByName(null, "elevatorvcontrol").GetOrigin()
-        Entities.FindByClassname(null, "info_player_start").SetOrigin(tp)
-        Entities.FindByClassname(null, "info_player_start").SetAngles(0, 0, 0)
-        for (local p; p = Entities.FindByClassname(p, "player");) {
-            p.SetOrigin(tp)
-            p.SetAngles(0, 0, 0)
-        }
-    }
-    function StartScene() {
-        
-        for (local p; p = Entities.FindByClassname(p, "player");) {
-            p.SetOrigin(Vector(-838, -2581, 500))
-        }
-        EntFire("elevatorvcontrol", "Enable")
-        
-    }
-        
+            
 }
 function Checkpoint(point) {
     switch(point) {
@@ -106,5 +98,36 @@ function Checkpoint(point) {
             Entities.FindByClassname(null, "info_player_start").SetOrigin(Vector(3875, 580, 216))
             Entities.FindByClassname(null, "info_player_start").SetAngles(0, 90, 0)
             return
+    }
+}
+
+function KillTrapped() {
+    // reset trap elevator after death
+    EntFire("lift_train", "StartBackward")
+    EntFire("trap_elevator_floor", "Enable", "", 5)
+    EntFire("exit_lift_p2mmoverride", "SetAnimation", "dooropen", 7)
+    EntFire("exit_tube_glass_p2mmoverride", "SetAnimation", "open", 6)
+
+}
+
+function EndScene() {
+    EntFire("elevatorvcontrol", "Disable")
+    Entities.FindByClassname(null, "info_player_start").SetOrigin(Vector(-688, -2445, 386))
+    Entities.FindByClassname(null, "info_player_start").SetAngles(0, 0, 0)
+    for (local p; p = Entities.FindByClassname(p, "player");) {
+        p.SetOrigin(Vector(-688, -2445, 386))
+        p.SetAngles(0, 0, 0)
+    }
+}
+function StartScene() {
+    if (Config_TrollFaceMode) {
+        for (local p; p = Entities.FindByClassname(p, "player");) {
+            p.SetOrigin(Vector(-688, -2445, -130))
+        }
+    } else {
+        for (local p; p = Entities.FindByClassname(p, "player");) {
+            p.SetOrigin(Vector(-838, -2581, 500))
+        }
+        EntFire("elevatorvcontrol", "Enable")
     }
 }
