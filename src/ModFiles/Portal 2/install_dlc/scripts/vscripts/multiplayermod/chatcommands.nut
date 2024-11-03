@@ -99,20 +99,25 @@ local IncludeScriptCC = function(script) {
 IncludeScriptCC("adminmodify")
 IncludeScriptCC("changeteam")
 IncludeScriptCC("help")
-IncludeScriptCC("hub")
 IncludeScriptCC("kick")
 IncludeScriptCC("kill")
-IncludeScriptCC("mpcourse")
 IncludeScriptCC("noclip")
 IncludeScriptCC("playercolor")
 IncludeScriptCC("restartlevel")
 IncludeScriptCC("rocket")
 IncludeScriptCC("slap")
-IncludeScriptCC("spchapter")
 IncludeScriptCC("speed")
 IncludeScriptCC("tp")
 IncludeScriptCC("vote")
+switch (GetGameMainDir()) {
+    case "portal2":
+        IncludeScriptCC("mpcourse")
+        IncludeScriptCC("hub")
+        IncludeScriptCC("spchapterp2")
 
+    case "portal_stories":
+        IncludeScriptCC("spchaptermel")
+}
 //--------------------------------------
 // Chat command function dependencies
 //
