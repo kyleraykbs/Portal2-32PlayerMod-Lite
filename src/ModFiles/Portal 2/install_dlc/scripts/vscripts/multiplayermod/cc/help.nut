@@ -11,11 +11,15 @@ commandtable["playercolor"] <- "Changes player color by color name or RGB value.
 commandtable["restartlevel"] <- "Reset the current map. \"!restartlevel\""
 commandtable["rocket"] <- "Send yourself, another player, or a target team into the air for them to blow up. \"!rocket (target arg: Specific player, team target. Self if no arg.)\""
 commandtable["slap"] <- "Slap yourself, another player, or a target team dealing a tiny amount of damage and jolting. \"!slap (target arg: Specific player, team target. Self if no arg.)\""
-commandtable["spchapter"] <- "Changes the level to the specified singleplayer chapter. \"!spchapter (chapter integer 1-9)\""
 commandtable["speed"] <- "Changes your player speed. \"!speed (float arg)\""
 commandtable["tp"] <- "Teleport yourself, another player, or a target team to a destination. \"!tp (target arg: Specific player, team target. destination player if only this arg.) (destination arg: player)\""
 commandtable["vote"] <- "Invoke this to get a headcount on whether something should happen or not. \"!vote (vote choice arg: changelevel, kick, or duogunonly) (arg for changelevel map name or kick player name)\""
-
+switch (GetGameMainDir()) {
+    case "portal2" :
+        commandtable["spchapter"] <- "Changes the level to the specified singleplayer chapter. \"!spchapter (chapter integer 1-9)\""
+    case "portal_stories" :
+        commandtable["spchapter"] <- "Changes the level to the specified singleplayer chapter. \"!spchapter (chapter integer 1-5) (Optional: Story/Hard)\""
+}
 CommandList.push(
     class {
         name = "help"
