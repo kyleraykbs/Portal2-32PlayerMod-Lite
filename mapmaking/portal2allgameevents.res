@@ -57,7 +57,7 @@
 
 "ModEvents"
 {
-	"portal_player_touchedground"	// player landed || Doesn't work, "player_landed" does instead.
+	"portal_player_touchedground"	//! player landed || Doesn't work, "player_landed" does instead.
 	{
 		"userid"	"short"		// user ID on server
 	}
@@ -215,7 +215,7 @@
 		"userid"	"short"
 		"subject"	"long"	//Entindex of the cleanser
 	}
-	"bounce_count"
+	"bounce_count" // Player bounced on repulsion gel. Does not count repulsion gel on walls for some reason.
 	{
 		"userid"	"short"
 		"bouncecount"	"short"
@@ -227,7 +227,7 @@
 		"userid"	"short"
 	}
 
-	"player_suppressed_bounce"
+	"player_suppressed_bounce" // Prevented bounce on repulsion gel by crouching
 	{
 		"userid"	"short"
 	}
@@ -241,12 +241,17 @@
 		"subject" "short"
 		"caption" "string"
 	}
+
+	//? Interface to VScript By P2:MM | GEPlayerSpawnBlue()
 	"player_spawn_blue"
 	{
 	}
+
+	//? Interface to VScript By P2:MM | GEPlayerSpawnOrange()
 	"player_spawn_orange"
 	{
 	}
+
 	"map_already_completed"
 	{
 	}
@@ -830,6 +835,7 @@
 		"bot"		"bool"		// true if player is a AI bot
 	}
 	
+	//! Needs to be fixed in the plugin, Valve broke player disconnections.
 	//// Interface to VScript By P2:MM | GEPlayerInfo(name, userid, reason, xuid, networkid)
 	"player_disconnect"			// a client was disconnected
 	{
