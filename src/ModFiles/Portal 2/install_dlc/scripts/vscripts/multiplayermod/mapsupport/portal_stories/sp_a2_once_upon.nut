@@ -36,9 +36,10 @@ function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSO
         Entities.FindByName(null, "elevator-start_trigger").Destroy()
         
         // Make changing levels work
+        EntFire("exit_elevator-exit_lift_train", "AddOutput", "OnStart end_fade:Fade::2", 0, null)
         if (GetMapName().find("sp_") != null) {
-            EntFire("@transition_from_map", "AddOutput", "OnTrigger p2mm_servercommand:Command:changelevel sp_a2_past_power:2", 0, null)
-        } else EntFire("@transition_from_map", "AddOutput", "OnTrigger p2mm_servercommand:Command:changelevel st_a2_past_power:2", 0, null)
+            EntFire("exit_elevator-exit_lift_train", "AddOutput", "OnStart p2mm_servercommand:Command:changelevel sp_a2_past_power:3.5", 0, null)
+        } else EntFire("exit_elevator-exit_lift_train", "AddOutput", "OnStart p2mm_servercommand:Command:changelevel st_a2_past_power:3.5", 0, null)
 
     }
     

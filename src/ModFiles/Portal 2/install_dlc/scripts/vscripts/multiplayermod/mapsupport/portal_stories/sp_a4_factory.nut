@@ -57,7 +57,9 @@ function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSO
         // in order to stop the cubes from despawning, we have to remove the trigger that kills them instead of renaming.
         EntFire("BTS_4_Shadowlight", "TurnOn")
         Entities.FindByClassnameNearest("trigger_once", Vector(5186.18, -104, 208), 32).Destroy()
+        
         // Make changing levels work
+        Entities.FindByName(null, "AutoInstance1-end_command").Destroy()
         if (GetMapName().find("sp_") != null) {
             EntFireByHandle(Entities.FindByClassnameNearest("trigger_once", Vector(10560, -1968, 16), 32), "AddOutput", "OnStartTouch p2mm_servercommand:Command:changelevel sp_a4_core_access", 0, null, null)
         } else EntFireByHandle(Entities.FindByClassnameNearest("trigger_once", Vector(10560, -1968, 16), 32), "AddOutput", "OnStartTouch p2mm_servercommand:Command:changelevel st_a4_core_access", 0, null, null)

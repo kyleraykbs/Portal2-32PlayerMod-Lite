@@ -35,9 +35,10 @@ function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSO
 
         // Make changing levels work
         Entities.FindByName(null, "end_command").Destroy()
+        EntFireByHandle(Entities.FindByClassnameNearest("trigger_once", Vector(20, 768, 48), 32), "AddOutput", "OnTrigger end_fade:Fade::5", 0, null, null)
         if (GetMapName().find("sp_") != null) {
-            EntFire("lift_track_3", "AddOutput", "OnPass p2mm_servercommand:Command:changelevel sp_a3_concepts:1", 0, null)
-        } else EntFire("lift_track_3", "AddOutput", "OnPass p2mm_servercommand:Command:changelevel st_a3_concepts:1", 0, null)
+            EntFireByHandle(Entities.FindByClassnameNearest("trigger_once", Vector(20, 768, 48), 32), "AddOutput", "OnTrigger p2mm_servercommand:Command:changelevel sp_a3_concepts:6.5", 0, null, null)
+        } else EntFireByHandle(Entities.FindByClassnameNearest("trigger_once", Vector(20, 768, 48), 32), "AddOutput", "OnTrigger p2mm_servercommand:Command:changelevel st_a3_concepts:6.5", 0, null, null)
     }
 }
 function Checkpoint() {

@@ -52,9 +52,10 @@ function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSO
 
         // Make changing levels work
         Entities.FindByName(null, "end_command").Destroy()
+        EntFire("InstanceAuto6-elevator_1", "AddOutput", "OnStart end_fade:Fade::2", 0, null)
         if (GetMapName().find("sp_") != null) {
-            EntFire("exit_trigger", "AddOutput", "OnStartTouch p2mm_servercommand:Command:changelevel sp_a3_paint_fling", 2, null)
-        } else EntFire("exit_trigger", "AddOutput", "OnStartTouch p2mm_servercommand:Command:changelevel st_a3_paint_fling", 2, null)
+            EntFire("InstanceAuto6-elevator_1", "AddOutput", "OnStart p2mm_servercommand:Command:changelevel sp_a3_paint_fling:3.5", 0, null)
+        } else EntFire("InstanceAuto6-elevator_1", "AddOutput", "OnStart p2mm_servercommand:Command:changelevel st_a3_paint_fling:3.5", 0, null)
 
     }
 

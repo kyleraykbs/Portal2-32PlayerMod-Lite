@@ -22,9 +22,11 @@ function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSO
         EntFire("InstanceAuto40-light_elevator_dynamic", "TurnOn")
         Entities.FindByClassname(null, "info_player_start").SetOrigin(Vector(0, -2224, 64))
 
+        // trap elevator
         EntFire("trap_player_rl", "AddOutput", "OnTrigger lift_train:StartForward::2.01")
-
         Entities.FindByName(null, "exit_lift").__KeyValueFromString("targetname", "exit_lift_p2mmoverride")
+        // weird timing that can softlock the trap elevator logic from being enabled
+        EntFireByHandle(Entities.FindByClassnameNearest("trigger_multiple", Vector(3287.98, -462.62, 235), 32), "AddOutput", "OnTrigger scene_144_done:SetValue:1:7.4:1", 0, null, null)
         Entities.FindByName(null, "exit_tube_glass").__KeyValueFromString("targetname", "exit_tube_glass_p2mmoverride")
         EntFire("trap_player_rl", "AddOutput", "OnTrigger exit_lift_p2mmoverride:SetAnimation:doorclose")
         EntFire("trap_player_rl", "AddOutput", "OnTrigger exit_tube_glass_p2mmoverride:SetAnimation:close")
@@ -81,9 +83,10 @@ function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSO
 
         // Make changing levels work
         Entities.FindByName(null, "end_command").Destroy()
+        EntFire("InstanceAuto28-elevator_1", "AddOutput", "OnStart end_fade:Fade::2", 0, null)
         if (GetMapName().find("sp_") != null) {
-            EntFire("exit_lift_trigger", "AddOutput", "OnTrigger p2mm_servercommand:Command:changelevel sp_a4_overgrown:1.5", 0, null)
-        } else EntFire("exit_lift_trigger", "AddOutput", "OnTrigger p2mm_servercommand:Command:changelevel st_a4_overgrown:1.5", 0, null)
+            EntFire("InstanceAuto28-elevator_1", "AddOutput", "OnStart p2mm_servercommand:Command:changelevel sp_a4_overgrown:3.5", 0, null)
+        } else EntFire("InstanceAuto28-elevator_1", "AddOutput", "OnStart p2mm_servercommand:Command:changelevel st_a4_overgrown:3.5", 0, null)
 
     }
             
@@ -107,7 +110,7 @@ function KillTrapped() {
     EntFire("trap_elevator_floor", "Enable", "", 5)
     EntFire("exit_lift_p2mmoverride", "SetAnimation", "dooropen", 7)
     EntFire("exit_tube_glass_p2mmoverride", "SetAnimation", "open", 6)
-
+    Entities.FindByName(null, "lift_track_2").SetOrigin(Vector(3264, -464, 166))
 }
 
 function EndScene() {

@@ -40,7 +40,9 @@ function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSO
         EntFireByHandle(Entities.FindByClassnameNearest("func_button", Vector(-350, -2228, 56.5), 32), "AddOutput", "OnPressed office_ap_p2mmoverride:Open", 0, null, null)
         Entities.FindByClassnameNearest("trigger_once", Vector(144, -1424, 63.99), 32).Destroy()
         Entities.FindByName(null, "intro_lift_entrance").__KeyValueFromString("targetname", "intro_lift_entrance_p2mmoverride")
+        Entities.FindByName(null, "intro_lift_ap").__KeyValueFromString("targetname", "intro_lift_ap_p2mmoverride")
         EntFireByHandle(Entities.FindByClassnameNearest("trigger_once", Vector(336, -1424, 63.99), 32), "AddOutput", "OnTrigger intro_lift_entrance_p2mmoverride:SetAnimation:vert_door_slow_opening:1", 0, null, null)
+        EntFireByHandle(Entities.FindByClassnameNearest("trigger_once", Vector(336, -1424, 63.99), 32), "AddOutput", "OnTrigger intro_lift_ap_p2mmoverride:open", 0, null, null)
         Entities.FindByName(null, "@entry_door1").__KeyValueFromString("targetname", "entry_door1_p2mmoverride")
         EntFire("AutoInstance1-leaving_elevator_trigger", "AddOutput", "OnTrigger entry_door1_p2mmoverride:Open::0.5")
         Entities.FindByClassnameNearest("trigger_once", Vector(704, -48, 64), 32).Destroy()
@@ -62,9 +64,10 @@ function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSO
 
         // Make changing levels work
         Entities.FindByName(null, "end_command").Destroy()
+        EntFire("InstanceAuto39-elevator_1", "AddOutput", "OnStart end_fade:Fade::2", 0, null)
         if (GetMapName().find("sp_") != null) {
-            EntFireByHandle(Entities.FindByClassnameNearest("trigger_once", Vector(2336, 1920, 1016), 32), "AddOutput", "OnStartTouch p2mm_servercommand:Command:changelevel sp_a4_tb_over_goo:1.5", 0, null, null)
-        } else EntFireByHandle(Entities.FindByClassnameNearest("trigger_once", Vector(2336, 1920, 1016), 32), "AddOutput", "OnStartTouch p2mm_servercommand:Command:changelevel st_a4_tb_over_goo:1.5", 0, null, null)
+            EntFire("InstanceAuto39-elevator_1", "AddOutput", "OnStart p2mm_servercommand:Command:changelevel sp_a4_tb_over_goo:3.5", 0, null)
+        } else EntFire("InstanceAuto39-elevator_1", "AddOutput", "OnStart p2mm_servercommand:Command:changelevel st_a4_tb_over_goo:3.5", 0, null)
 
     }
     

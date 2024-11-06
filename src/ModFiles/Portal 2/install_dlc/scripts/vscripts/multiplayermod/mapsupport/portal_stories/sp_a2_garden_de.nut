@@ -33,6 +33,7 @@ function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSO
         melgunC.__KeyValueFromString("spawnflags", "140")
         EntFire("viewcontrol_melgun", "SetParentAttachment", "camera_attach")
         EntFire("relay_melgun", "AddOutput", "OnTrigger !self:RunScriptCode:playerdrawdisable()")
+        EntFire("relay_melgun", "AddOutput", "OnTrigger melgun_glass:EnableDraw") // not sure why this breaks in mp. valv moment
         Entities.FindByName(null, "end_command").Destroy()
 
         // prevent doors from closing        
@@ -56,14 +57,20 @@ function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSO
 
         Entities.FindByClassname(null, "info_player_start").SetOrigin(Vector(3800, 1880, -1000))
         // Make changing levels work
+        EntFire("InstanceAuto2-exit_lift_train", "AddOutput", "OnStart end_fade:Fade::2", 0, null)
         if (GetMapName().find("sp_") != null) {
-            EntFire("@transition_from_map", "AddOutput", "OnTrigger p2mm_servercommand:Command:changelevel sp_a2_underbounce:2", 0, null)
-        } else EntFire("@transition_from_map", "AddOutput", "OnTrigger p2mm_servercommand:Command:changelevel st_a2_underbounce:2", 0, null)
+            EntFire("InstanceAuto2-exit_lift_train", "AddOutput", "OnStart p2mm_servercommand:Command:changelevel sp_a2_underbounce:3.5", 0, null)
+        } else EntFire("InstanceAuto2-exit_lift_train", "AddOutput", "OnStart p2mm_servercommand:Command:changelevel st_a2_underbounce:3.5", 0, null)
     }
     
     if (MSPostPlayerSpawn) {
         EntFire("cs_virgil_1_p2mmoverride", "Start")
         EntFire("blackin_p2mmoverride", "SetAnimation", "exit1")
+    }
+    if (MSLoop) {
+        for (local p; p = Entities.FindByClassnameWithin(p, "player", Vector(-5023.5, 3991.5, -10000), 8656);) {
+            EntFireByHandle(p, "sethealth", "\"-100\"", 0, null, null)
+        } // lets pray that this area is correct :>
     }
 }
 

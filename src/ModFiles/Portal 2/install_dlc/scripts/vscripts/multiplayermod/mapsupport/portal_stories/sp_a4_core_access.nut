@@ -28,6 +28,7 @@ function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSO
 
         // Make changing levels work
         Entities.FindByName(null, "end_command").Destroy()
+        EntFire("transition_trigger", "Enable")
         if (GetMapName().find("sp_") != null) {
             EntFire("transition_trigger", "AddOutput", "OnStartTouch p2mm_servercommand:Command:changelevel sp_a4_finale:2", 0, null)
         } else EntFire("transition_trigger", "AddOutput", "OnStartTouch p2mm_servercommand:Command:changelevel st_a4_finale:2", 0, null)

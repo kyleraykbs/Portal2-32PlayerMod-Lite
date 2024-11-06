@@ -35,6 +35,9 @@ if (Entities.FindByName(null, "p2mm_servercommand")){
 } else {
     // Create a global point_servercommand entity for us to pass through commands
     Entities.CreateByClassname("point_servercommand").__KeyValueFromString("targetname", "p2mm_servercommand")
+    if (GetGameMainDir() == "portal_stories") {
+        Entities.CreateByClassname("point_clientcommand").__KeyValueFromString("targetname", "p2mm_clientcommand")
+    }
 }
 
 iMaxPlayers <- (Entities.FindByClassname(null, "team_manager").entindex() - 1) // Determine what the "maxplayers" cap is
