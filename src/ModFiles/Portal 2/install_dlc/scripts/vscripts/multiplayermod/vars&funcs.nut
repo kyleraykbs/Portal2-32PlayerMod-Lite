@@ -39,9 +39,11 @@ class GlobalSpawnClass {
 // Constants
 //---------------
 // enum is weird in VScript
+// Player team constants.
 const TEAM_SINGLEPLAYER = 0
-const TEAM_RED = 2
-const TEAM_BLUE = 3
+const TEAM_SPECTATOR	= 1
+const TEAM_RED          = 2
+const TEAM_BLUE         = 3
 
 //---------------
 // Booleans
@@ -579,6 +581,7 @@ function CreateGenericPlayerClass(p) {
         GetMapName() == "workshop/594730048530814099/mp_coop_gelocity_2_v01" ||
         GetMapName() == "workshop/613885499245125173/mp_coop_gelocity_3_v02") {
         currentplayerclass.nCurrentLap <- 1 // Current lap
+        currentplayerclass.v_SpawnVector <- null // Where the player needs to be teleported to when they respawn.
         currentplayerclass.GelocityCheckPointType <- 0 // Player checkpoint status (<- LAP_CHECKPOINT1)
 
         // TEMP
@@ -2002,13 +2005,12 @@ function SendChatMessage(message, pActivatorAndCaller = null) {
         printl("(P2:MM): " + message) // public messages dont print to console on dedicated, since we are not a player here
     }
 
-    SendToChat(color + "(P2:MM): " + message, pActivatorAndCaller)
+    SendToChat(pActivatorAndCaller, color + "(P2:MM): " + message)
 
     // Note that "\x05" is used for private messages with more than one person
     // You will need to create a special case to use it (see cc/tp.nut for an example)
 }
 
-function UTIL_PlayerByIndex(index) {
     for (local player; player = Entities.FindByClassname(player, "player");) {
         if (player.entindex() == index) {
             return player

@@ -451,6 +451,7 @@
 		"score"		"short"		// total game score
 	}
 	
+	//? Interface to VScript By P2:MM | GEPlayerSpawn(userid, entindex)
 	"player_spawn"				// player spawned in game
 	{
 		"userid"	"short"		// user ID on server
