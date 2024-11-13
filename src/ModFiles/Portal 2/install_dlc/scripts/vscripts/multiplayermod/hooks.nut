@@ -315,22 +315,6 @@ function P2MMLoop() {
             EntFireByHandle(frank, "Color", (r + " " + g + " " + b), 0, null, null)
         }
     }
-    
-
-    //////////////////////////
-    // RUNS EVERY 5 SECONDS //
-    //////////////////////////
-
-    if (Time() >= PreviousTime5Sec + 5) {
-        PreviousTime5Sec = Time()
-
-        // Color indicator
-        if (Config_UseColorIndicator && g_bAllowColorIndicator && g_bHasSpawned) {
-            for (local p = null; p = Entities.FindByClassname(p, "player");) {
-                DisplayPlayerColor(p)
-            }
-        }
-    }
 
     ///////////////////////
     // RUNS EVERY SECOND //
