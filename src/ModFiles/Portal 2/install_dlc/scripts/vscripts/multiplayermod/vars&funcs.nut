@@ -116,7 +116,6 @@ TickSpeed <- 0.00
 //---------------
 // Arrays/Tables
 //---------------
-CurrentlyDead <- []
 entityclasses <- []
 ExpendableEntities <- [
     "logic_auto",
@@ -2009,14 +2008,6 @@ function SendChatMessage(message, pActivatorAndCaller = null) {
 
     // Note that "\x05" is used for private messages with more than one person
     // You will need to create a special case to use it (see cc/tp.nut for an example)
-}
-
-    for (local player; player = Entities.FindByClassname(player, "player");) {
-        if (player.entindex() == index) {
-            return player
-        }
-    }
-    return null
 }
 
 function RemoveDangerousChars(str) {

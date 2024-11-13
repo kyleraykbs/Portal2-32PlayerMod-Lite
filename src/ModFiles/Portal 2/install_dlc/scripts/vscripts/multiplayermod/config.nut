@@ -83,7 +83,7 @@ Config_HostOnlyChatCommands <- false
 // * Everyone by default has level [0]
 //
 // * These can be accessed with "!" preceding them
-// * Use "!help (commandname)" to print a description of each command in the chat box
+// * Use "!help (command name)" to print a description of each command in the chat box
 //
 // What each admin level gives you (0 means no admin, default player permissions)
 // [0]: "help", "changeteam", "kill", "rocket", "playercolor", replying to a "vote"
