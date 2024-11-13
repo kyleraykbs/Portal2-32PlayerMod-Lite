@@ -1089,26 +1089,6 @@ function ForwardVectorTraceLine(origin, forward, mindist = 0, maxdist = 10000, c
     }
 }
 
-function DisplayPlayerColor(player) {
-    if (!Entities.FindByName(null, "p2mm_playercolordisplay")) {
-        p2mm_playercolordisplay <- Entities.CreateByClassname("game_text")
-        p2mm_playercolordisplay.__KeyValueFromString("targetname", "p2mm_playercolordisplay")
-        p2mm_playercolordisplay.__KeyValueFromString("holdtime", "5")
-        p2mm_playercolordisplay.__KeyValueFromString("fadeout", "2")
-        p2mm_playercolordisplay.__KeyValueFromString("fadein", "2")
-        // p2mm_playercolordisplay.__KeyValueFromString("spawnflags", "0")
-        p2mm_playercolordisplay.__KeyValueFromString("channel", "4")
-        // p2mm_playercolordisplay.__KeyValueFromString("message", "")
-        p2mm_playercolordisplay.__KeyValueFromString("x", "0.005")
-        p2mm_playercolordisplay.__KeyValueFromString("y", "1")
-    }
-    EntFireByHandle(p2mm_playercolordisplay, "SetText", "Your color: " + FindPlayerClass(player).color.name, 0, player, player)
-    EntFireByHandle(p2mm_playercolordisplay, "SetTextColor", FindPlayerClass(player).color.r + " " + FindPlayerClass(player).color.g + " " + FindPlayerClass(player).color.b, 0, player, player)
-    EntFireByHandle(p2mm_playercolordisplay, "Display", "", 0, player, player)
-    EntFireByHandle(p2mm_playercolordisplay, "Display", "", 0, player, player)
-    EntFireByHandle(p2mm_playercolordisplay, "kill", "", 0.1, player, player)
-}
-
 function ColorDisassemblerAnimation(activator) {
     if (activator.GetTeam() == TEAM_BLUE) {
         local blueDisassemblerColor = FindPlayerClass(activator).color.r + " " + FindPlayerClass(activator).color.g + " " + FindPlayerClass(activator).color.b

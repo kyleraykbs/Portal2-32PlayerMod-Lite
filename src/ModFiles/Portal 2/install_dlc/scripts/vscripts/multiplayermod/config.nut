@@ -43,9 +43,6 @@ Config_RandomTurretLoop <- false
 // Set true/false if you want to randomize the size of all portals every second
 Config_RandomPortalSize <- false
 
-// Set true/false if you want the indicator of player color to appear in the bottom left corner in-game (affects all players)
-Config_UseColorIndicator <- true
-
 // Set true/false if you want the player join messages to appear in the top left corner in-game (affects all players)
 Config_UseJoinIndicator <- true
 
@@ -250,16 +247,6 @@ try {
 } catch (exception) {
     Config_RandomPortalSize <- false
     ConfigValueError("Undefined", "Config_RandomPortalSize")
-}
-
-try {
-    if (typeof(Config_UseColorIndicator) != "bool") {
-        Config_UseColorIndicator <- true
-        ConfigValueError("Invalid", "Config_UseColorIndicator")
-    }
-} catch (exception) {
-    Config_UseColorIndicator <- true
-    ConfigValueError("Undefined", "Config_UseColorIndicator")
 }
 
 try {
