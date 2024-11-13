@@ -579,11 +579,9 @@ function CreateGenericPlayerClass(p) {
     if (GetMapName() == "workshop/596984281130013835/mp_coop_gelocity_1_v02" ||
         GetMapName() == "workshop/594730048530814099/mp_coop_gelocity_2_v01" ||
         GetMapName() == "workshop/613885499245125173/mp_coop_gelocity_3_v02") {
-        currentplayerclass.nCurrentLap <- 1 // Current lap
-        currentplayerclass.v_SpawnVector <- null // Where the player needs to be teleported to when they respawn.
-        currentplayerclass.GelocityCheckPointType <- 0 // Player checkpoint status (<- LAP_CHECKPOINT1)
-
-        // TEMP
+        // Legacy Gelocity Mapsupport Code
+        currentplayerclass.nCurrentLap <- 0
+        currentplayerclass.GelocityCheckPointType <- 0
         if (GetMapName() == "workshop/594730048530814099/mp_coop_gelocity_2_v01") {
             currentplayerclass.Gelocity2Checkpoint <- true
             currentplayerclass.Gelocity2CheckpointMove <- class {
@@ -591,6 +589,13 @@ function CreateGenericPlayerClass(p) {
                 rot = Vector(0, 90, 0)
             }
         }
+
+        // New Gelocity Mapsupport Code
+        currentplayerclass.i_CompletedLaps <- 0 // Completed laps by player.
+        currentplayerclass.l_PassedCheckpoints <- [] // List of passted checkpoints to keep track of progress in race.
+        currentplayerclass.s_LastCheckPoint <- "start" // Last checkpoint player had passed.
+        currentplayerclass.v_SpawnVector <- null // Where the player needs to be teleported to when they respawn.
+        currentplayerclass.b_FinishedRace <- false // Flag set when player finishes the race.
     }
 
     // Can change depending on whether the plugin is loaded
