@@ -13,6 +13,11 @@ if (!Config_UseChatCommands) {
     return
 }
 
+function RunChatCommand(cmd, args, plr) {
+    printlP2MM(0, true, "Running chat command \"" + cmd.name + "\" from player \"" + FindPlayerClass(plr).username + "\"")
+    cmd.CC(plr, args)
+}
+
 // The whole filtering process for the chat commands
 function ChatCommands(rawText, iUserIndex) {
     local Message = strip(RemoveDangerousChars(rawText))
@@ -57,13 +62,13 @@ function ChatCommands(rawText, iUserIndex) {
     // Confirmed that it's a command that follows our syntax, now try to run it
 
     // Check if the command exists
-    if (typeof szTargetCommand != "class") {
+    if (typeof(szTargetCommand) != "class") {
         SendChatMessage("[ERROR] Command not found. Use !help to list some commands!", pPlayer)
         return
     }
 
-    // Check if the caller has the right admin level
-    if (!(szTargetCommand.level <= AdminLevel)) {
+    // Check if the caller has the right admin level as well as if Config_HostOnlyChatCommands is enabled and if it is still a allowed command
+    if ((szTargetCommand.level > AdminLevel) || (Config_HostOnlyChatCommands && !(iUserIndex == 1) && !(szTargetCommand.name == "help" || szTargetCommand.name == "kill" || szTargetCommand.name == "vote"))) {
         SendChatMessage("[ERROR] You do not have permission to use this command!", pPlayer)
         return
     }

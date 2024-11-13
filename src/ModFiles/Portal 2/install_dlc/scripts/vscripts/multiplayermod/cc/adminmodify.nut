@@ -12,7 +12,7 @@ CommandList.push(
                     args[1] = strip(args[1])
                     args[1] = args[1].tointeger()
                     try {
-                        if (typeof args[1] == "integer") {
+                        if (typeof(args[1]) == "integer") {
                             if (args[1] >= 0 && args[1] <= 6) {
                                 SetAdminLevel(args[1].tostring(), plr.entindex())
                             }

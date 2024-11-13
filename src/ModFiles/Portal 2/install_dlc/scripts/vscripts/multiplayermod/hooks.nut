@@ -336,19 +336,6 @@ function P2MMLoop() {
             } catch (exception) {}
         }
 
-        //## Detect respawn ##//
-        for (local p = null; p = Entities.FindByClassname(p, "player");) {
-            if (p.GetHealth() >= 1) {
-                // Get the players from the dead players array
-                foreach (index, player in CurrentlyDead) {
-                    if (player == p) {
-                        CurrentlyDead.remove(index)
-                        OnRespawn(p)
-                    }
-                }
-            }
-        }
-
         //## Singleplayer check that must be looped in case sv_cheats was changed ##//
         if (g_bOverridePluginGrabController && g_bIsOnSingleplayerMaps) {
             SetPhysTypeConVar(0) // enable real-time physics
@@ -363,7 +350,7 @@ function P2MMLoop() {
                 EntFire("VoteCounter", "Display")
                 EntFire("VoteTimer", "Display")
                 if (!ReversedTimer) {
-                    // Revese the timer and firing time...
+                    // Reverse the timer and firing time...
                     for (local i = 0; i <= VotingTime; i++) {
                         // TODO: AddOutput likes to replace ":" with "," in strings...
                         // ALSO when starting new votes if someone canceled or forcefully
@@ -950,15 +937,6 @@ function OnPlayerJoin(p) {
 
 // 6
 function OnDeath(p) {
-
-    // Put dead players in the dead players array
-    foreach (player in CurrentlyDead) {
-        if (player == p) {
-            return
-        }
-    }
-    CurrentlyDead.push(p)
-
     // Trigger map-specific code
     MapSupport(false, false, false, false, false, p, false)
 
@@ -966,14 +944,14 @@ function OnDeath(p) {
 }
 
 // 7
-function OnRespawn(player) {
+function OnRespawn(p) {
     // Trigger map-specific code
-    MapSupport(false, false, false, false, false, false, player)
+    MapSupport(false, false, false, false, false, false, p)
 
-    printlP2MM(0, true, FindPlayerClass(player).username + " respawned! OnRespawn() has been triggered.")
+    printlP2MM(0, true, FindPlayerClass(p).username + " respawned! OnRespawn() has been triggered.")
 
     // GlobalSpawnClass teleport
     if (GlobalSpawnClass.m_bUseAutoSpawn) {
-        TeleportToSpawnPoint(player, null)
+        TeleportToSpawnPoint(p, null)
     }
 }

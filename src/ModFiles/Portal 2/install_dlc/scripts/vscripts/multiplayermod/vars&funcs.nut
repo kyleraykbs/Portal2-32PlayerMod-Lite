@@ -39,9 +39,11 @@ class GlobalSpawnClass {
 // Constants
 //---------------
 // enum is weird in VScript
+// Player team constants.
 const TEAM_SINGLEPLAYER = 0
-const TEAM_RED = 2
-const TEAM_BLUE = 3
+const TEAM_SPECTATOR	= 1
+const TEAM_RED          = 2
+const TEAM_BLUE         = 3
 
 //---------------
 // Booleans
@@ -114,7 +116,6 @@ TickSpeed <- 0.00
 //---------------
 // Arrays/Tables
 //---------------
-CurrentlyDead <- []
 entityclasses <- []
 ExpendableEntities <- [
     "logic_auto",
@@ -425,7 +426,7 @@ function GetColorByName(color) {
 
 function GetPlayerColor(p, multiply = true) {
     local PlayerID
-    if (typeof p == "integer") {
+    if (typeof(p) == "integer") {
         PlayerID = p
     } else {
         PlayerID = p.entindex() + amtoffsetclr
@@ -578,10 +579,9 @@ function CreateGenericPlayerClass(p) {
     if (GetMapName() == "workshop/596984281130013835/mp_coop_gelocity_1_v02" ||
         GetMapName() == "workshop/594730048530814099/mp_coop_gelocity_2_v01" ||
         GetMapName() == "workshop/613885499245125173/mp_coop_gelocity_3_v02") {
-        currentplayerclass.nCurrentLap <- 1 // Current lap
-        currentplayerclass.GelocityCheckPointType <- 0 // Player checkpoint status (<- LAP_CHECKPOINT1)
-
-        // TEMP
+        // Legacy Gelocity Mapsupport Code
+        currentplayerclass.nCurrentLap <- 0
+        currentplayerclass.GelocityCheckPointType <- 0
         if (GetMapName() == "workshop/594730048530814099/mp_coop_gelocity_2_v01") {
             currentplayerclass.Gelocity2Checkpoint <- true
             currentplayerclass.Gelocity2CheckpointMove <- class {
@@ -589,6 +589,13 @@ function CreateGenericPlayerClass(p) {
                 rot = Vector(0, 90, 0)
             }
         }
+
+        // New Gelocity Mapsupport Code
+        currentplayerclass.i_CompletedLaps <- 0 // Completed laps by player.
+        currentplayerclass.l_PassedCheckpoints <- [] // List of passted checkpoints to keep track of progress in race.
+        currentplayerclass.s_LastCheckPoint <- "start" // Last checkpoint player had passed.
+        currentplayerclass.v_SpawnVector <- null // Where the player needs to be teleported to when they respawn.
+        currentplayerclass.b_FinishedRace <- false // Flag set when player finishes the race.
     }
 
     // Can change depending on whether the plugin is loaded
@@ -1982,24 +1989,10 @@ function SendChatMessage(message, pActivatorAndCaller = null) {
         printl("(P2:MM): " + message) // public messages dont print to console on dedicated, since we are not a player here
     }
 
-    SendToChat(color + "(P2:MM): " + message, pActivatorAndCaller)
+    SendToChat(pActivatorAndCaller, color + "(P2:MM): " + message)
 
     // Note that "\x05" is used for private messages with more than one person
     // You will need to create a special case to use it (see cc/tp.nut for an example)
-}
-
-function RunChatCommand(cmd, args, plr) {
-    printlP2MM(0, true, "Running chat command \"" + cmd.name + "\" from player \"" + FindPlayerClass(plr).username + "\"")
-    cmd.CC(plr, args)
-}
-
-function UTIL_PlayerByIndex(index) {
-    for (local player; player = Entities.FindByClassname(player, "player");) {
-        if (player.entindex() == index) {
-            return player
-        }
-    }
-    return null
 }
 
 function RemoveDangerousChars(str) {

@@ -12,7 +12,7 @@ CommandList.push(
 
             args[0] = strip(args[0]).tofloat()
 
-            if (typeof args[0] != "integer" && typeof args[0] != "float") {
+            if (typeof(args[0]) != "integer" && typeof(args[0]) != "float") {
                 SendChatMessage("[ERROR] Input a number!", p)
                 return
             }

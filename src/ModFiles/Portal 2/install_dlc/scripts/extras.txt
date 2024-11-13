@@ -4,14 +4,14 @@
     {
         "title"     "#P2MM_SplitScreenOn_t"
         "subtitle"  "#P2MM_SplitScreenOn_d"
-        "command"   "p2mm_splitscreen 1; play ui/p2_editor_buttons_explo_01"
+        "command"   "p2mm_splitscreen 1; play ui/p2_store_ui_checkout_01"
         "pic"       "vgui/p2mm/spliton"
     }
     "splitoff"
     {
         "title"     "#P2MM_SplitScreenOff_t"
         "subtitle"  "#P2MM_SplitScreenOff_d"
-        "command"   "p2mm_splitscreen 0; play ui/p2_editor_buttons_collapse_01"
+        "command"   "p2mm_splitscreen 0; play ui/p2_store_ui_add_to_cart_01"
         "pic"       "vgui/p2mm/splitoff"
     }
     "normal"

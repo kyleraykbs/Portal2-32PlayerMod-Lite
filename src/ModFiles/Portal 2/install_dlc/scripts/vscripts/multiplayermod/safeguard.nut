@@ -42,7 +42,7 @@ if (SendToConsole.getinfos().native) {
         }
 
         foreach (char in illegalChars) {
-            if (typeof str.find(char) == "integer") {
+            if (typeof(str.find(char)) == "integer") {
                 if (char == illegalChars[4]) {
                     str = "% + n"
                 }

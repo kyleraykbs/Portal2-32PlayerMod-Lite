@@ -36,12 +36,23 @@ CommandList.push(
                     SendChatMessage("[HELP] Unknown chat command: " + args[0], p)
                 }
             } catch (exception) {
-                SendChatMessage("[HELP] Target team operations:", p)
-                SendChatMessage("[HELP] \"@a\": Everyone | \"@b\": Atlas Team", p)
-                SendChatMessage("[HELP] \"@o\": P-Body Team | \"@s\": SP Team", p)
+                // Only print the command operations for the host when Config_HostOnlyChatCommands is enabled
+                if (Config_HostOnlyChatCommands) {
+                    if (p.entindex() == 1) {
+                        SendChatMessage("[HELP] Target team operations:", p)
+                        SendChatMessage("[HELP] \"@a\": Everyone | \"@b\": Atlas Team", p)
+                        SendChatMessage("[HELP] \"@o\": P-Body Team | \"@s\": SP Team", p)
+                    }
+                } else {
+                    SendChatMessage("[HELP] Target team operations:", p)
+                    SendChatMessage("[HELP] \"@a\": Everyone | \"@b\": Atlas Team", p)
+                    SendChatMessage("[HELP] \"@o\": P-Body Team | \"@s\": SP Team", p)
+                }
                 SendChatMessage("[HELP] Available commands:", p)
                 local availablecommands = ""
                 foreach (command in CommandList) {
+                    // Only print the available commands when Config_HostOnlyChatCommands is enabled 
+                    if (Config_HostOnlyChatCommands && !(p.entindex() == 1) && !(command.name == "help" || command.name == "kill" || command.name == "vote")) { continue }
                     if (command.level <= GetAdminLevel(p)) {
                         // 150 characters max allowed in chat box per message
                         if ((availablecommands + command.name + ", ").len() >= 150) {
