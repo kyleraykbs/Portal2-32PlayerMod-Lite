@@ -41,8 +41,8 @@ MAP_SPAWNPOINTS <- {
 }
 
 function DevFillPassedPoints(index) {
-    player <- UTIL_PlayerByIndex(index)
-    playerClass <- FindPlayerClass(player)
+    local playerClass = FindPlayerClass(UTIL_PlayerByIndex(index))
+    if (!playerClass) return
     playerClass.l_PassedCheckpoints.clear()
     playerClass.l_PassedCheckpoints.extend(MAP_CHECKPOINTS)
 }
@@ -107,23 +107,23 @@ function CheckCompletedLaps(player, checkpoint) {
     playerClass.i_CompletedLaps++
     printlP2MM(0, true, "LAP COMPLETE")
     // The first player has reached the final lap.
-    if (playerClass.i_CompletedLaps == i_GameLaps && !b_FinalLap) {
+    if (playerClass.i_CompletedLaps == (i_GameLaps - 1) && !b_FinalLap) {
         EntFire("last_lap", "PlaySound")
         HudPrint(playerClass.player.entindex(), "FINAL LAP!", -1, 0.2, 2, Vector(255, 0, 0), 255, Vector(0, 0, 0), 0, 0.5, 0.5, 1, 0, 3)
         SendToChat(0, "\x04" + playerClass.username + " HAS REACHED THE FINAL LAP!")
         b_FinalLap = true
     }
     // Other player have reached the final lap.
-    else if (playerClass.i_CompletedLaps == i_GameLaps && b_FinalLap) {
+    else if (playerClass.i_CompletedLaps == (i_GameLaps - 1) && b_FinalLap) {
         HudPrint(playerClass.player.entindex(), "FINAL LAP!", -1, 0.2, 2, Vector(255, 0, 0), 255, Vector(0, 0, 0), 0, 0.5, 0.5, 1, 0, 3)
     }
     // Player has completed a lap.
-    else if (playerClass.i_CompletedLaps != i_GameLaps && playerClass.i_CompletedLaps < i_GameLaps) {
+    else if (playerClass.i_CompletedLaps < i_GameLaps) {
         HudPrint(playerClass.player.entindex(), "COMPLETED LAP " + playerClass.i_CompletedLaps + "!", -1, 0.2, 2, Vector(255, 255, 255), 255, Vector(0, 0, 0), 0, 0.2, 0.5, 1, 1, 3)
     }
     
     // Check if the player has completed all the laps, if so, they won!
-    if (playerClass.i_CompletedLaps > i_GameLaps) {
+    if (playerClass.i_CompletedLaps >= i_GameLaps) {
         playerClass.b_FinishedRace = true
         WonRace(playerClass)
         return
