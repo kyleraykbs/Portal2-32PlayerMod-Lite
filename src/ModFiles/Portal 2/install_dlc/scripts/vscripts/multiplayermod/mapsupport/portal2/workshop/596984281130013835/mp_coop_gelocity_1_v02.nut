@@ -111,6 +111,7 @@ function CheckCompletedLaps(player, checkpoint) {
         EntFire("last_lap", "PlaySound")
         HudPrint(playerClass.player.entindex(), "FINAL LAP!", -1, 0.2, 2, Vector(255, 0, 0), 255, Vector(0, 0, 0), 0, 0.5, 0.5, 1, 0, 3)
         SendToChat(0, "\x04" + playerClass.username + " HAS REACHED THE FINAL LAP!")
+        b_FinalLap = true
     }
     // Other player have reached the final lap.
     else if (playerClass.i_CompletedLaps == i_GameLaps && b_FinalLap) {
@@ -122,7 +123,7 @@ function CheckCompletedLaps(player, checkpoint) {
     }
     
     // Check if the player has completed all the laps, if so, they won!
-    if (playerClass.i_CompletedLaps >= i_GameLaps + 1) {
+    if (playerClass.i_CompletedLaps > i_GameLaps) {
         playerClass.b_FinishedRace = true
         WonRace(playerClass)
         return
@@ -132,33 +133,33 @@ function CheckCompletedLaps(player, checkpoint) {
     playerClass.l_PassedCheckpoints.clear()
 }
 
-function CheckpointHit(p, checkpoint) {
-    local player = FindPlayerClass(p)
+function CheckpointHit(player, checkpoint) {
+    local playerClass = FindPlayerClass(player)
     // Dev debug
-    printlP2MM(0, true, p.tostring())
-    printlP2MM(0, true, player.username)
+    printlP2MM(0, true, player.tostring())
+    printlP2MM(0, true, playerClass.username)
     printlP2MM(0, true, checkpoint)
     printlP2MM(0, true, "checkpoint hit")
 
-    if (player.b_FinishedRace) return // Only register a checkpoint as hit when the player hasn't finished the race.
+    if (playerClass.b_FinishedRace) return // Only register a checkpoint as hit when the player hasn't finished the race.
 
     // Dev debug
     if (GetDeveloperLevelP2MM()) {
-        HudPrint(p.entindex(), "CHECKPOINT: " + checkpoint, -1, 0.2, 0, Vector(0, 0, 255), 255, Vector(0, 0, 255), 255, 0.5, 0.5, 1, 0, 2)
+        HudPrint(player.entindex(), "CHECKPOINT: " + checkpoint, -1, 0.8, 0, Vector(0, 0, 255), 255, Vector(0, 0, 255), 255, 0.5, 0.5, 1, 0, 2)
     }
 
     // Check if the player hasn't already passed the point.
-    foreach (passedpoint in player.l_PassedCheckpoints) {
+    foreach (passedpoint in playerClass.l_PassedCheckpoints) {
         printlP2MM(0, true, passedpoint)
         if (checkpoint == passedpoint) return
     }
 
-    player.s_LastCheckPoint = checkpoint
+    playerClass.s_LastCheckPoint = checkpoint
     // Make sure no duplicate checkpoints are added to the player's passed checkpoints list.
-    foreach (index, point in player.l_PassedCheckpoints) {
-        if (checkpoint == player.l_PassedCheckpoints[index]) return
+    foreach (index, point in playerClass.l_PassedCheckpoints) {
+        if (checkpoint == playerClass.l_PassedCheckpoints[index]) return
     }
-    player.l_PassedCheckpoints.append(checkpoint)
+    playerClass.l_PassedCheckpoints.append(checkpoint)
     printlP2MM(0, true, "checkpoint passed")
 }
 
@@ -404,6 +405,12 @@ function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSO
         // Checkpoint 8: Before finish line.
         local checkpoint_8 = CreateTrigger("player", 128, -2816, -256, 260, -3328, 0)
         foreach (player in checkpoint_8) {
+            local playerClass = FindPlayerClass(player)
+            // Prevent players from racing in the wrong direction.
+            if (playerClass.l_PassedCheckpoints.len() < MAP_CHECKPOINTS.len() - 1) {
+                RespawnPlayer(player.entindex())
+                continue
+            }
             CheckpointHit(player, "checkpoint_8")
         }
     }

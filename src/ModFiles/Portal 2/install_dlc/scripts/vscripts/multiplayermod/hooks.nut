@@ -903,7 +903,7 @@ function OnPlayerJoin(p) {
     if (Config_UseJoinIndicator && PlayerID > 1) {
         // Set join message to player name (or index)
         local iCurrentNumPlayers = CalcNumPlayers()
-        Entities.FindByName(null, "p2mm_player_joined_text").__KeyValueFromString("message", GetPlayerName(PlayerID) + " joined the game (" + iCurrentNumPlayers.tostring() + "/" + iMaxPlayers.tostring() + ")")
+        Entities.FindByName(null, "p2mm_player_joined_text").__KeyValueFromString("message", GetPlayerName(PlayerID) + " joined the game (" + iCurrentNumPlayers.tostring() + "/" + GetMaxPlayers().tostring() + ")")
         waitingtext.__KeyValueFromString("y", "0.075")
         
         //# Say join message on HUD #//

@@ -37,11 +37,9 @@ if (Entities.FindByName(null, "p2mm_servercommand")){
     Entities.CreateByClassname("point_servercommand").__KeyValueFromString("targetname", "p2mm_servercommand")
 }
 
-iMaxPlayers <- GetMaxPlayers() // Determine what the "maxplayers" cap is
-
 printlP2MM(0, true, "Session info...")
 printlP2MM(0, true, "- Current map: " + GetMapName())
-printlP2MM(0, true, "- Max players allowed on the server: " + iMaxPlayers)
+printlP2MM(0, true, "- Max players allowed on the server: " + GetMaxPlayers())
 printlP2MM(0, true, "- Dedicated server: " + IsDedicatedServer())
 printlP2MM(0, true, "\n")
 

@@ -1748,7 +1748,7 @@ function Plyr_Disconnect_Function(displayname = null) {
         displayname = "\\\\n"
     }
 
-    Entities.FindByName(null, "p2mm_player_disconnect_message").__KeyValueFromString("message", displayname + " disconnected (" + (CalcNumPlayers() - 1).tostring() + "/" + iMaxPlayers.tostring() + ")")
+    Entities.FindByName(null, "p2mm_player_disconnect_message").__KeyValueFromString("message", displayname + " disconnected (" + (CalcNumPlayers() - 1).tostring() + "/" + GetMaxPlayers().tostring() + ")")
     EntFire("p2mm_player_disconnect_message", "Display")
 }
 
