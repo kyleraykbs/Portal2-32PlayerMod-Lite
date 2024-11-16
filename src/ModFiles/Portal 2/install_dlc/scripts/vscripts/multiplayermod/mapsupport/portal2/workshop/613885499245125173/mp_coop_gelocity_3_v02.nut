@@ -65,16 +65,16 @@ function DevFillPassedPoints(index) {
 }
 
 function WonRace(playerClass) {
-// A player won! Trigger their teams win relay!
-if (playerClass.player.GetTeam() == TEAM_BLUE) {
-    EntFire("blue_wins", "Trigger")
-    EntFire("orange_wins", "Kill")
-    playerClass.v_SpawnVector = MAP_SPAWNPOINTS[0]
-} else {
-    EntFire("orange_wins", "Trigger")
-    EntFire("blue_wins", "Kill")
-    playerClass.v_SpawnVector = MAP_SPAWNPOINTS[1]
-}
+    // A player won! Trigger their teams win relay!
+    if (playerClass.player.GetTeam() == TEAM_BLUE) {
+        EntFire("blue_wins", "Trigger")
+        EntFire("orange_wins", "Kill")
+        playerClass.v_SpawnVector = null
+    } else {
+        EntFire("orange_wins", "Trigger")
+        EntFire("blue_wins", "Kill")
+        playerClass.v_SpawnVector = null
+    }
 
     // Check to make sure if anyone triggers WonRace and they are already on the winner list to return.
     foreach (index, winner in l_WinnerList) {
@@ -172,6 +172,17 @@ function CheckpointHit(player, checkpoint) {
     printlP2MM(0, true, "checkpoint hit")
 
     if (playerClass.b_FinishedRace) return // Only register a checkpoint as hit when the player hasn't finished the race.
+
+    if (playerClass.l_PassedCheckpoints.len() < MAP_CHECKPOINTS.len() - 1 && checkpoint == MAP_CHECKPOINTS[MAP_CHECKPOINTS.len() - 1]) {
+        if (player.GetTeam() == TEAM_BLUE) {
+            playerClass.v_SpawnVector = null
+        } else {
+            playerClass.v_SpawnVector = null
+        }
+        RespawnPlayer(player.entindex())
+        HudPrint(player.entindex(), "WRONG WAY!", -1, 0.2, 2, Vector(255, 0, 0), 255, Vector(0, 0, 0), 0, 0.5, 0.5, 1, 0, 3)
+        return
+    }
 
     // Dev debug
     if (GetDeveloperLevelP2MM()) {
@@ -423,7 +434,6 @@ function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSO
         Entities.FindByName(null, "team_trigger_door").Destroy()
         Entities.FindByName(null, "team_door-trigger_glados_exit_door").Destroy()
         
-
         // Map starting race function
         Entities.FindByName(null, "relay_start").__KeyValueFromString("targetname", "relay_start_p2mmoverride")
         EntFire("startdoor_2_manager_2", "AddOutput", "OnChangeToAllTrue !self:RunScriptCode:StartGelocityRace()")

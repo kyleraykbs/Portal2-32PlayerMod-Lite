@@ -47,18 +47,33 @@ function DevFillPassedPoints(index) {
     playerClass.l_PassedCheckpoints.extend(MAP_CHECKPOINTS)
 }
 
+function KillLosers(player) {
+    local playerClass = FindPlayerClass(player)
+    if (l_WinnerList[0] != playerClass.username) {
+        printlP2MM(0, true, playerClass.username + " landed on pedestal, but isn't #1. Killing.")
+        player.SetVelocity(Vector(player.GetVelocity().x, player.GetVelocity().y, 500))
+        EntFireByHandle(player, "SetHealth", "-99999999999", 0.75, null, null)
+    } else {
+        printlP2MM(0, true, playerClass.username + " landed on pedestal, and is the winner. Not killing.")
+        EntFire("glados_6_p2mmoverride", "Start")
+    }
+}
+
 function WonRace(playerClass) {
     // A player won! Trigger their teams win relay!
     if (playerClass.player.GetTeam() == TEAM_BLUE) {
         EntFire("blue_wins", "Trigger")
         EntFire("orange_wins", "Kill")
+        playerClass.v_SpawnVector = MAP_SPAWNPOINTS.rawget(MAP_CHECKPOINTS[0] + "_blue")
     } else {
         EntFire("orange_wins", "Trigger")
         EntFire("blue_wins", "Kill")
+        playerClass.v_SpawnVector = MAP_SPAWNPOINTS.rawget(MAP_CHECKPOINTS[0] + "_orange")
     }
 
     // Check to make sure if anyone triggers WonRace and they are already on the winner list to return.
     foreach (index, winner in l_WinnerList) {
+        printlP2MM(0, true, "Winner "+ index + ": " + winner)
         // Only add someone to the list when they aren't already on and its not already containing a certain amount.
         if (winner == playerClass.player.GetName() || index >= (b_TournamentMode ? 9 : 2)) return
     }
@@ -143,6 +158,17 @@ function CheckpointHit(player, checkpoint) {
 
     if (playerClass.b_FinishedRace) return // Only register a checkpoint as hit when the player hasn't finished the race.
 
+    if (playerClass.l_PassedCheckpoints.len() < MAP_CHECKPOINTS.len() - 1 && checkpoint == MAP_CHECKPOINTS[MAP_CHECKPOINTS.len() - 1]) {
+        if (player.GetTeam() == TEAM_BLUE) {
+            playerClass.v_SpawnVector = MAP_SPAWNPOINTS.rawget(MAP_CHECKPOINTS[0] + "_blue")
+        } else {
+            playerClass.v_SpawnVector = MAP_SPAWNPOINTS.rawget(MAP_CHECKPOINTS[0] + "_orange")
+        }
+        RespawnPlayer(player.entindex())
+        HudPrint(player.entindex(), "WRONG WAY!", -1, 0.2, 2, Vector(255, 0, 0), 255, Vector(0, 0, 0), 0, 0.5, 0.5, 1, 0, 3)
+        return
+    }
+
     // Dev debug
     if (GetDeveloperLevelP2MM()) {
         HudPrint(player.entindex(), "CHECKPOINT: " + checkpoint, -1, 0.8, 0, Vector(0, 0, 255), 255, Vector(0, 0, 255), 255, 0.5, 0.5, 1, 0, 2)
@@ -165,6 +191,10 @@ function CheckpointHit(player, checkpoint) {
 
 function StartGelocityRace() {
     b_RaceStarted = true;
+    
+    // Spawn in all the gel.
+    EntFire("gel_relay_p2mmoverride", "trigger")
+
     // Close the panels to keep the players in.
     EntFire("door2_player1", "SetAnimation", "90down")
     EntFire("door2_player2", "SetAnimation", "90down")
@@ -188,7 +218,7 @@ function StartGelocityRace() {
     EntFire("button_2", "Skin", "1")
 
     // Start the countdown... and the RACE!
-    EntFire("start_relay", "Trigger")
+    EntFire("start_relay", "Trigger", "", 5)
 }
 
 // When a player respawns, send them back to the last spawning checkpoint they've passed as indicated by v_SpawnVector.
@@ -270,9 +300,12 @@ function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSO
         // So nobody spawns here.
         Entities.FindByClassname(null, "info_player_start").Destroy()
 
+        // Rename the gel relay that spawns the gels for the map
+        Entities.FindByName(null, "gel_relay").__KeyValueFromString("targetname", "gel_relay_p2mmoverride")
+
         // Remove test chamber VGUI screen as it doesn't work.
         EntFire("info_sign-info_panel", "Kill")
-        EntFire("info_sign-info_panel", "Kill", "", 0.1)
+        EntFire("info_sign-info_panel", "Kill")
 
         // Remove the lap counters, VScript will keep track instead.
         Entities.FindByName(null, "rounds").Destroy()
@@ -308,6 +341,15 @@ function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSO
         // Remove back win panels.
         Entities.FindByNameNearest("trigger_blue_wins", Vector(1890, -386, -122), 250).Destroy()
         Entities.FindByNameNearest("trigger_orange_wins", Vector(1890, -386, -122), 250).Destroy()
+
+        // Only the winner can go onto the #1 pedestal and trigger the voiceline.
+        Entities.FindByName(null, "glados_6").__KeyValueFromString("targetname", "glados_6_p2mmoverride")
+        Entities.FindByName(null, "trigger_blue_wins").Destroy()
+        Entities.FindByName(null, "trigger_orange_wins").__KeyValueFromString("target_team", "0")
+        Entities.FindByName(null, "trigger_orange_wins").__KeyValueFromString("trigger_once", "0")
+        EntFire("trigger_orange_wins", "AddOutput", "OnStartTouch !activator:RunScriptCode:KillLosers(activator)")
+        EntFire("glados_7", "AddOutput", "OnCompletion glados_6_p2mmoverride:Kill")
+        EntFire("trigger_orange_wins", "Enable")
 
         // Make sure the exit panels do not open up so players can't restart or exit the map.
         Entities.FindByName(null, "exit_sound_2").Destroy()
@@ -403,7 +445,7 @@ function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSO
         }
 
         // Checkpoint 8: Before finish line.
-        local checkpoint_8 = CreateTrigger("player", 128, -2816, -256, 260, -3328, 0)
+        local checkpoint_8 = CreateTrigger("player", 128, -2816, -256, 264, -3328, 0)
         foreach (player in checkpoint_8) {
             local playerClass = FindPlayerClass(player)
             // Prevent players from racing in the wrong direction.
