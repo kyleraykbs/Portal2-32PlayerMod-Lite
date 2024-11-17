@@ -181,6 +181,18 @@ function CheckpointHit(player, checkpoint) {
 
     if (playerClass.b_FinishedRace) return // Only register a checkpoint as hit when the player hasn't finished the race.
 
+    if (playerClass.l_PassedCheckpoints.len() < MAP_CHECKPOINTS.len() - 1 && checkpoint == MAP_CHECKPOINTS[MAP_CHECKPOINTS.len() - 1]) {
+        if (player.GetTeam() == TEAM_BLUE) {
+            playerClass.v_SpawnVector = null
+        } else {
+            playerClass.v_SpawnVector = null
+        }
+        EntFireByHandle(player, "RunScriptCode", "HudPrint(" + player.entindex() + ", \"WRONG WAY!\", -1, 0.6, 0, Vector(255, 0, 0), 255, Vector(0, 0, 0), 0, 0, 2, 1, 0, 3)", 0.1, null, null)
+        // HudPrint(player.entindex(), "WRONG WAY!", -1, 0.2, 2, Vector(255, 0, 0), 255, Vector(0, 0, 0), 0, 0.5, 0.5, 1, 0, 3)
+        RespawnPlayer(player.entindex())
+        return
+    }
+
     // Dev debug
     if (GetDeveloperLevelP2MM()) {
         HudPrint(player.entindex(), "CHECKPOINT: " + checkpoint, -1, 0.8, 0, Vector(0, 0, 255), 255, Vector(0, 0, 255), 255, 0.5, 0.5, 1, 0, 2)
