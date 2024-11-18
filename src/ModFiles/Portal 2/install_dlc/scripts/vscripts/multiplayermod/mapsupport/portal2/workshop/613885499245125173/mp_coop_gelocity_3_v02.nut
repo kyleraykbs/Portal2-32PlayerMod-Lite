@@ -54,7 +54,16 @@ MAP_SPAWNPOINTS <- {
     checkpoint_11_orange = [Vector(-9024, -672, -296), Vector(0, 90, 0)],
 
     checkpoint_13_blue   = [Vector(-4416, 3452, -424), Vector(0, 270, 0)],
-    checkpoint_13_orange = [Vector(-4288, 3452, -424), Vector(0, 270, 0)],
+    checkpoint_13_orange = [Vector(-4288, 3452, -424), Vector(0, 270, 0)]
+}
+
+function HostStartGame(activator) {
+    printlP2MM(0, true, "" + activator)
+    if (activator.entindex() == 1) {
+        StartGelocityRace()
+    } else {
+        HudPrint(activator.entindex(), "Only the host can start the game.", -1, 0.2, 0, Vector(255, 255, 255), 255, Vector(0, 0, 0), 0, 0.5, 1, 3, 0, 3)
+    }
 }
 
 function DevFillPassedPoints(index) {
@@ -236,12 +245,7 @@ function StartGelocityRace() {
     EntFire("door_start_1_2", "Close")
     EntFire("door_start_2_1", "Close")
     EntFire("door_start_2_2", "Close")
-
-    // Delay this because the map reopens these for some reason
-    // Entities.FindByName(null, "door_start_1_1").__KeyValueFromString("targetname", "door_start_1_1_p2mmoverride")
-    // Entities.FindByName(null, "door_start_1_2").__KeyValueFromString("targetname", "door_start_1_2_p2mmoverride")
-    // Entities.FindByName(null, "door_start_2_1").__KeyValueFromString("targetname", "door_start_2_1_p2mmoverride")
-    // Entities.FindByName(null, "door_start_2_2").__KeyValueFromString("targetname", "door_start_2_2_p2mmoverride")
+    EntFire("door_start", "SetAnimation" "close")
 
     // Start the countdown... and the RACE!
     EntFire("relay_start_p2mmoverride", "Trigger")
@@ -392,14 +396,6 @@ function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSO
         if (b_TournamentMode) {
             Config_HostOnlyChatCommands <- true // Make sure no other chat commands can be used.
 
-            // Delete starting race levers.
-            Entities.FindByClassnameNearest("trigger_playerteam", Vector(-4904, 848, -64), 32).Destroy()
-            Entities.FindByClassnameNearest("trigger_playerteam", Vector(-4904, 688, -64), 32).Destroy()
-            Entities.FindByName(null, "lever_2_red").Destroy()
-            Entities.FindByName(null, "lever_1_red").Destroy()
-            Entities.FindByClassnameNearest("prop_dynamic_override", Vector(-5146, 750, -59), 32).Destroy()
-            Entities.FindByClassnameNearest("prop_dynamic_override", Vector(-5146, 786, -59), 32).Destroy()
-
             // Disabled round and music buttons so only host can remotely control their values.
             EntFire("button_music_1", "Skin", "1")
             EntFire("button_music_2", "Skin", "1")
@@ -414,8 +410,6 @@ function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSO
             Entities.FindByClassnameNearest("trigger_multiple", Vector(-5568.01, -416, -64), 10).Destroy()
             Entities.FindByClassnameNearest("trigger_multiple", Vector(-5312.01, -416, -64), 10).Destroy()
             Entities.FindByClassnameNearest("trigger_playerteam", Vector(-1056, -768, 60.25), 10).Destroy()
-            Entities.FindByName(null, "counter_view_blue").Destroy()
-            Entities.FindByName(null, "counter_view_orange").Destroy()
             Entities.FindByName(null, "restart_hint_orange").Destroy()
             Entities.FindByName(null, "restart_hint_blue").Destroy()
             Entities.FindByName(null, "restart_hint_orange_2").Destroy()
@@ -435,8 +429,26 @@ function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSO
         Entities.FindByName(null, "team_door-trigger_glados_exit_door").Destroy()
         
         // Map starting race function
+        Entities.FindByName(null, "startdoor_2_manager_2").Destroy()
         Entities.FindByName(null, "relay_start").__KeyValueFromString("targetname", "relay_start_p2mmoverride")
-        EntFire("startdoor_2_manager_2", "AddOutput", "OnChangeToAllTrue !self:RunScriptCode:StartGelocityRace()")
+        
+        if (!b_TournamentMode) {
+            button <- Entities.CreateByClassname("prop_under_button")
+            InitializeEntity(button)
+            button.SetOrigin(Vector(-5280, 768, -127))
+            button.SetAngles(0, 180, 0)
+            button.__KeyValueFromString("skin", "1")
+            EntFireByHandle(button, "AddOutput", "OnPressed !activator:RunScriptCode:HostStartGame(activator)", 0, null, null)
+        }
+            
+        // Delete starting race levers.
+        Entities.FindByName(null, "lever_2_red").Destroy()
+        Entities.FindByName(null, "lever_1_red").Destroy()
+        Entities.FindByName(null, "lever_2_knob").Destroy()
+        Entities.FindByName(null, "lever_1_knob").Destroy()
+        Entities.FindByClassnameNearest("trigger_playerteam", Vector(-4904, 848, -64), 32).Destroy()
+        Entities.FindByClassnameNearest("trigger_playerteam", Vector(-4904, 688, -64), 32).Destroy()
+
     }
     if (MSLoop) {
         // Prevent players jumping through window before the game starts.

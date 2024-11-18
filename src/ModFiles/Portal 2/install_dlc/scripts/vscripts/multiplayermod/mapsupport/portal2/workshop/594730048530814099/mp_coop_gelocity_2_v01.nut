@@ -13,18 +13,18 @@ l_WinnerList <- [] // List of winning players
 b_RaceStarted <- false // Flag for trigger checking for the host ot start the map
 
 MAP_CHECKPOINTS <- [
-    "checkpoint_1",//
-    "checkpoint_2",//
-    "checkpoint_3",//
-    "checkpoint_4",//
-    "checkpoint_5",//
-    "checkpoint_6",//
-    "checkpoint_7",//
-    "checkpoint_8",//
-    "checkpoint_9",//
-    "checkpoint_10",//
-    "checkpoint_11",//
-    "checkpoint_12",//
+    "checkpoint_1",
+    "checkpoint_2",
+    "checkpoint_3",
+    "checkpoint_4",
+    "checkpoint_5",
+    "checkpoint_6",
+    "checkpoint_7",
+    "checkpoint_8",
+    "checkpoint_9",
+    "checkpoint_10",
+    "checkpoint_11",
+    "checkpoint_12",
     "checkpoint_13",
     "checkpoint_14"
 ]
@@ -65,6 +65,15 @@ MAP_SPAWNPOINTS <- {
 
     checkpoint_14_blue   = [Vector(-200, -7456, 88), Vector(0, 0, 0)],
     checkpoint_14_orange = [Vector(-200, -7456, 88), Vector(0, 0, 0)]
+}
+
+function HostStartGame(player) {
+    if (player.entindex() == 1) {
+        StartGelocityRace()
+    } else {
+        player.SetVelocity(Vector(0, -1000, 200))
+        HudPrint(player.entindex(), "Only the host can start the game.", -1, 0.2, 0, Vector(255, 255, 255), 255, Vector(0, 0, 0), 0, 0, 1, 3, 0, 3)
+    }
 }
 
 function DevFillPassedPoints(index) {
@@ -115,14 +124,16 @@ function WonRace(playerClass) {
 }
 
 function KillLosers(player) {
-    local playerClass = FindPlayerClass(player)
-    if (l_WinnerList[0] != playerClass.username) {
-        printlP2MM(0, true, playerClass.username + " landed on pedestal, but isnt #1. Killing.")
-        player.SetVelocity(Vector(player.GetVelocity().x, player.GetVelocity().y, 500))
-        EntFireByHandle(player, "sethealth", "-99999999999", 0.75, null, null)
-    } else {
-        printlP2MM(0, true, "" + playerClass.username + " landed on pedestal, and is the winner. Not killing.")
-        EntFire("glados_6_p2mmoverride", "Start")
+    if (l_WinnerList.len() > 0) {
+        local playerClass = FindPlayerClass(player)
+        if (l_WinnerList[0] != playerClass.username) {
+            printlP2MM(0, true, playerClass.username + " landed on pedestal, but isnt #1. Killing.")
+            player.SetVelocity(Vector(player.GetVelocity().x, player.GetVelocity().y, 500))
+            EntFireByHandle(player, "sethealth", "-99999999999", 0.75, null, null)
+        } else {
+            printlP2MM(0, true, "" + playerClass.username + " landed on pedestal, and is the winner. Not killing.")
+            EntFire("glados_6_p2mmoverride", "Start")
+        }
     }
 }
 
@@ -247,7 +258,7 @@ function StartGelocityRace() {
     EntFire("door_start_2_2", "Close")
 
     // Start the countdown... and the RACE!
-    EntFire("button_2_branch", "SetValue", "1")
+    EntFire("button_2_branch_p2mmoverride", "SetValue", "1")
     EntFire("button_1_branch", "SetValue", "1")
     EntFire("coopmanager_start", "SetStateBTrue")
 }
@@ -390,6 +401,13 @@ function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSO
         EntFire("glados_7", "AddOutput", "OnCompletion glados_6_p2mmoverride:Kill")
         EntFire("trigger_orange_wins", "Enable")
 
+        // Make sure only the host can begin the game.
+        Entities.FindByName(null, "button_2_branch").__KeyValueFromString("targetname", "button_2_branch_p2mmoverride")
+        Entities.FindByClassname(null, "logic_branch_listener").__KeyValueFromString("targetname", "button_2_branch_p2mmoverride")
+        for (local button; button = Entities.FindByClassname(button, "prop_floor_button");) {
+            EntFireByHandle(button, "AddOutput", "OnPressed !activator:RunScriptCode:HostStartGame(activator)", 0, null, null)
+        }
+
         // Tournament mode stuff
         if (b_TournamentMode) {
             Config_HostOnlyChatCommands <- true // Make sure no other chat commands can be used.
@@ -444,6 +462,5 @@ function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSO
         while (Entities.FindByName(null, "env_instructor_hint")) {
             Entities.FindByName(null, "env_instructor_hint").Destroy()
         }
-
     }
 }
