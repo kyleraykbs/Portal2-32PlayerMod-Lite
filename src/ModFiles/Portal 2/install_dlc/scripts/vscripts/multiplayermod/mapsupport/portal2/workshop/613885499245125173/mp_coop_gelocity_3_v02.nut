@@ -5,12 +5,12 @@
 // ██║ ╚═╝ ██║██║     ██████████╗╚█████╔╝╚█████╔╝╚█████╔╝██║     ██████████╗╚██████╔╝███████╗███████╗╚█████╔╝╚█████╔╝██║   ██║      ██║   ██████████╗██████╔╝██████████╗  ╚██╔╝  ╚█████╔╝███████╗
 // ╚═╝     ╚═╝╚═╝     ╚═════════╝ ╚════╝  ╚════╝  ╚════╝ ╚═╝     ╚═════════╝ ╚═════╝ ╚══════╝╚══════╝ ╚════╝  ╚════╝ ╚═╝   ╚═╝      ╚═╝   ╚═════════╝╚═════╝ ╚═════════╝   ╚═╝    ╚════╝ ╚══════╝
 
-b_TournamentMode <- GetConVarInt("p2mm_gelocity_tournamentmode") // Locks down somethings so the host has full control.
-
-i_GameLaps <- 3 // Gelocity race laps
-b_FinalLap <- false // Flag signifying the last lap of the race
-l_WinnerList <- [] // List of winning players
-b_RaceStarted <- false // Flag for trigger checking for the host ot start the map
+bTournamentMode <- GetConVarInt("p2mm_gelocity_tournament_mode") // Locks down somethings so the host has full control. Default: 0
+iGameLaps <- GetConVarInt("p2mm_gelocity_laps_default") // Gelocity race laps. Default: 3
+iMusicTrack <- GetConVarInt("p2mm_gelocity_music_default") // Gelocity music track. Default: 0
+bFinalLap <- false // Flag signifying the last lap of the race.
+lWinnerList <- [] // List of winning players.
+bRaceStarted <- false // Flag for checking if the race has started or is in progress.
 
 MAP_CHECKPOINTS <- [
     "checkpoint_1",
@@ -57,13 +57,12 @@ MAP_SPAWNPOINTS <- {
     checkpoint_13_orange = [Vector(-4288, 3452, -424), Vector(0, 270, 0)]
 }
 
-function HostStartGame(activator) {
-    printlP2MM(0, true, "" + activator)
-    if (activator.entindex() == 1) {
+function HostStartGame(player) {
+    if (player.entindex() == 1) {
         StartGelocityRace()
-    } else {
-        HudPrint(activator.entindex(), "Only the host can start the game.", -1, 0.2, 0, Vector(255, 255, 255), 255, Vector(0, 0, 0), 0, 0.5, 1, 3, 0, 3)
-    }
+        return
+    } 
+    HudPrint(player.entindex(), "Only the host can start the game!", Vector(-1, 0.2, 3), 0, 0.0, Vector(255, 255, 255), 255, Vector(0, 0, 0), 0, Vector(0.5, 0.5, 0.5))
 }
 
 function DevFillPassedPoints(index) {
@@ -86,16 +85,16 @@ function WonRace(playerClass) {
     }
 
     // Check to make sure if anyone triggers WonRace and they are already on the winner list to return.
-    foreach (index, winner in l_WinnerList) {
+    foreach (index, winner in lWinnerList) {
         // Only add someone to the list when they aren't already on and its not already containing a certain amount.
-        if (winner == playerClass.player.GetName() || index >= (b_TournamentMode ? 9 : 2)) return
+        if (winner == playerClass.player.GetName() || index >= (bTournamentMode ? 9 : 2)) return
     }
-    l_WinnerList.append(playerClass.username) // Add winner to the list.
+    lWinnerList.append(playerClass.username) // Add winner to the list.
 
     // Setup the place postfix and color that will be sent in HudPrint.
     local placeString = "th"
     local placeColor = Vector(255, 255, 255)
-    switch (l_WinnerList.len()) {
+    switch (lWinnerList.len()) {
         case (1):
             placeString = "st"
             placeColor = Vector(255, 255, 0)
@@ -111,14 +110,14 @@ function WonRace(playerClass) {
         default:
             break
     }
-    HudPrint(playerClass.player.entindex(), "FINISHED " + l_WinnerList.len() + placeString + "!", -1, 0.2, 0, placeColor, 255, Vector(0, 0, 0), 0, 0, 1, 3, 0, 3)
-    SendToChat(0, "\x04" + playerClass.username + " Has Passed The Finish Line For " + l_WinnerList.len() + placeString + " Place!")
+    HudPrint(playerClass.player.entindex(), "FINISHED " + lWinnerList.len() + placeString + "!", Vector(-1, 0.2, 3), 0, 0.0, placeColor, 255, Vector(0, 0, 0), 0, Vector(0.5, 0.5, 1.5))
+    SendToChat(0, "\x04" + playerClass.username + " Has Passed The Finish Line For " + lWinnerList.len() + placeString + " Place!")
 }
 
 function KillLosers(player) {
     local playerClass = FindPlayerClass(player)
-    if (l_WinnerList[0] != playerClass.username) {
-        printlP2MM(0, true, playerClass.username + " landed on pedestal, but isnt #1. Killing.")
+    if (lWinnerList[0] != playerClass.username) {
+        printlP2MM(0, true, playerClass.username + " landed on pedestal, but isn't #1. Killing.")
         player.SetVelocity(Vector(player.GetVelocity().x, player.GetVelocity().y, 500))
         EntFireByHandle(player, "sethealth", "-99999999999", 0.75, null, null)
     } else {
@@ -147,22 +146,23 @@ function CheckCompletedLaps(player, checkpoint) {
     playerClass.i_CompletedLaps++
     printlP2MM(0, true, "LAP COMPLETE")
     // The first player has reached the final lap.
-    if (playerClass.i_CompletedLaps == (i_GameLaps - 1) && !b_FinalLap) {
+    if (playerClass.i_CompletedLaps == (iGameLaps - 1) && !bFinalLap) {
         EntFire("last_lap", "PlaySound")
-        HudPrint(playerClass.player.entindex(), "FINAL LAP!", -1, 0.2, 2, Vector(255, 0, 0), 255, Vector(0, 0, 0), 0, 0.5, 0.5, 1, 0, 3)
+        HudPrint(playerClass.player.entindex(), "FINAL LAP!", Vector(-1, 0.2, 3), 2, 0, Vector(255, 0, 0), 255, Vector(0, 0, 0), 0, Vector(0.5, 0.5, 1))
         SendToChat(0, "\x04" + playerClass.username + " HAS REACHED THE FINAL LAP!")
-        b_FinalLap = true
+        bFinalLap = true
     }
     // Other player have reached the final lap.
-    else if (playerClass.i_CompletedLaps == (i_GameLaps - 1) && b_FinalLap) {
-        HudPrint(playerClass.player.entindex(), "FINAL LAP!", -1, 0.2, 2, Vector(255, 0, 0), 255, Vector(0, 0, 0), 0, 0.5, 0.5, 1, 0, 3)
+    else if (playerClass.i_CompletedLaps == (iGameLaps - 1) && bFinalLap) {
+        HudPrint(playerClass.player.entindex(), "FINAL LAP!", Vector(-1, 0.2, 3), 2, 0, Vector(255, 0, 0), 255, Vector(0, 0, 0), 0, Vector(0.5, 0.5, 1))
     }
     // Player has completed a lap.
-    else if (playerClass.i_CompletedLaps < i_GameLaps) {
-        HudPrint(playerClass.player.entindex(), "COMPLETED LAP " + playerClass.i_CompletedLaps + "!", -1, 0.2, 2, Vector(255, 255, 255), 255, Vector(0, 0, 0), 0, 0.2, 0.5, 1, 1, 3)
+    else if (playerClass.i_CompletedLaps < iGameLaps) {
+        HudPrint(playerClass.player.entindex(), "COMPLETED LAP " + playerClass.i_CompletedLaps + "!", Vector(-1, 0.2, 3), 2, 1, Vector(255, 255, 255), 255, Vector(0, 0, 0), 0, Vector(0.2, 0.5, 1))
     }
+
     // Check if the player has completed all the laps, if so, they won!
-    if (playerClass.i_CompletedLaps >= i_GameLaps) {
+    if (playerClass.i_CompletedLaps >= iGameLaps) {
         playerClass.b_FinishedRace = true
         WonRace(playerClass)
         return
@@ -182,20 +182,23 @@ function CheckpointHit(player, checkpoint) {
 
     if (playerClass.b_FinishedRace) return // Only register a checkpoint as hit when the player hasn't finished the race.
 
+    // Check to make sure the player is no going the wrong direction.
     if (playerClass.l_PassedCheckpoints.len() < MAP_CHECKPOINTS.len() - 1 && checkpoint == MAP_CHECKPOINTS[MAP_CHECKPOINTS.len() - 1]) {
         if (player.GetTeam() == TEAM_BLUE) {
             playerClass.v_SpawnVector = null
         } else {
             playerClass.v_SpawnVector = null
         }
+
+        // Delayed because instant respawn makes the game_text disappear.
+        EntFireByHandle(player, "RunScriptCode", "HudPrint(" + player.entindex() + ", \"WRONG WAY!\", Vector(-1, 0.6, 3) 0, 0, Vector(255, 0, 0), 255, Vector(0, 0, 0), 0, Vector(0, 2, 1))", 0.1, null, null)
         RespawnPlayer(player.entindex())
-        HudPrint(player.entindex(), "WRONG WAY!", -1, 0.2, 2, Vector(255, 0, 0), 255, Vector(0, 0, 0), 0, 0.5, 0.5, 1, 0, 3)
         return
     }
 
     // Dev debug
     if (GetDeveloperLevelP2MM()) {
-        HudPrint(player.entindex(), "CHECKPOINT: " + checkpoint, -1, 0.8, 0, Vector(0, 0, 255), 255, Vector(0, 0, 255), 255, 0.5, 0.5, 1, 0, 2)
+        HudPrint(player.entindex(), "CHECKPOINT: " + checkpoint, Vector(-1, 0.8, 2), 0, 0, Vector(0, 150, 255), 255, Vector(0, 0, 0), 0, Vector(0.5, 0.5, 1))
     }
 
     // Check if the player hasn't already passed the point.
@@ -214,7 +217,7 @@ function CheckpointHit(player, checkpoint) {
 }
 
 function StartGelocityRace() {
-    b_RaceStarted = true;
+    bRaceStarted = true;
 
     EntFire("gel_relay", "Trigger")
 
@@ -255,7 +258,7 @@ function StartGelocityRace() {
 function GEPlayerRespawn(player) {
     local playerClass = FindPlayerClass(player)
 
-    if (playerClass.v_SpawnVector == null) return;
+    if (playerClass.v_SpawnVector == null) return
 
     player.SetOrigin(playerClass.v_SpawnVector[0])
     player.SetAngles(playerClass.v_SpawnVector[1].x, playerClass.v_SpawnVector[1].y, playerClass.v_SpawnVector[1].z)
@@ -263,7 +266,6 @@ function GEPlayerRespawn(player) {
 
 // If a player dies, set spawn vector to be at the last applicable spawn point.
 function GEPlayerDeath(userid, attacker, entindex) {
-    printlP2MM(0, false, "tejasdfhasjdf")
     local player = UTIL_PlayerByIndex(entindex) 
     local playerClass = FindPlayerClass(player)
 
@@ -279,14 +281,14 @@ function GEPlayerDeath(userid, attacker, entindex) {
     printlP2MM(1, false, "Player last checkpoint does not match any on the list!")
 }
 
-// Add a lap to i_GameLaps.
+// Add a lap to iGameLaps.
 function GameLapsAdd() {
-    if (i_GameLaps >= 300) return
+    if (iGameLaps >= 300) return
 
-    i_GameLaps++
-    HudPrint(0, "Laps: " + i_GameLaps, -1, 0.2, 0, Vector(255, 255, 255), 255, Vector(0, 0, 0), 0, 0.5, 0.5, 0.5, 0, 3)
+    iGameLaps++
+    HudPrint(0, "Race Laps: " + iGameLaps, Vector(-1, 0.2, 3), 0, 0.0, Vector(255, 255, 255), 255, Vector(0, 0, 0), 0, Vector(0.5, 0.5, 0.5))
 
-    if (i_GameLaps >= 300) {
+    if (iGameLaps >= 300) {
         EntFire("rounds_button_1", "Unlock", "", 0, null)
         EntFire("rounds_button_2", "Lock", "", 0, null)
         EntFire("button_1", "Skin", "0", 0, null)
@@ -294,7 +296,7 @@ function GameLapsAdd() {
         return
     }
 
-    if (i_GameLaps < 300 && i_GameLaps > 1) {
+    if (iGameLaps < 300 && iGameLaps > 1) {
         EntFire("rounds_button_1", "Unlock", "", 0, null)
         EntFire("rounds_button_2", "Unlock", "", 0, null)
         EntFire("button_1", "Skin", "0", 0, null)
@@ -302,14 +304,14 @@ function GameLapsAdd() {
     }
 }
 
-// Subtract a lap to i_GameLaps.
+// Subtract a lap to iGameLaps.
 function GameLapsSub() {
-    if (i_GameLaps <= 1) return
+    if (iGameLaps <= 1) return
 
-    i_GameLaps--
-    HudPrint(0, "Laps: " + i_GameLaps, -1, 0.2, 0, Vector(255, 255, 255), 255, Vector(0, 0, 0), 0, 0.5, 0.5, 0.5, 0, 3)
+    iGameLaps--
+    HudPrint(0, "Race Laps: " + iGameLaps, Vector(-1, 0.2, 3), 0, 0.0, Vector(255, 255, 255), 255, Vector(0, 0, 0), 0, Vector(0.5, 0.5, 0.5))
     
-    if (i_GameLaps <= 1) {
+    if (iGameLaps <= 1) {
         EntFire("rounds_button_1", "Lock", "", 1, null)
         EntFire("rounds_button_2", "Unlock", "", 1, null)
         EntFire("button_2", "Skin", "0", 0, null)
@@ -317,7 +319,7 @@ function GameLapsSub() {
         return
     }
 
-    if (i_GameLaps < 300 && i_GameLaps > 1) {      
+    if (iGameLaps < 300 && iGameLaps > 1) {      
         EntFire("rounds_button_1", "Unlock", "", 0, null)
         EntFire("rounds_button_2", "Unlock", "", 0, null)
         EntFire("button_2", "Skin", "0", 0, null)
@@ -325,14 +327,33 @@ function GameLapsSub() {
     }
 }
 
+// Progress music track up one.
+function GameMusicNext() {
+    if (iMusicTrack >= 5) return
+
+    iMusicTrack++
+    HudPrint(0, "Music Track: " + iMusicTrack, Vector(-1, 0.2, 3), 0, 0.0, Vector(255, 255, 255), 255, Vector(0, 0, 0), 0, Vector(0.5, 0.5, 0.5))
+    EntFire("counter_music", "SetValue", iMusicTrack)
+}
+
+// Progress music track down one.
+function GameMusicBack() {
+    if (iMusicTrack <= 0) return
+
+    iMusicTrack--
+    if (iMusicTrack == 0) {
+        HudPrint(0, "No Music", Vector(-1, 0.2, 3), 0, 0.0, Vector(255, 255, 255), 255, Vector(0, 0, 0), 0, Vector(0.5, 0.5, 0.5))
+    }
+    else {
+        HudPrint(0, "Music Track: " + iMusicTrack, Vector(-1, 0.2, 3), 0, 0.0, Vector(255, 255, 255), 255, Vector(0, 0, 0), 0, Vector(0.5, 0.5, 0.5))
+    }
+    EntFire("counter_music", "SetValue", iMusicTrack)
+}
+
 function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSOnPlayerJoin, MSOnDeath, MSOnRespawn) {
     if (MSInstantRun) {
         // So nobody spawns here.
         Entities.FindByClassname(null, "info_player_start").Destroy()
-
-        // Remove test chamber VGUI screen as it doesn't work.
-        EntFire("info_sign-info_panel", "Kill")
-        EntFire("info_sign-info_panel", "Kill", "", 0.1)
 
         // Remove the lap counters, VScript will keep track instead.
         Entities.FindByName(null, "rounds").Destroy()
@@ -383,6 +404,30 @@ function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSO
         EntFire("rounds_button_1", "AddOutput", "OnPressed !self:RunScriptCode:GameLapsSub():0:-1")
         EntFire("rounds_button_2", "AddOutput", "OnPressed !self:RunScriptCode:GameLapsAdd():0:-1")
 
+        // Make buttons run a music track function instead of the usual relay.
+        EntFire("music_button_1", "AddOutput", "OnPressed !self:RunScriptCode:GameMusicBack():0:-1")
+        EntFire("music_button_2", "AddOutput", "OnPressed !self:RunScriptCode:GameMusicNext():0:-1")
+
+        // Remove the old game_text entities for the lap and music selection.
+        for (local gt = null; gt = Entities.FindByClassname(gt, "game_text");) {
+            if (gt.GetName().find("music_") != null && gt.GetName().find("_text") != null) {
+                gt.Destroy()
+            }
+        }
+        Entities.FindByName(null, "change_rounds_text").Destroy()
+
+        if (!GetConVarInt("p2mm_gelocity_lockbuttons")) {
+            EntFire("rounds_button_1", "Unlock")
+            EntFire("rounds_button_2", "Unlock")
+            EntFire("music_button_1", "Unlock")
+            EntFire("music_button_2", "Unlock")
+        } else {
+            EntFire("rounds_button_1", "Lock")
+            EntFire("rounds_button_2", "Lock")
+            EntFire("music_button_1", "Lock")
+            EntFire("music_button_2", "Lock")
+        }
+
         // Only the winner can go onto the #1 pedestal and trigger the voiceline.
         Entities.FindByName(null, "glados_6").__KeyValueFromString("targetname", "glados_6_p2mmoverride")
         Entities.FindByName(null, "trigger_blue_wins").Destroy()
@@ -393,7 +438,7 @@ function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSO
         EntFire("trigger_orange_wins", "Enable")
 
         // Tournament mode stuff
-        if (b_TournamentMode) {
+        if (bTournamentMode) {
             Config_HostOnlyChatCommands <- true // Make sure no other chat commands can be used.
 
             // Disabled round and music buttons so only host can remotely control their values.
@@ -420,7 +465,8 @@ function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSO
             // Prevent exit door from opening.
             Entities.FindByName(null, "@relay_exit_door_open").Destroy()
         }
-        // paint gel when race starts so everyone can join until then
+        
+        // Stop gel spawning so it can be done once the race actually starts.
         Entities.FindByName(null, "coop_man_gel").Destroy()
 
         // Delete elements that change the level.
@@ -428,11 +474,12 @@ function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSO
         Entities.FindByName(null, "team_trigger_door").Destroy()
         Entities.FindByName(null, "team_door-trigger_glados_exit_door").Destroy()
         
-        // Map starting race function
+        // Rename the relay that starts the race so it can be controlled.
         Entities.FindByName(null, "startdoor_2_manager_2").Destroy()
         Entities.FindByName(null, "relay_start").__KeyValueFromString("targetname", "relay_start_p2mmoverride")
         
-        if (!b_TournamentMode) {
+        // Make a prop_button for the host to start the game.
+        if (!bTournamentMode) {
             button <- Entities.CreateByClassname("prop_under_button")
             InitializeEntity(button)
             button.SetOrigin(Vector(-5280, 768, -127))
@@ -452,7 +499,7 @@ function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSO
     }
     if (MSLoop) {
         // Prevent players jumping through window before the game starts.
-        if (!b_RaceStarted) {
+        if (!bRaceStarted) {
             for (local p; p = Entities.FindByClassname(p, "player");) {
                 if (p.GetOrigin().z < -170 && p.GetOrigin().y > 16.03) {
                     p.SetOrigin(Vector(-5406.540527, 803.267151, -127.968750))
@@ -460,5 +507,9 @@ function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSO
                 }
             }
         }
+    }
+
+    if (MSPostPlayerSpawn) {
+        EntFire("counter_music", "SetValue", iMusicTrack)
     }
 }
