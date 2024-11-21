@@ -5,7 +5,7 @@
 // ██║ ╚═╝ ██║██║     ██████████╗╚█████╔╝╚█████╔╝╚█████╔╝██║     ██████████╗╚██████╔╝███████╗███████╗╚█████╔╝╚█████╔╝██║   ██║      ██║   ██████████╗██████╔╝██████████╗  ╚██╔╝  ╚█████╔╝███████╗
 // ╚═╝     ╚═╝╚═╝     ╚═════════╝ ╚════╝  ╚════╝  ╚════╝ ╚═╝     ╚═════════╝ ╚═════╝ ╚══════╝╚══════╝ ╚════╝  ╚════╝ ╚═╝   ╚═╝      ╚═╝   ╚═════════╝╚═════╝ ╚═════════╝   ╚═╝    ╚════╝ ╚══════╝
 
-bTournamentMode <- GetConVarInt("p2mm_gelocity_tournament_mode") // Locks down somethings so the host has full control. Default: 0
+bTournamentMode <- GetConVarInt("p2mm_gelocity_tournamentmode") // Locks down somethings so the host has full control. Default: 0
 iGameLaps <- GetConVarInt("p2mm_gelocity_laps_default") // Gelocity race laps. Default: 3
 iMusicTrack <- GetConVarInt("p2mm_gelocity_music_default") // Gelocity music track. Default: 0
 bFinalLap <- false // Flag signifying the last lap of the race.
@@ -58,11 +58,14 @@ MAP_SPAWNPOINTS <- {
 }
 
 function HostStartGame(player) {
-    if (player.entindex() == 1) {
-        StartGelocityRace()
-        return
-    } 
-    HudPrint(player.entindex(), "Only the host can start the game!", Vector(-1, 0.2, 3), 0, 0.0, Vector(255, 255, 255), 255, Vector(0, 0, 0), 0, Vector(0.5, 0.5, 0.5))
+    if (!bRaceStarted) {
+        if (player.entindex() == 1) {
+            StartGelocityRace()
+            return
+        } else {
+            HudPrint(player.entindex(), "Only the host can start the game!", Vector(-1, 0.2, 3), 0, 0.0, Vector(255, 255, 255), 255, Vector(0, 0, 0), 0, Vector(0.5, 3, 0.5))
+        }
+    }
 }
 
 function DevFillPassedPoints(index) {
@@ -400,6 +403,11 @@ function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSO
             }
         }
         
+        // remove +remoteview logic as it is buggy in 3+ MP
+        // TODO: maybe add custom logic for this instead?
+        Entities.FindByName(null, "counter_view_blue").Destroy()
+        Entities.FindByName(null, "counter_view_orange").Destroy()
+
         // Make buttons increase the VScript lap counter.
         EntFire("rounds_button_1", "AddOutput", "OnPressed !self:RunScriptCode:GameLapsSub():0:-1")
         EntFire("rounds_button_2", "AddOutput", "OnPressed !self:RunScriptCode:GameLapsAdd():0:-1")

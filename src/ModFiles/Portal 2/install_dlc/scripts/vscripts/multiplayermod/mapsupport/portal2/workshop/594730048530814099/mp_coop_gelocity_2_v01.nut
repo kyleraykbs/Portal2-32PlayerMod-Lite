@@ -218,12 +218,15 @@ function CheckpointHit(player, checkpoint) {
 }
 
 function HostStartGame(player) {
-    if (player.entindex() == 1 && !bRaceStart) {
-        StartGelocityRace()
-        return
+    if (!bRaceStarted) {
+        if (player.entindex() == 1) {
+            StartGelocityRace()
+            return
+        } else {
+            player.SetVelocity(Vector(0, -1000, 200))
+            HudPrint(player.entindex(), "Only the host can start the game!", Vector(-1, 0.2, 3), 0, 0.0, Vector(255, 255, 255), 255, Vector(0, 0, 0), 0, Vector(0.5, 3, 0.5))
+        }
     }
-    player.SetVelocity(Vector(0, -1000, 200))
-    HudPrint(player.entindex(), "Only the host can start the game!", Vector(-1, 0.2, 3), 0, 0.0, Vector(255, 255, 255), 255, Vector(0, 0, 0), 0, Vector(0.5, 0.5, 0.5))
 }
 
 function StartGelocityRace() {
@@ -449,7 +452,7 @@ function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSO
         Entities.FindByName(null, "button_2_branch").__KeyValueFromString("targetname", "button_2_branch_p2mmoverride")
         Entities.FindByClassname(null, "logic_branch_listener").__KeyValueFromString("targetname", "button_2_branch_p2mmoverride")
         for (local button; button = Entities.FindByClassname(button, "prop_floor_button");) {
-            EntFireByHandle(button, "AddOutput", "OnPressed !activator:RunScriptCode:HostStartGame(activator):0:1", 0, null, null)
+            EntFireByHandle(button, "AddOutput", "OnPressed !activator:RunScriptCode:HostStartGame(activator)", 0, null, null)
         }
 
         // Tournament mode stuff
