@@ -112,8 +112,8 @@ CommandList.push(
                 return
             } else {
                 // Special case for changing chat color to a mildly dark green
-                SendToChat(p.entindex(), "\x05(P2:MM): Teleported player.")
-                SendToChat(target.entindex(), "\x05(P2:MM): You've been teleported.") // Notify the other player who got teleported as well
+                SendToChat("\x05(P2:MM): Teleported player.", p.entindex())
+                SendToChat("\x05(P2:MM): You've been teleported.", target.entindex()) // Notify the other player who got teleported as well
                 return
             }
         }

@@ -119,7 +119,7 @@ function WonRace(playerClass) {
             break
     }
     HudPrint(playerClass.player.entindex(), "FINISHED " + lWinnerList.len() + placeString + "!", Vector(-1, 0.2, 3), 0, 0.0, placeColor, 255, Vector(0, 0, 0), 0, Vector(0.5, 0.5, 1.5))
-    SendToChat(0, "\x04" + playerClass.username + " Has Passed The Finish Line For " + lWinnerList.len() + placeString + " Place!")
+    SendToChat("\x04" + playerClass.username + " Has Passed The Finish Line For " + lWinnerList.len() + placeString + " Place!", 0)
 }
 
 function KillLosers(player) {
@@ -157,7 +157,7 @@ function CheckCompletedLaps(player, checkpoint) {
     if (playerClass.i_CompletedLaps == (iGameLaps - 1) && !bFinalLap) {
         EntFire("last_lap", "PlaySound")
         HudPrint(playerClass.player.entindex(), "FINAL LAP!", Vector(-1, 0.2, 3), 2, 0, Vector(255, 0, 0), 255, Vector(0, 0, 0), 0, Vector(0.5, 0.5, 1))
-        SendToChat(0, "\x04" + playerClass.username + " HAS REACHED THE FINAL LAP!")
+        SendToChat("\x04" + playerClass.username + " HAS REACHED THE FINAL LAP!", 0)
         bFinalLap = true
     }
     // Other player have reached the final lap.
@@ -362,6 +362,7 @@ function GameMusicBack() {
 function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSOnPlayerJoin, MSOnDeath, MSOnRespawn) {
     if (MSInstantRun) {
         // change some blobs to make the map possible backwards.
+
         Entities.FindByNameNearest("s_sphere_13", Vector(-8960, -384, -512), 32).__KeyValueFromString("paint_type", "0")
         Entities.FindByNameNearest("s_sphere_9", Vector(-2964, -2824, -512), 32).__KeyValueFromString("paint_type", "0")
         Entities.FindByNameNearest("j_sphere_3", Vector(-3607, -2760, -512), 32).__KeyValueFromString("paint_type", "2")
@@ -369,12 +370,9 @@ function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSO
         Entities.FindByNameNearest("s_sphere_9", Vector(-1116, -2824, -512), 32).__KeyValueFromString("paint_type", "0")
         Entities.FindByNameNearest("j_sphere_3", Vector(-1759, -2760, -512), 32).__KeyValueFromString("paint_type", "2")
         Entities.FindByNameNearest("j_sphere_3", Vector(-1759, -2888, -512), 32).__KeyValueFromString("paint_type", "2")
-        //                                                                                                                                                                       what the hell is null here??!
-        // EntFireByHandle(Entities.FindByClassnameNearest("trigger_playerteam", Vector(-8680, -968, -192), 32), "AddOutput", "OnStartTouch !activator:RunScriptCode:activator.SetVelocity(Vector(null 0 -600 -100))", 0, null, null)
         for (local gel = null; gel = Entities.FindByName(gel, "s_sphere_12");) {
             gel.__KeyValueFromString("paint_type", "0")
         }
-
         Entities.FindByName(null, "ml_jump_1").__KeyValueFromString("targetname", "ml_jump_1_p2mmoverride")
         Entities.FindByName(null, "ml_jump_2").__KeyValueFromString("targetname", "ml_jump_2_p2mmoverride")
         EntFire("gel_relay", "AddOutput", "OnTrigger ml_jump_1_p2mmoverride:Open::17")
@@ -386,28 +384,20 @@ function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSO
         EntFire("relay_moveplat_r", "AddOutput", "OnTrigger ml_jump_2_p2mmoverride:Open")
         EntFire("relay_moveplat_l", "AddOutput", "OnTrigger ml_jump_2_p2mmoverride:Close")
         Entities.FindByNameNearest("s_sphere_10", Vector(-4736, -2824, -512), 32).__KeyValueFromString("paint_type", "0")
+        
         Entities.FindByName(null, "launch_arm16").SetOrigin(Vector(1560, -4988, -328))
         Entities.FindByName(null, "launch_arm16").SetAngles(-90, 180, 90)
         Entities.FindByName(null, "launch_arm16").__KeyValueFromString("skin", "0")
         Entities.FindByName(null, "launch_sound16").SetOrigin(Vector(1560, -4988, -328))
-
         Entities.FindByName(null, "launch_arm14").SetOrigin(Vector(3712, -2492, -176))
         Entities.FindByName(null, "launch_arm14").SetAngles(-90 270 0)
         Entities.FindByName(null, "launch_sound14").SetOrigin(Vector(3712, -2492, -176))
 
         Entities.FindByNameNearest("s_sphere_8", Vector(1472, -4352, -704), 32).__KeyValueFromString("paint_type", "0")
         Entities.FindByNameNearest("s_sphere_8", Vector(1456, -4096, -656), 32).__KeyValueFromString("paint_type", "0")
-
         for (local paint = null; paint = Entities.FindByName(paint, "j_sphere_2");) {
             paint.__KeyValueFromString("paint_type", "2")
         }
-        local floor = Entities.CreateByClassname("prop_dynamic")
-        floor.SetOrigin(Vector(3712, 256, 0))
-        floor.SetAngles(90, 90, 0)
-        floor.__KeyValueFromString("model", "models/props_underground/wood_panel_64x128_01.mdl")
-        floor.__KeyValueFromString("solid", "6")
-        floor.__KeyValueFromString("physicsmode", "1")
-        InitializeEntity(floor)
 
         local fan = Entities.CreateByClassname("prop_dynamic")
         fan.SetOrigin(Vector(-9127, -1588, -36))

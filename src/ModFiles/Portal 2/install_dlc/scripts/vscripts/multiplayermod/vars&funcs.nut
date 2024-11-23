@@ -1989,7 +1989,7 @@ function SendChatMessage(message, pActivatorAndCaller = null) {
         printl("(P2:MM): " + message) // public messages dont print to console on dedicated, since we are not a player here
     }
 
-    SendToChat(pActivatorAndCaller, color + "(P2:MM): " + message)
+    SendToChat(color + "(P2:MM): " + message, pActivatorAndCaller)
 
     // Note that "\x05" is used for private messages with more than one person
     // You will need to create a special case to use it (see cc/tp.nut for an example)

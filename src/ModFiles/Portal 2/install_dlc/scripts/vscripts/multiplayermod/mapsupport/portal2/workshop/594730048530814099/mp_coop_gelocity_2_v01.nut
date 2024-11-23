@@ -111,7 +111,7 @@ function WonRace(playerClass) {
     }
 
     HudPrint(playerClass.player.entindex(), "FINISHED " + lWinnerList.len() + placeString + "!", Vector(-1, 0.2, 3), 0, 0.0, placeColor, 255, Vector(0, 0, 0), 0, Vector(0.5, 0.5, 1.5))
-    SendToChat(0, "\x04" + playerClass.username + " Has Passed The Finish Line For " + lWinnerList.len() + placeString + " Place!")
+    SendToChat("\x04" + playerClass.username + " Has Passed The Finish Line For " + lWinnerList.len() + placeString + " Place!", 0)
 }
 
 function KillLosers(player) {
@@ -151,7 +151,7 @@ function CheckCompletedLaps(player, checkpoint) {
     if (playerClass.i_CompletedLaps == (iGameLaps - 1) && !bFinalLap) {
         EntFire("last_lap", "PlaySound")
         HudPrint(playerClass.player.entindex(), "FINAL LAP!", Vector(-1, 0.2, 3), 2, 0, Vector(255, 0, 0), 255, Vector(0, 0, 0), 0, Vector(0.5, 0.5, 1))
-        SendToChat(0, "\x04" + playerClass.username + " HAS REACHED THE FINAL LAP!")
+        SendToChat("\x04" + playerClass.username + " HAS REACHED THE FINAL LAP!", 0)
         bFinalLap = true
     }
     // Other player have reached the final lap.

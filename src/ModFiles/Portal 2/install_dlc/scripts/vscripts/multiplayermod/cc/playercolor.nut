@@ -47,8 +47,8 @@ CommandList.push(
                 if (pTargetPlayer != p) {
                     // Send to other player as well
                     // Special case for changing chat color to a mildly dark green
-                    SendToChat(p.entindex(), "\x05(P2:MM): Successfully reset " + pTargetPlayerText + " color.")
-                    SendToChat(pTargetPlayer.entindex(), "\x05(P2:MM): Successfully reset " + pTargetPlayerText + " color.") // Notify the other player who got colored as well
+                    SendToChat("\x05(P2:MM): Successfully reset " + pTargetPlayerText + " color.", p.entindex())
+                    SendToChat("\x05(P2:MM): Successfully reset " + pTargetPlayerText + " color.", pTargetPlayer.entindex()) // Notify the other player who got colored as well
                 } else {
                     // Only one person changed color
                     SendChatMessage("Successfully reset " + pTargetPlayerText + " color.", p)
@@ -150,8 +150,8 @@ CommandList.push(
             if (pTargetPlayer != p) {
                 // Send to other player as well
                 // Special case for changing chat color to a mildly dark green
-                SendToChat(p.entindex(), "\x05(P2:MM): Successfully changed " + pTargetPlayerText + " color.")
-                SendToChat(pTargetPlayer.entindex(), "\x05(P2:MM): Successfully changed " + pTargetPlayerText + " color.") // Notify the other player who got colored as well
+                SendToChat("\x05(P2:MM): Successfully changed " + pTargetPlayerText + " color.", p.entindex())
+                SendToChat("\x05(P2:MM): Successfully changed " + pTargetPlayerText + " color.", pTargetPlayer.entindex()) // Notify the other player who got colored as well
             } else {
                 // Only one person changed color
                 SendChatMessage("Successfully changed " + pTargetPlayerText + " color.", p)
