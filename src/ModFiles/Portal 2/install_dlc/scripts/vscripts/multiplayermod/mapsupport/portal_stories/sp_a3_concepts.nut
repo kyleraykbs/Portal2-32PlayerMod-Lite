@@ -5,8 +5,6 @@
 // ██████╔╝██║     ██████████╗██║  ██║██████╔╝██████████╗╚█████╔╝╚█████╔╝██║ ╚███║╚█████╔╝███████╗██║        ██║   ██████╔╝
 // ╚═════╝ ╚═╝     ╚═════════╝╚═╝  ╚═╝╚═════╝ ╚═════════╝ ╚════╝  ╚════╝ ╚═╝  ╚══╝ ╚════╝ ╚══════╝╚═╝        ╚═╝   ╚═════╝
 
-
-
 viewactive <- false
 tploop <- -1
 function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSOnPlayerJoin, MSOnDeath, MSOnRespawn) {
@@ -50,13 +48,19 @@ function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSO
         EntFire("AutoInstance1-@elevator_1_end_path", "AddOutput", "OnPass cs_virgil_103:Start")
 
 
-        // Make changing levels work
+        // exit elevator stuff
+        
         Entities.FindByName(null, "end_command").Destroy()
-        EntFire("InstanceAuto6-elevator_1", "AddOutput", "OnStart end_fade:Fade::2", 0, null)
+        EntFire("cs_virgil_115", "AddOutput", "OnCompletion @transition_script:RunScriptCode:TransitionReady()")
+        EntFire("exit_elevator-exit_lift_train", "AddOutput", "OnStart end_fade:Fade::2", 0, null)
+        Entities.FindByName(null, "exit_trigger").Destroy()
         if (GetMapName().find("sp_") != null) {
-            EntFire("InstanceAuto6-elevator_1", "AddOutput", "OnStart p2mm_servercommand:Command:changelevel sp_a3_paint_fling:3.5", 0, null)
-        } else EntFire("InstanceAuto6-elevator_1", "AddOutput", "OnStart p2mm_servercommand:Command:changelevel st_a3_paint_fling:3.5", 0, null)
-
+            Entities.FindByName(null, "InstanceAuto6-elevator_1").__KeyValueFromString("dmg", "100")
+            EntFire("InstanceAuto6-elevator_1_path_12", "AddOutput", "OnPass @transition_script:RunScriptCode:FailSafeTransition()")
+        } else {
+            Entities.FindByName(null, "InstanceAuto9-elevator_1").__KeyValueFromString("dmg", "100")
+            EntFire("InstanceAuto9-elevator_1_path_12", "AddOutput", "OnPass @transition_script:RunScriptCode:FailSafeTransition()")
+        }
     }
 
     if (MSPostPlayerSpawn) {
@@ -145,4 +149,3 @@ function TeleportFailsafe() {
         }
     }
 }
-

@@ -34,7 +34,6 @@ function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSO
         EntFire("viewcontrol_melgun", "SetParentAttachment", "camera_attach")
         EntFire("relay_melgun", "AddOutput", "OnTrigger !self:RunScriptCode:playerdrawdisable()")
         EntFire("relay_melgun", "AddOutput", "OnTrigger melgun_glass:EnableDraw") // not sure why this breaks in mp. valv moment
-        Entities.FindByName(null, "end_command").Destroy()
 
         // prevent doors from closing        
         Entities.FindByName(null, "sleep_lab_real_door").__KeyValueFromString("targetname", "sleep_lab_real_dooroverride")
@@ -44,7 +43,19 @@ function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSO
         Entities.FindByName(null, "ap_sleepy_room").__KeyValueFromString("targetname", "ap_sleepy_room_p2mmoverride")
         Entities.FindByName(null, "cs_virgil_1").__KeyValueFromString("targetname", "cs_virgil_1_p2mmoverride")
 
-        Entities.FindByName(null, "blackin").__KeyValueFromString("targetname", "blackin_p2mmoverride")
+        // delay unlocking the vault levers to prevent a cosmetic bug when turning the power on and opening vault at the same time
+        Entities.FindByName(null, "hatch_control_on_rl").__KeyValueFromString("targetname", "hatch_control_on_rl_p2mmoverride")
+        EntFire("power_on_rl", "AddOutput", "OnTrigger hatch_control_on_rl_p2mmoverride:Trigger::2.1:-1")
+        EntFire("vault_manager", "AddOutput", "OnChangeToAllTrue hatch_control_on_rl_p2mmoverride:Kill")
+
+        // fixing a vanilla bug that allows a lever to be pressed again even after vault scene is triggered
+        // also the parent gets cleared too fast so levers look weird in general when scene plays
+        while (Entities.FindByName(null, "Lever_Model")) {
+            Entities.FindByName(null, "Lever_Model").__KeyValueFromString("targetname", "Lever_Model_p2mmoverride")
+        }
+        EntFire("vault_manager", "AddOutput", "OnChangeToAllTrue Lever_Model_p2mmoverride:ClearParent::0.85")
+        EntFire("vault_manager", "AddOutput", "OnChangeToAllTrue hatch_door1:Kill::0.9")
+        EntFire("vault_manager", "AddOutput", "OnChangeToAllTrue hatch_door:Kill::0.9")
 
         // remove death fade
         Entities.FindByName(null, "AutoInstance1-fade2death1").Destroy()
@@ -61,16 +72,23 @@ function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSO
         if (GetMapName().find("sp_") != null) {
             EntFire("InstanceAuto2-exit_lift_train", "AddOutput", "OnStart p2mm_servercommand:Command:changelevel sp_a2_underbounce:3.5", 0, null)
         } else EntFire("InstanceAuto2-exit_lift_train", "AddOutput", "OnStart p2mm_servercommand:Command:changelevel st_a2_underbounce:3.5", 0, null)
+        // exit elevator stuff
+        Entities.FindByName(null, "end_command").Destroy()
+        Entities.FindByClassnameNearest("trigger_once", Vector(-6312, 4456, -312), 32).Destroy()
+
     }
     
     if (MSPostPlayerSpawn) {
         EntFire("cs_virgil_1_p2mmoverride", "Start")
         EntFire("blackin_p2mmoverride", "SetAnimation", "exit1")
     }
+
     if (MSLoop) {
-        for (local p; p = Entities.FindByClassnameWithin(p, "player", Vector(-5023.5, 3991.5, -10000), 8656);) {
-            EntFireByHandle(p, "sethealth", "\"-100\"", 0, null, null)
-        } // lets pray that this area is correct :>
+        foreach (player in CreateTrigger("player", -10128, 1408, -840, -3472, 8064, -3400)) {
+            if (player.GetClassname() == "player") {
+                EntFireByHandle(player, "sethealth", "\"-10000\"", 0, null, null)
+            }
+        }
     }
 }
 

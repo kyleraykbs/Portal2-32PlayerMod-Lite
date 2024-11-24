@@ -26,14 +26,19 @@ function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSO
         EntFire("button_p2mm", "AddOutput", "OnPressed door1_p2mm_override:SetAnimation:open:0.3", 0, null)
         EntFire("button_p2mm", "AddOutput", "OnUnPressed door1_p2mm_override:SetAnimation:close:0.3", 0, null)
 
+        EntFire("Power_On_Start_Relay", "AddOutput", "OnTrigger !self:RunScriptCode:Teleport():8.2")
+
         // checkpoint
         EntFire("Door_1_ct", "AddOutput", "OnStartTouch !self:RunScriptCode:Checkpoint()")
 
         // Make changing levels work
-        EntFire("InstanceAuto16-exit_lift_train", "AddOutput", "OnStart end_fade:Fade::2", 0, null)
         if (GetMapName().find("sp_") != null) {
+            EntFire("InstanceAuto16-exit_lift_train", "AddOutput", "OnStart end_fade:Fade::2", 0, null)
             EntFire("InstanceAuto16-exit_lift_train", "AddOutput", "OnStart p2mm_servercommand:Command:changelevel sp_a2_once_upon:3.5", 0, null)
-        } else EntFire("InstanceAuto16-exit_lift_train", "AddOutput", "OnStart p2mm_servercommand:Command:changelevel st_a2_once_upon:3.5", 0, null)
+        } else {
+            EntFire("InstanceAuto13-exit_lift_train", "AddOutput", "OnStart p2mm_servercommand:Command:changelevel st_a2_once_upon:3.5", 0, null)
+            EntFire("InstanceAuto13-exit_lift_train", "AddOutput", "OnStart end_fade:Fade::2", 0, null)
+        }
     }
     
     if (MSPostPlayerSpawn) {
@@ -46,4 +51,10 @@ function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSO
 function Checkpoint() {
     Entities.FindByClassname(null, "info_player_start").SetOrigin(Vector(1824, 256, 165))
     Entities.FindByClassname(null, "info_player_start").SetAngles(0, 90, 0)
+}
+
+function Teleport() {
+    for (local p; p = Entities.FindByClassname(p, "player");) {
+        p.SetOrigin(Vector(-552, -192, 162))
+    } 
 }

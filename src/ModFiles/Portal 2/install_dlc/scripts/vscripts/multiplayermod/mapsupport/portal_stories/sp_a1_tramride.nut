@@ -20,7 +20,7 @@ function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSO
         
         playerSpawn <- Entities.FindByClassnameNearest("info_player_start", Vector(-2992, -344, 5), 9999)
         playerSpawn.__KeyValueFromString("targetname", "playerSpawn")
-        playerSpawn.SetAngles(0, 180, 0)
+        playerSpawn.SetAngles(0, 90, 0)
         playerSpawn.SetOrigin(Vector(-2992, -334, 5)) //! This needs to be moved after the starting cut scene
         
         // Make intro screen work

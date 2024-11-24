@@ -30,6 +30,9 @@ function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSO
         EntFire("Blue_gel_exit_button", "AddOutput", "OnPressed ap4_p2mmoverride:open")
         EntFire("door", "AddOutput", "OnPressed model_p2mmoverride:SetAnimation:open")
 
+        // for some reason the catapult helper resets in mp? :clueless:
+        Entities.FindByName(null, "fake_catapult").__KeyValueFromString("useThresholdCheck", "1")
+
         // checkpoints
         EntFire("close_orange_trigger", "AddOutput", "OnStartTouch !self:RunScriptCode:Checkpoint(1)")
         EntFire("Blue_gel_exit_button", "AddOutput", "OnPressed !self:RunScriptCode:Checkpoint(2)")
