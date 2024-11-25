@@ -160,7 +160,6 @@ function Vote::DoVote(arg1 = null) {
                 EntFire("p2mm_servercommand", "command", "kick " + FindPlayerClass(FindPlayerByName(VoteInstanceArray[0].Arg2)).username, 5)
                 break
             case "duogunonly":
-                // TODO: This doesn't account for gamemodes apart from "standard"
                 // How do we deal with other weapon classes?
                 if (!IsDedicatedServer()) {
                     SendChatMessage("[VOTE] Stripping all player guns except host in 5 seconds.")
