@@ -16,9 +16,9 @@
 //*	}
 
 //? `GEClientActive` is the plugin's ClientActive callback function.
-//*	"GEClientActive" // Called when a player is "activated" in the server, meaning fully loaded, not fully connect which happens before that.
-//*	{
-//*		"userid"	"short"		// user ID on server
+//*	"GEClientActive" // Called when a player is "activated" in the server, meaning fully loaded. This is not the same as fully connect which happens before ClientActive.
+//*	{	
+//* 	"userid"	"short"		// user ID on server
 //*		"entindex"	"int"		// user index on server
 //*	}
 
@@ -26,6 +26,12 @@
 //*	"GEGameFrame" // Called every server frame, used for the VScript loop. Warning: Don't do too intensive tasks with this!
 //*	{
 //*		"simulating" "bool"	
+//*	}
+
+//? `GEPlayerRespawn` is called by the hooked respawn function the game uses to respawn players.
+//*	"GEPlayerRespawn" // Called when a player respawns.
+//* {
+//*		"playerHandle" "HSCRIPT" // player's VScript handle
 //*	}
 
 //=========== (C) Copyright 1999 Valve, L.L.C. All rights reserved. ===========
@@ -57,7 +63,7 @@
 
 "ModEvents"
 {
-	"portal_player_touchedground"	//! player landed || Doesn't work, "player_landed" does instead.
+	"portal_player_touchedground"	// player landed || //! Doesn't work, "player_landed" does instead.
 	{
 		"userid"	"short"		// user ID on server
 	}
