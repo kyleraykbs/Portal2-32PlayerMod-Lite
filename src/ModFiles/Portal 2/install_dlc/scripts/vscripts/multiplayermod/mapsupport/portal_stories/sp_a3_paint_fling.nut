@@ -7,6 +7,8 @@
 
 function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSOnPlayerJoin, MSOnDeath, MSOnRespawn) {
     if (MSInstantRun) {
+        GlobalSpawnClass.m_bUseAutoSpawn <- true
+
         UTIL_Team.Spawn_PortalGun(true)
 
         // Enable pinging and disable taunting
@@ -18,8 +20,6 @@ function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSO
         EntFire("InstanceAuto52-light_elevator_fill", "TurnOn")
         EntFire("InstanceAuto52-signs_on", "Trigger")
         EntFire("InstanceAuto52-light_elevator_dynamic", "TurnOn")
-        Entities.FindByClassname(null, "info_player_start").SetOrigin(Vector(-368, -384, -64))
-        Entities.FindByClassname(null, "info_player_start").SetAngles(0, 0, 0)
 
         // make doors not close
         Entities.FindByName(null, "Entrance_Door").__KeyValueFromString("targetname", "Entrance_Door_p2mm_override")
