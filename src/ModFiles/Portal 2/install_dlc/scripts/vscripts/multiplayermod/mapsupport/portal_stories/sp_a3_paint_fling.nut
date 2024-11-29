@@ -47,6 +47,7 @@ function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSO
     }
 }
 function Checkpoint() {
+    GlobalSpawnClass.m_bUseAutoSpawn <- false
     Entities.FindByClassname(null, "info_player_start").SetOrigin(Vector(-896, 1103.99, 256))
     Entities.FindByClassname(null, "info_player_start").SetAngles(0, 90, 0)
 }
