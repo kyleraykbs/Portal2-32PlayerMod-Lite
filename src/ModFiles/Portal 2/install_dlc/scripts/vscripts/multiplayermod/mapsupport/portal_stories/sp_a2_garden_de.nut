@@ -16,7 +16,6 @@ function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSO
 
         // delete box spawn
         Entities.FindByClassnameNearest("info_player_start", Vector(1648, 2552, 1828), 999).Destroy()
-        playerpoint <- Entities.FindByClassname(null, "info_player_start")
 
         // Melgun Cutscene
         Entities.FindByName(null, "viewcontrol_melgun").Destroy()

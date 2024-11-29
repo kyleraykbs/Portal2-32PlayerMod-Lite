@@ -7,6 +7,7 @@
 
 function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSOnPlayerJoin, MSOnDeath, MSOnRespawn) {
     if (MSInstantRun) {
+        GlobalSpawnClass.m_bUseAutoSpawn <- true
         // Spawn With Portal Gun
         UTIL_Team.Spawn_PortalGun(true)
 
@@ -30,10 +31,6 @@ function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSO
 
         // delete box spawn
         Entities.FindByClassnameNearest("info_player_start", Vector(7056, -384, -40), 127).Destroy()
-
-        // remove auto elevator start
-        Entities.FindByClassnameNearest("logic_auto", Vector(3072, -1016, 1476), 127).Destroy()
-        Entities.FindByName(null, "elevator-start_trigger").Destroy()
         
         // Make changing levels work
         EntFire("exit_elevator-exit_lift_train", "AddOutput", "OnStart end_fade:Fade::2", 0, null)
@@ -42,13 +39,9 @@ function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSO
         } else EntFire("exit_elevator-exit_lift_train", "AddOutput", "OnStart p2mm_servercommand:Command:changelevel st_a2_past_power:3.5", 0, null)
 
     }
-    
-    if (MSPostPlayerSpawn) {
-        EntFire("elevator-entrance_lift_train", "StartForward")
-        Entities.FindByClassname(null, "info_player_start").SetOrigin(Vector(3072, -1120, 1864))
-    }
 }
 function Checkpoint() {
+    GlobalSpawnClass.m_bUseAutoSpawn <- false
     Entities.FindByClassname(null, "info_player_start").SetOrigin(Vector(2720, -2880, 2197))
     Entities.FindByClassname(null, "info_player_start").SetAngles(0, 180, 0)
 }

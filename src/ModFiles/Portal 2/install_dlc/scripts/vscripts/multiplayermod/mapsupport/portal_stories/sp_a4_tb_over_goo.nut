@@ -7,6 +7,7 @@
 
 function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSOnPlayerJoin, MSOnDeath, MSOnRespawn) {
     if (MSInstantRun) {
+        GlobalSpawnClass.m_bUseAutoSpawn <- true
         UTIL_Team.Spawn_PortalGun(true)
 
         // Enable pinging and disable taunting
@@ -33,9 +34,6 @@ function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSO
         // checkpoint
         EntFireByHandle(Entities.FindByClassnameNearest("trigger_once", Vector(440, -3520, 592), 32), "AddOutput", "OnTrigger !self:RunScriptCode:Checkpoint()", 0, null, null)
 
-        // set the player spawn
-        Entities.FindByClassname(null, "info_player_start").SetOrigin(Vector(0, -1264, 208))
-
         // Make changing levels work
         Entities.FindByName(null, "end_command").Destroy()
         EntFire("InstanceAuto32-elevator_1", "AddOutput", "OnStart end_fade:Fade::2", 0, null)
@@ -46,6 +44,7 @@ function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSO
     }
 }
 function Checkpoint() {
+    GlobalSpawnClass.m_bUseAutoSpawn <- false
     Entities.FindByClassname(null, "info_player_start").SetOrigin(Vector(600, -3592, 592))
     Entities.FindByClassname(null, "info_player_start").SetAngles(0, -54, 0)
 }

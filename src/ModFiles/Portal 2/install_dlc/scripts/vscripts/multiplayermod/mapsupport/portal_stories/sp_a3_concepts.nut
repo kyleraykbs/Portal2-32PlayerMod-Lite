@@ -56,10 +56,10 @@ function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSO
         Entities.FindByName(null, "exit_trigger").Destroy()
         if (GetMapName().find("sp_") != null) {
             Entities.FindByName(null, "InstanceAuto6-elevator_1").__KeyValueFromString("dmg", "100")
-            EntFire("InstanceAuto6-elevator_1_path_12", "AddOutput", "OnPass @transition_script:RunScriptCode:FailSafeTransition()")
+            EntFire("InstanceAuto6-elevator_1_path_12", "AddOutput", "OnPass p2mm_servercommand:Command:changelevel sp_a3_paint_fling")
         } else {
             Entities.FindByName(null, "InstanceAuto9-elevator_1").__KeyValueFromString("dmg", "100")
-            EntFire("InstanceAuto9-elevator_1_path_12", "AddOutput", "OnPass @transition_script:RunScriptCode:FailSafeTransition()")
+            EntFire("InstanceAuto9-elevator_1_path_12", "AddOutput", "OnPass p2mm_servercommand:Command:changelevel st_a3_paint_fling")
         }
     }
 

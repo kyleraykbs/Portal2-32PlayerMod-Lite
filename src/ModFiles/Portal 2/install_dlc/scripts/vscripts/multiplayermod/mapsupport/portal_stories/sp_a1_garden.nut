@@ -22,6 +22,10 @@ function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSO
         Entities.FindByName(null, "AutoInstance1-@huge_doors_close_relay").Destroy()
         Entities.FindByName(null, "sleep_movie").__KeyValueFromString("targetname", "playmovie_p2mm_override")
         
+        Entities.FindByName(null, "death_fade-proxy").Destroy()
+        EntFireByHandle(Entities.FindByClassnameNearest("trigger_multiple", Vector(48, 2176, -72), 32), "AddOutput", "OnTrigger !activator:sethealth:-999999999", 0, null, null)
+
+
         EntFire("sleep_button", "AddOutput", "OnPressed playmovie_p2mm_override:playmovieforallplayers")
 
         // Make changing levels work

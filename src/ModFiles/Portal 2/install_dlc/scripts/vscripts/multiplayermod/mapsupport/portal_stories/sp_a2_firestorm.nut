@@ -14,11 +14,13 @@ function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSO
         // Enable pinging and disable taunting
         UTIL_Team.Pinging(true)
         UTIL_Team.Taunting(false)
+        GlobalSpawnClass.m_bUseAutoSpawn <- true
 
         // elevator stuff
         Entities.FindByClassnameNearest("info_player_start", Vector(-96, 288, 996), 64).Destroy()
         Entities.FindByClassnameNearest("logic_auto", Vector(192, -2672, 404), 64).Destroy()
         Entities.FindByName(null, "InstanceAuto15-start_trigger").Destroy()
+        EntFire("InstanceAuto15-entrance_lift_train", "StartForward", null, 0)
 
         // prevent doors/pathways from closing
         Entities.FindByName(null, "intro_door_trigger").__KeyValueFromString("targetname", "intro_door_trigger_p2mmoverride")
@@ -48,7 +50,6 @@ function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSO
         EntFire("pumproom_lift_ascend_trigger", "AddOutput", "OnTrigger !self:RunScriptCode:Checkpoint(4)")
         EntFire("pumproom_lift_tracktrain_path_top", "AddOutput", "OnPass !self:RunScriptCode:Checkpoint(5)")
         EntFireByHandle(Entities.FindByClassnameNearest("trigger_once", Vector(3240, 2300, 320.25), 128), "AddOutput", "OnTrigger !self:RunScriptCode:Checkpoint(6)", 0, null, null)
-
         // // teleport everyone when lift is activated
         // Entities.FindByName(null, "Achievement_Fire_Fighter").__KeyValueFromString("targetname", "doteleport")
         // Entities.FindByName(null, "explosion_ambience_sound_1").__KeyValueFromString("targetname", "doteleport1")
@@ -57,22 +58,21 @@ function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSO
         Entities.FindByClassnameNearest("prop_dynamic_override", Vector(-876, 1626, 26), 64).__KeyValueFromString("targetname", "Hoopy_The_Hoop")
 
         // Make changing levels work
-        Entities.FindByClassnameNearest("trigger_once", Vector(4976, 2160, 2497.13), 64).__KeyValueFromString("targetname", "p2mm_endleveltrigger")
         Entities.FindByName(null, "end_command").Destroy()
         if (GetMapName().find("sp_") != null) {
-            EntFire("p2mm_endleveltrigger", "AddOutput", "OnStartTouch p2mm_servercommand:Command:changelevel sp_a3_junkyard:3", 0, null)
-        } else EntFire("p2mm_endleveltrigger", "AddOutput", "OnStartTouch p2mm_servercommand:Command:changelevel st_a3_junkyard:3", 0, null)
+            EntFireByHandle(Entities.FindByClassnameNearest("trigger_once", Vector(4976, 2160, 2497.13), 64), "AddOutput", "OnStartTouch p2mm_servercommand:Command:changelevel sp_a3_junkyard:3", 0, null, null)
+        } else EntFireByHandle(Entities.FindByClassnameNearest("trigger_once", Vector(4976, 2160, 2497.13), 64), "AddOutput", "OnStartTouch p2mm_servercommand:Command:changelevel st_a3_junkyard:3", 0, null, null)
 
     }
     
     if (MSPostPlayerSpawn) {
-        EntFire("InstanceAuto15-entrance_lift_train", "StartForward", null, 1)
         Entities.FindByClassname(null, "info_player_start").SetOrigin(Vector(192, -2672, 816))
         
     }
 }
 function Checkpoint(point) {
-    printlP2MM(1, true, "Checkpoint() called!")
+    GlobalSpawnClass.m_bUseAutoSpawn <- false
+    printlP2MM(0, true, "Checkpoint() called!")
     switch(point) {
         case 1:
             Entities.FindByClassname(null, "info_player_start").SetOrigin(Vector(90, 266, 300))

@@ -8,7 +8,7 @@
 function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSOnPlayerJoin, MSOnDeath, MSOnRespawn) {
     if (MSInstantRun) {
         // Offset coop repsawn nodes for elevators (left and right side)
-        GlobalSpawnClass.m_bUseAutoSpawn <- false
+        GlobalSpawnClass.m_bUseAutoSpawn <- true
         UTIL_Team.Spawn_PortalGun(true)
 
         // Enable pinging and disable taunting
@@ -17,6 +17,8 @@ function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSO
 
         // delete box spawn
         Entities.FindByClassnameNearest("info_player_start", Vector(-2384, -176, 596), 64).Destroy()
+    
+        EntFire("elevator-entrance_lift_train", "StartForward", null, 0)
 
         // prevent doors from closing
         Entities.FindByName(null, "elevator_door-door_close").Destroy()
@@ -36,15 +38,10 @@ function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSO
         } else EntFire("exit_elevator-exit_lift_train", "AddOutput", "OnStart p2mm_servercommand:Command:changelevel st_a2_firestorm:3.5", 0, null)
 
     }
-    
-    if (MSPostPlayerSpawn) {
-        EntFire("elevator-entrance_lift_train", "StartForward", null, 1)
-        Entities.FindByClassname(null, "info_player_start").SetOrigin(Vector(256, 400, -50))
 
-        
-    }
 }
 function Checkpoint() {
+    GlobalSpawnClass.m_bUseAutoSpawn <- false
     Entities.FindByClassname(null, "info_player_start").SetOrigin(Vector(640, -1632, -91))
     Entities.FindByClassname(null, "info_player_start").SetAngles(0, 180, 0)
 }

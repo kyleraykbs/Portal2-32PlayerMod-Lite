@@ -7,15 +7,12 @@
 
 function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSOnPlayerJoin, MSOnDeath, MSOnRespawn) {
     if (MSInstantRun) {
+        GlobalSpawnClass.m_bUseAutoSpawn <- true
         UTIL_Team.Spawn_PortalGun(true)
 
         // Enable pinging and disable taunting
         UTIL_Team.Pinging(true)
         UTIL_Team.Taunting(false)
-
-        // remove autostart elevator
-        Entities.FindByClassnameNearest("logic_auto", Vector(1360, 272, -188), 64).Destroy()
-        Entities.FindByName(null, "elevator-start_trigger").Destroy()
 
         // make doors not close
         Entities.FindByName(null, "room_1_door_0-proxy").Destroy()
@@ -29,6 +26,8 @@ function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSO
         EntFire("bts_door_2_button", "AddOutput", "OnPressed bts_door_2_p2mmoverride:SetAnimation:open")
         EntFire("Blue_gel_exit_button", "AddOutput", "OnPressed ap4_p2mmoverride:open")
         EntFire("door", "AddOutput", "OnPressed model_p2mmoverride:SetAnimation:open")
+
+        EntFire("room_1_door_0-door_open", "Trigger")
 
         // for some reason the catapult helper resets in mp? :clueless:
         Entities.FindByName(null, "fake_catapult").__KeyValueFromString("useThresholdCheck", "1")
@@ -50,15 +49,9 @@ function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSO
         } else EntFire("AutoInstance1-exit_elevator-exit_lift_train", "AddOutput", "OnStart p2mm_servercommand:Command:changelevel st_a2_ramp:3.5", 0, null)
 
     }
-    
-    if (MSPostPlayerSpawn) {
-        EntFire("elevator-entrance_lift_train", "StartForward", null, 1)
-        EntFire("room_1_door_0-door_open", "Trigger", null, 6)
-        Entities.FindByClassname(null, "info_player_start").SetOrigin(Vector(1240, 272, 224))
-
-    }
 }
 function Checkpoint(point) {
+    GlobalSpawnClass.m_bUseAutoSpawn <- false
     switch(point) {
         case 1:
             Entities.FindByClassname(null, "info_player_start").SetOrigin(Vector(-2236, -528, -128))

@@ -7,6 +7,7 @@
 
 function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSOnPlayerJoin, MSOnDeath, MSOnRespawn) {
     if (MSInstantRun) {
+        GlobalSpawnClass.m_bUseAutoSpawn <- true
         UTIL_Team.Spawn_PortalGun(true)
 
         // Enable pinging and disable taunting
@@ -19,7 +20,6 @@ function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSO
         EntFire("arrival_logic-signs_on", "Trigger")
         EntFire("arrival_logic-light_elevator_dynamic", "TurnOn")
 
-        Entities.FindByClassname(null, "info_player_start").SetOrigin(Vector(-112, -64, 336))
         Entities.FindByClassname(null, "info_player_start").SetAngles(0, 0, 0)
 
         // make doors not close
@@ -43,6 +43,7 @@ function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSO
     }
 }
 function Checkpoint() {
+    GlobalSpawnClass.m_bUseAutoSpawn <- false
     Entities.FindByClassname(null, "info_player_start").SetOrigin(Vector(-224, 709, 840))
     Entities.FindByClassname(null, "info_player_start").SetAngles(0, 90, 0)
 }

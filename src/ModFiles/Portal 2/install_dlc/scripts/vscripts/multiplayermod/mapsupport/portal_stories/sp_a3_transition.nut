@@ -8,7 +8,7 @@
 function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSOnPlayerJoin, MSOnDeath, MSOnRespawn) {
     if (MSInstantRun) {
         // Offset coop repsawn nodes for elevators (left and right side)
-        GlobalSpawnClass.m_bUseAutoSpawn <- false
+        GlobalSpawnClass.m_bUseAutoSpawn <- true
         UTIL_Team.Spawn_PortalGun(true)
 
         // Enable pinging and disable taunting
@@ -66,8 +66,8 @@ function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSO
         Entities.FindByName(null, "oa_entry_finish").Destroy()
         
         // checkpoint
-        EntFireByHandle(Entities.FindByClassnameNearest("trigger_once", Vector(2152, -944, 509.75), 32), "AddOutput", "OnTrigger !self:RunScriptCode:Checkpoint(1)", 0, null, null)
-        EntFire("oa_lever_button", "AddOutput", "OnPressed !self:RunScriptCode:Checkpoint(2)")
+        EntFireByHandle(Entities.FindByClassnameNearest("trigger_once", Vector(2152, -944, 509.75), 32), "AddOutput", "OnTrigger !self:RunScriptCode:Checkpoint(2)", 0, null, null)
+        EntFire("oa_lever_button", "AddOutput", "OnPressed !self:RunScriptCode:Checkpoint(3)")
 
         // elevator cutscene
         elevatorvcontrol <- Entities.CreateByClassname("point_viewcontrol_multiplayer")
@@ -92,12 +92,17 @@ function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSO
             
 }
 function Checkpoint(point) {
+    GlobalSpawnClass.m_bUseAutoSpawn <- false
     switch(point) {
         case 1:
+            Entities.FindByClassname(null, "info_player_start").SetOrigin(Vector(-528, -2445, 420))
+            Entities.FindByClassname(null, "info_player_start").SetAngles(0, 0, 0)
+            return
+        case 2:
             Entities.FindByClassname(null, "info_player_start").SetOrigin(Vector(2152, -944, 509.75))
             Entities.FindByClassname(null, "info_player_start").SetAngles(0, 90, 0)
             return
-        case 2:
+        case 3:
             Entities.FindByClassname(null, "info_player_start").SetOrigin(Vector(3875, 580, 216))
             Entities.FindByClassname(null, "info_player_start").SetAngles(0, 90, 0)
             return
