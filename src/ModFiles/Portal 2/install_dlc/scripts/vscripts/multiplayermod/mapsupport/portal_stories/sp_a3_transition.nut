@@ -20,7 +20,6 @@ function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSO
         EntFire("InstanceAuto40-light_elevator_fill", "TurnOn")
         EntFire("InstanceAuto40-signs_on", "Trigger")
         EntFire("InstanceAuto40-light_elevator_dynamic", "TurnOn")
-        Entities.FindByClassname(null, "info_player_start").SetOrigin(Vector(0, -2224, 64))
 
         // trap elevator
         EntFire("trap_player_rl", "AddOutput", "OnTrigger lift_train:StartForward::2.01")
@@ -128,7 +127,7 @@ function EndScene() {
     }
 }
 function StartScene() {
-    if (Config_TrollFaceMode) {
+    if (Config_DisableMelCutscenes) {
         for (local p; p = Entities.FindByClassname(p, "player");) {
             p.SetOrigin(Vector(-688, -2445, -130))
         }

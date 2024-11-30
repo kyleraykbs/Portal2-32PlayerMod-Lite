@@ -40,13 +40,11 @@ function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSO
         Entities.FindByClassnameNearest("info_player_start", Vector(4864, 1008, 2644), 64).Destroy()
 
         // Make changing levels work
-        Entities.FindByName(null, "sphere_transfer").Destroy()
         Entities.FindByClassnameNearest("trigger_once", Vector(4864, 1008, 2644), 64).Destroy()
         Entities.FindByClassnameNearest("trigger_once", Vector(-4064 5232 1524.53), 64).Destroy()
-        EntFire("AutoInstance1-exit_elevator-exit_lift_train", "AddOutput", "OnStart end_fade:Fade::2", 0, null)
         if (GetMapName().find("sp_") != null) {
-            EntFire("AutoInstance1-exit_elevator-exit_lift_train", "AddOutput", "OnStart p2mm_servercommand:Command:changelevel sp_a2_ramp:3.5", 0, null)
-        } else EntFire("AutoInstance1-exit_elevator-exit_lift_train", "AddOutput", "OnStart p2mm_servercommand:Command:changelevel st_a2_ramp:3.5", 0, null)
+            EntFire("sphere_transfer", "AddOutput", "OnStart p2mm_servercommand:Command:changelevel sp_a2_ramp:3.5", 0, null)
+        } else EntFire("sphere_transfer", "AddOutput", "OnStart p2mm_servercommand:Command:changelevel st_a2_ramp:3.5", 0, null)
 
     }
 }

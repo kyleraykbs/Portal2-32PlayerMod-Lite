@@ -30,8 +30,8 @@ Config_UseCustomDevModels <- false
 // Set false if you want to disable the prompt that appears once at the start at every play session.
 Config_FirstRunPrompt <- true
 
-// Set to true if you want to disable cutscenes (can make for some funny moments, Portal Stories: Mel only)
-Config_TrollFaceMode <- false
+// Set to true if you want to disable cut scenes for Portal Stories: Mel (can make for some funny moments)
+Config_DisableMelCutscenes <- false
 
 // Set true/false if you want to randomize every Turret's models and colors and the Frankenturret's colors.
 // The second one when true will make the models and colors constantly change instead of once.
@@ -204,13 +204,13 @@ try {
 }
 
 try {
-    if (typeof(Config_TrollFaceMode) != "bool") {
-        Config_TrollFaceMode <- false
-        ConfigValueError("Invalid", "Config_TrollFaceMode")
+    if (typeof(Config_DisableMelCutscenes) != "bool") {
+        Config_DisableMelCutscenes <- false
+        ConfigValueError("Invalid", "Config_DisableMelCutscenes")
     }
 } catch (exception) {
-    Config_TrollFaceMode <- false
-    ConfigValueError("Undefined", "Config_TrollFaceMode")
+    Config_DisableMelCutscenes <- false
+    ConfigValueError("Undefined", "Config_DisableMelCutscenes")
 }
 
 try {

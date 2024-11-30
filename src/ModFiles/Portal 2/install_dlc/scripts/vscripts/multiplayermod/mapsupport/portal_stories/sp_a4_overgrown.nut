@@ -16,8 +16,6 @@ function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSO
         UTIL_Team.Pinging(true)
         UTIL_Team.Taunting(false)
 
-
-
         // delete elevator start trigger
         Entities.FindByName(null, "intro_elevator_1_interior_start_trigger").Destroy()
 
@@ -78,7 +76,7 @@ function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSO
         EntFire("intro_elevator_train", "MoveToPathNode", "AutoInstance1-@elevator_1_bottom_path_1", 0.1)
         EntFire("intro_light_elevator_dynamic", "TurnOn")
 
-        if (Config_TrollFaceMode) {
+        if (Config_DisableMelCutscenes) {
             Entities.FindByName(null, "intro_elevator").__KeyValueFromString("targetname", "intro_elevator_p2mmoverride")
             EntFireByHandle(Entities.FindByClassname(null, "info_player_start"), "setparent", "intro_elevator_p2mmoverride", 0, null, null)
             EntFire("intro_lift_flicker_timer", "AddOutput intro_elevator:Skin:3", "OnTimer ", 0)

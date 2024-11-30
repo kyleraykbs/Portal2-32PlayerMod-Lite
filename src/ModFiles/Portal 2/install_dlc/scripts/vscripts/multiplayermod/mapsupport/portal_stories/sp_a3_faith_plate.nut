@@ -34,7 +34,7 @@ function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSO
         // remove death fade
         Entities.FindByName(null, "Death_Fade").Destroy()
 
-        if (!Config_TrollFaceMode) {
+        if (!Config_DisableMelCutscenes) {
             // elevator cutscene setup
             EntFire("AutoInstance2-elevator_1_player_teleport", "AddOutput", "OnStartTouch !self:RunScriptCode:StartScene():1")
             elevator_viewcontrol <- Entities.CreateByClassname("point_viewcontrol_multiplayer")

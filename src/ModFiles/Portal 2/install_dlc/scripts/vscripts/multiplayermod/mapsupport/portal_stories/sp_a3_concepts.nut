@@ -10,7 +10,7 @@ tploop <- -1
 function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSOnPlayerJoin, MSOnDeath, MSOnRespawn) {
     if (MSInstantRun) {
         // Start without Portal Gun for starting elevator cutscene in normal mode
-        if (!Config_TrollFaceMode) {UTIL_Team.Spawn_PortalGun(false)}
+        if (!Config_DisableMelCutscenes) {UTIL_Team.Spawn_PortalGun(false)}
 
         // Enable pinging and disable taunting
         UTIL_Team.Pinging(true)
@@ -64,7 +64,7 @@ function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSO
     }
 
     if (MSPostPlayerSpawn) {
-        if (Config_TrollFaceMode) {
+        if (Config_DisableMelCutscenes) {
             EntFire("AutoInstance1-@elevator_1_end_path", "AddOutput", "OnPass !self:RunScriptCode:TeleportFailsafe():0:1")
             for (local p = null; p = Entities.FindByClassname(p, "player");) {
             }
