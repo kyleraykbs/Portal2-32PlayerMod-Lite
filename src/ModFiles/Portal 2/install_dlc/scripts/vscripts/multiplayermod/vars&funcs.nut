@@ -1515,8 +1515,9 @@ function BestGuessSpawnpoint() {
             for (local ent = null; ent = Entities.FindByClassname(ent, "trigger_once");) {
                 if (ent.GetName().find("-leaving_elevator_trigger") == null) continue
 
+                // Get the position of the elevator and the elevator tube to determine where players should spawn
                 local elevator = Entities.FindByName(null, split(ent.GetName(), "-")[0] + "-elevator_1")
-                // Get the nearest elevator
+                
                 local elevator_pos = elevator.GetOrigin()
                 local elevator_model = Entities.FindByName(null, split(ent.GetName(), "-")[0] + "-elevator_tube_opener")
                 local elevator_model_pos = elevator_model.GetOrigin()

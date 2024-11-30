@@ -8,7 +8,6 @@
 EnableLights <- false
 function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSOnPlayerJoin, MSOnDeath, MSOnRespawn) {
     if (MSInstantRun) {
-        GlobalSpawnClass.m_bUseAutoSpawn <- true
         UTIL_Team.Spawn_PortalGun(true)
 
         // Enable pinging and disable taunting
@@ -21,6 +20,7 @@ function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSO
         EntFire("AutoInstance1-arrival_logic-signs_on", "Trigger")
         EntFire("AutoInstance1-arrival_logic-light_elevator_dynamic", "TurnOn")
 
+        Entities.FindByClassname(null, "info_player_start").SetOrigin(Vector(3408, -1872, -48))
         Entities.FindByClassname(null, "info_player_start").SetAngles(0, 90, 0)
 
         // remove death fade
@@ -82,7 +82,6 @@ function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSO
     }
 }
 function Checkpoint(point) {
-    GlobalSpawnClass.m_bUseAutoSpawn <- false
     switch(point) {
         case 1:
             Entities.FindByClassname(null, "info_player_start").SetOrigin(Vector(6328, -2304, 624))
