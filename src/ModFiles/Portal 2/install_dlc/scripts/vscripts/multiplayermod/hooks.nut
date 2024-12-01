@@ -251,9 +251,7 @@ function P2MMLoop() {
                 if (Entities.FindByClassname(null, "player").GetHealth() < 200003001 || Entities.FindByClassname(null, "player").GetHealth() > 230053963) {
                     g_bDoneWaiting = true
                     PostPlayerSpawn()
-                    if (GetDeveloperLevelP2MM()) {
-                        printl("=================================HEALTH SPAWN")
-                    }
+                    printlP2MM(0, true, "=================================HEALTH SPAWN")
                 }
             }
             EntFire("p2mm_wait_for_players_text", "Display")
