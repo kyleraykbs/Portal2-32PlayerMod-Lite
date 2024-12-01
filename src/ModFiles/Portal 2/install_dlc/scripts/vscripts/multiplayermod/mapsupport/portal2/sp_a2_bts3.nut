@@ -5,6 +5,8 @@
 // ██████╔╝██║     ██████████╗██║  ██║███████╗██████████╗██████╦╝   ██║   ██████╔╝██████╔╝
 // ╚═════╝ ╚═╝     ╚═════════╝╚═╝  ╚═╝╚══════╝╚═════════╝╚═════╝    ╚═╝   ╚═════╝ ╚═════╝ 
 
+flashOn <- false
+
 function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSOnPlayerJoin, MSOnDeath, MSOnRespawn) {
     if (MSInstantRun) {
         // Destroy objects
@@ -19,6 +21,8 @@ function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSO
         Entities.FindByName(null, "tube_scanner_room-shutdown_tube_objects").Destroy()
         Entities.FindByClassnameNearest("logic_auto", Vector(4231, 990, 194), 20).Destroy()
         Entities.FindByClassnameNearest("trigger_once", Vector(5952, 4624, -1736), 20).Destroy()
+        EntFire("sphere_flashlight_turnon_relay", "AddOutput", "OnTrigger !self:RunScriptCode:enableFlashlights():0.1:-1")
+
         // Set func_portal_detector to detect all portals
         Entities.FindByName(null, "blindness_detector").__KeyValueFromString("CheckAllIDs", "1")
     }
@@ -43,5 +47,22 @@ function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSO
             EntFire("instanceauto9-exit_fade", "fade")
             EntFire("p2mm_servercommand", "command", "changelevel sp_a2_bts4", 2)
         }
+
+        // Turn this players light off when they get to the lit up area
+        foreach (p in CreateTrigger("player", 9216, 3648, -512, 9088, 3520, -384)) {
+            SetFlashlightState(p.entindex(), false)
+        }
+    }
+}
+
+function enableFlashlights() {
+    flashOn = true
+    for (local p = null; p = Entities.FindByClassname(p, "player");) {
+        SetFlashlightState(p.entindex(), true)
+    }
+}
+function GEClientActive(userid, index) {
+    if (flashOn) {
+        SetFlashlightState(index, true)
     }
 }
