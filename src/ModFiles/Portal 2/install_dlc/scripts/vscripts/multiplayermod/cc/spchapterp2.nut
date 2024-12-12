@@ -20,12 +20,12 @@ CommandList.push(
             try{
                 args[0] = args[0].tointeger()
             } catch (err){
-                SendChatMessage("Type in a valid number from 1 to 9.", p)
+                SendChatMessage("[ERROR] Type in a valid number from 1 to 9.", p)
                 return
             }
 
             if (args[0].tointeger() < 1 || args[0].tointeger() > 9) {
-                SendChatMessage("Type in a valid number from 1 to 9.", p)
+                SendChatMessage("[ERROR] Type in a valid number from 1 to 9.", p)
                 return
             }
 

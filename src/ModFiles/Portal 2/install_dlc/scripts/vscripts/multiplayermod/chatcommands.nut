@@ -86,7 +86,7 @@ local IncludeScriptCC = function(script) {
     try {
         IncludeScript("multiplayermod/cc/" + script + ".nut")
     } catch (exception) {
-        p2mmlP2MM("Failed to load: multiplayermod/cc/" + script + ".nut")
+        printlP2MM("Failed to load: multiplayermod/cc/" + script + ".nut")
     }
 }
 

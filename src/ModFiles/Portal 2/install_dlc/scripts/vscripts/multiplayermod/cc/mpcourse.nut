@@ -18,12 +18,12 @@ CommandList.push(
             try{
                 args[0] = args[0].tointeger()
             } catch (exception) {
-                SendChatMessage("Type in a valid number from 0 to 6.", p)
+                SendChatMessage("[ERROR] Type in a valid number from 0 to 6.", p)
                 return
             }
 
             if (args.len() == 0 || args[0].tointeger() < 0 || args[0].tointeger() > 6) {
-                SendChatMessage("Type in a valid number from 0 to 6.", p)
+                SendChatMessage("[ERROR] Type in a valid number from 0 to 6.", p)
                 return
             }
 
