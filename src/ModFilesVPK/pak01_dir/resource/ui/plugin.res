@@ -22,7 +22,7 @@
 		"fieldName"		"PluginMenu"
 		"xpos"		"10"
 		"ypos"		"10"
-		"wide"		"400"
+		"wide"		"600"
 		"tall"		"330"
 		"autoResize"		"3"
 		"pinCorner"		"0"
