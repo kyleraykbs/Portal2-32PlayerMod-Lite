@@ -18,18 +18,13 @@ CommandList.push(
             args[0] = strip(args[0])
             local target = FindPlayerByName(args[0])
 
-            local targetOperation = false
             if ((args[0].find("@") != null) && (target == null)) {
-                targetOperation = true
-            }
-
-            if (targetOperation) {
                 switch (args[0]) {
                     case "@a":
                         for (local player; player = Entities.FindByClassname(player, "player");) {
                             SlapPlayer(player) 
                         }
-                        SendChatMessage("Slapped all players.", p)
+                        SendChatMessage("Slapped all players!", p)
                         return
 
                     case "@b":
@@ -38,7 +33,7 @@ CommandList.push(
                                 SlapPlayer(player)
                             }
                         }
-                        SendChatMessage("Slapped all Atlas players.", p)
+                        SendChatMessage("Slapped all Atlas players!", p)
                         return
 
                     case "@o":
@@ -47,7 +42,7 @@ CommandList.push(
                                 SlapPlayer(player)
                             }
                         }
-                        SendChatMessage("Slapped all P-Body players.", p)
+                        SendChatMessage("Slapped all P-Body players!", p)
                         return
                     
                     case "@s":
@@ -56,7 +51,7 @@ CommandList.push(
                                 SlapPlayer(player)
                             }
                         }
-                        SendChatMessage("Slapped all Singleplayer team players.", p)
+                        SendChatMessage("Slapped all Singleplayer team players!", p)
                         return
 
                     default:
@@ -70,7 +65,7 @@ CommandList.push(
                 return
             } else {
                 SlapPlayer(target)
-                SendChatMessage("Slapped player.", p)
+                SendChatMessage("Slapped player " + FindPlayerClass(target).username + "!", p)
             }
         }
     }

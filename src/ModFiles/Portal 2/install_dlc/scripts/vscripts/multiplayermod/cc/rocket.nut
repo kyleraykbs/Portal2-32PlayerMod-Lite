@@ -19,18 +19,13 @@ CommandList.push(
             args[0] = strip(args[0])
             local target = FindPlayerByName(args[0])
 
-            local targetOperation = false
             if ((args[0].find("@") != null) && (target == null)) {
-                targetOperation = true
-            }
-
-            if (targetOperation) {
                 switch (args[0]) {
                     case "@a":
                         for (local player; player = Entities.FindByClassname(player, "player");) {
                             RocketPlayer(player) 
                         }
-                        SendChatMessage("Rocketed all players.", p)
+                        SendChatMessage("Rocketed all players!", p)
                         return
 
                     case "@b":
@@ -39,7 +34,7 @@ CommandList.push(
                                 RocketPlayer(player)
                             }
                         }
-                        SendChatMessage("Rocketed all Atlas players.", p)
+                        SendChatMessage("Rocketed all Atlas players!", p)
                         return
 
                     case "@o":
@@ -48,7 +43,7 @@ CommandList.push(
                                 RocketPlayer(player)
                             }
                         }
-                        SendChatMessage("Rocketed all P-Body players.", p)
+                        SendChatMessage("Rocketed all P-Body players!", p)
                         return
                     
                     case "@s":
@@ -57,7 +52,7 @@ CommandList.push(
                                 RocketPlayer(player)
                             }
                         }
-                        SendChatMessage("Rocketed all Singleplayer team players.", p)
+                        SendChatMessage("Rocketed all Singleplayer team players!", p)
                         return
 
                     default:
@@ -71,7 +66,7 @@ CommandList.push(
                 return
             } else {
                 RocketPlayer(target)
-                SendChatMessage("Rocketed player.", p)
+                SendChatMessage("Rocketed player " + FindPlayerClass(target).username + "!", p)
             }
         }
     }

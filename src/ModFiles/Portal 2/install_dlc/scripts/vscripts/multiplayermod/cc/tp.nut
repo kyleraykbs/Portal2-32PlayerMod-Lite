@@ -51,7 +51,7 @@ CommandList.push(
             }
 
             if (args.len() == 0) {
-                SendChatMessage("[ERROR] Input a teleport!", p)
+                SendChatMessage("[ERROR] Input a player to teleport to!", p)
                 return
             }
             if (args.len() > 2) {
@@ -63,18 +63,13 @@ CommandList.push(
             args[0] = strip(args[0])
             local target = FindPlayerByName(args[0])
 
-            local targetOperation = false
-            if ((args[0].find("@") != null) && (target == null)) {
-                targetOperation = true
-            }
-
-            if ((target == null) && (!targetOperation)) {
+            if ((target == null) && (!(args[0].find("@") != null) && (target == null))) {
                 SendChatMessage("[ERROR] Player not found!", p)
                 return
             }
 
             if (args.len() == 1) {
-                if (targetOperation) {
+                if ((args[0].find("@") != null) && (target == null)) {
                     TeleportTargetOperation(args[0], p, p)
                     return
                 }
@@ -86,7 +81,7 @@ CommandList.push(
 
                 p.SetOrigin(target.GetOrigin())
                 p.SetAngles(target.GetAngles().x, target.GetAngles().y, target.GetAngles().z)
-                SendChatMessage("Teleported to player.", p)
+                SendChatMessage("Teleported to player " + FindPlayerClass(target).username + "!", p)
                 return
             }
 
@@ -99,7 +94,7 @@ CommandList.push(
                 return
             }
             
-            if (targetOperation) {
+            if ((args[0].find("@") != null) && (target == null)) {
                 TeleportTargetOperation(args[0], destination, p)
                 return
             }
@@ -108,12 +103,12 @@ CommandList.push(
             target.SetOrigin(destination.GetOrigin())
             target.SetAngles(destination.GetAngles().x, destination.GetAngles().y, destination.GetAngles().z)
             if (target == p) {
-                SendChatMessage("Teleported to player.", p)
+                SendChatMessage("Teleported to player " + FindPlayerClass(target).username + "!", p)
                 return
             } else {
                 // Special case for changing chat color to a mildly dark green
-                SendToChat(p.entindex(), "\x05(P2:MM): Teleported player.")
-                SendToChat(target.entindex(), "\x05(P2:MM): You've been teleported.") // Notify the other player who got teleported as well
+                SendToChat(p.entindex(), "\x05(P2:MM): Teleported player " + FindPlayerClass(target).username + " to player " + FindPlayerClass(p).username + "!")
+                SendToChat(target.entindex(), "\x05(P2:MM): You've been teleported to player " + FindPlayerClass(p).username + "!") // Notify the other player who got teleported as well
                 return
             }
         }
