@@ -48,10 +48,16 @@ function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSO
             EntFire("p2mm_servercommand", "command", "changelevel sp_a2_bts4", 2)
         }
 
-        // Turn this players light off when they get to the lit up area
+        // Turn this players light off when they get to the lit up area and enable checkpoint
         foreach (p in CreateTrigger("player", 9216, 3648, -512, 9088, 3520, -384)) {
             SetFlashlightState(p.entindex(), false)
+            Entities.FindByClassname(null, "info_player_start").SetOrigin(Vector(9153, 3584, -414))
+            flashOn = false
         }
+    }
+
+    if (MSOnRespawn && flashOn) {
+        SetFlashlightState(MSOnRespawn.entindex(), true)
     }
 }
 
