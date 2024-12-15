@@ -7,6 +7,7 @@
 
 TriggerOnceSP_A2_BTS4_1 <- true
 DisableLookDisablerSP_A2_BTS4 <- false
+alreadyFading <- false
 
 TestingHackStart <- function() {
     printlP2MM(0, true, "DOOR HACK START")
@@ -112,7 +113,7 @@ function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSO
                 printlP2MM(0, true "Wheatley Sequence Started")
                 EntFire("wheatley_start_smash_window_relay", "Trigger", "", 18, null)
                 EntFire("@glados", "RunScriptCode", "FactoryControlRoomHackSuccess()", 18, null)
-                TriggerOnceSP_A2_BTS4_1 <- false
+                TriggerOnceSP_A2_BTS4_1 = false
             }
         }
 
@@ -126,7 +127,10 @@ function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSO
 
         // Make our own changelevel trigger
         for (local p = null; p = Entities.FindByClassnameWithin(p, "player", Vector(-4080, -7232, 6328), 64);) {
-            EntFire("instanceauto17-exit_fade", "fade")
+            if (!alreadyFading) {
+                EntFire("instanceauto17-exit_fade", "fade")
+                alreadyFading = true
+            }
             EntFire("p2mm_servercommand", "command", "changelevel sp_a2_bts5", 2)
         }
     }

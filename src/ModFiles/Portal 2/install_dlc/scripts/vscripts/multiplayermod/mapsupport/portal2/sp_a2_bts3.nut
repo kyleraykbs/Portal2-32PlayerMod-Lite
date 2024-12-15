@@ -6,6 +6,7 @@
 // ╚═════╝ ╚═╝     ╚═════════╝╚═╝  ╚═╝╚══════╝╚═════════╝╚═════╝    ╚═╝   ╚═════╝ ╚═════╝ 
 
 flashOn <- false
+alreadyFading <- false
 
 function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSOnPlayerJoin, MSOnDeath, MSOnRespawn) {
     if (MSInstantRun) {
@@ -44,7 +45,10 @@ function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSO
 
         // Make our own changelevel trigger
         for (local p = null; p = Entities.FindByClassnameWithin(p, "player", Vector(5952, 4624, -1736), 100);) {
-            EntFire("instanceauto9-exit_fade", "fade")
+            if (!alreadyFading) {
+                EntFire("InstanceAuto9-exit_fade", "fade")
+                alreadyFading = true
+            }
             EntFire("p2mm_servercommand", "command", "changelevel sp_a2_bts4", 2)
         }
 
