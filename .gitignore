@@ -31,7 +31,6 @@ srctools.vdf
 srctools_sndscript_data.vdf
 bee2/
 *.mdmp
-src/ModFiles/Portal 2/install_dlc/cfg/autoexec.cfg
 vpk_override/
 *.so
 kyle.portal2.gdb.E5rc
