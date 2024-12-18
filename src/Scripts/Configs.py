@@ -57,14 +57,6 @@ def GetSysLang() -> str:
 # "description": appears as a label when the config is hovered over.
 # "warning": same as description and appears below it but in red.
 DefaultConfig = {
-    "Launcher-SFX": {
-        "value": True,
-        "menu": "general",
-        "description": "Makes the buttons play sound effects.",
-        "warning": "",
-        "prompt": ""
-    },
-
     "Active-Language": {
         "value": GetSysLang(),
         "menu": "",
@@ -72,7 +64,21 @@ DefaultConfig = {
         "warning": "",
         "prompt": ""
     },
+    "Last-Map": {
+        "value": "",
+        "menu": "",
+        "description": "The last map played.",
+        "warning": "",
+        "prompt": ""
+    },
 
+    "Launcher-SFX": {
+        "value": True,
+        "menu": "general",
+        "description": "Makes the buttons play sound effects.",
+        "warning": "",
+        "prompt": ""
+    },
     "Portal2-Path": {
         "value": "undefined",
         "menu": "general",
@@ -80,7 +86,6 @@ DefaultConfig = {
         "warning": "",
         "prompt": "Enter the path to the Portal 2 folder."
     },
-
     "Auto-Unmount": {
         "value": True,
         "menu": "general",
@@ -88,23 +93,6 @@ DefaultConfig = {
         "warning": "It's recommended to leave this on!",
         "prompt": ""
     },
-
-    "Custom-Launch-Options": {
-        "value": "",
-        "menu": "general",
-        "description": "Add your own launch options for Portal 2. Example: '+map mp_coop_lobby_3'",
-        "warning": "Leave this alone if you don't know what it does!",
-        "prompt": "Launch options for Portal 2.\nExample: '+map mp_coop_lobby_3'"
-    },
-
-    "Portal2-VR-Mod": {
-        "value": False,
-        "menu": "general",
-        "description": "Enable this to start P2:MM with the Portal 2 VR Mod.",
-        "warning": "P2VR v0.1.5 needed as latest is unstable. Make sure P2VR works before using it with P2MM!",
-        "prompt": ""
-    },
-
     "Start-From-Last-Map": {
         "value": False,
         "menu": "general",
@@ -112,13 +100,41 @@ DefaultConfig = {
         "warning": "",
         "prompt": ""
     },
-
-    "Last-Map": {
-        "value": "",
-        "menu": "",
-        "description": "The last map played.",
+    "Discord-RPC": {
+        "value": True,
+        "menu": "general",
+        "description": "Enable Discord Rich Presence for P2:MM.",
         "warning": "",
         "prompt": ""
+    },
+
+    "Portal2-VR-Mod": {
+        "value": False,
+        "menu": "advanced",
+        "description": "Enable this to start P2:MM with the Portal 2 VR Mod.",
+        "warning": "P2VR v0.1.5 needed as latest pre-release is unstable. Make sure P2VR works before using it with P2MM!",
+        "prompt": ""
+    },
+    "Discord-Webhook": {
+        "value": False,
+        "menu": "advanced",
+        "description": "Turn on using a webhook to send chat messages to Discord.",
+        "warning": "Discord-Webhook-URL must be specified for this to work.",
+        "prompt": ""
+    },
+    "Discord-Webhook-URL": {
+        "value": "",
+        "menu": "advanced",
+        "description": "Webhook URL used to send webhook events to from your server.",
+        "warning": "Console in Portal 2 will report if URL is invalid.",
+        "prompt": "Webhook used to send webhook events to from your server."
+    },
+    "Custom-Launch-Options": {
+        "value": "",
+        "menu": "advanced",
+        "description": "Add your own launch options for Portal 2. Example: '+map mp_coop_lobby_3'",
+        "warning": "Leave this alone if you don't know what it does!",
+        "prompt": "Launch options for Portal 2.\nExample: '+map mp_coop_lobby_3'"
     },
 
     "Players": {

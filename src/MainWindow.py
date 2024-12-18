@@ -162,6 +162,10 @@ class Gui:
     # Switches to the General Settings
     def Button_GeneralSettingsMenu_func(self) -> None:
         self.RefreshSettingsMenu("general")
+    
+    # Switches to the Advanced Settings
+    def Button_AdvancedSettingsMenu_func(self) -> None:
+        self.RefreshSettingsMenu("advanced")
 
     # Switches to the Player menu where you can add admins
     def Button_AdminsMenu_func(self) -> None:
