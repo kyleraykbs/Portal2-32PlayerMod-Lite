@@ -60,7 +60,7 @@ def FilterConsole(text: list[str]) -> list[str]:
             continue
 
         # gets the last loaded map
-        if text[i].startswith("(P2:MM PLUGIN): MAP LOADED:"):
+        if text[i].startswith("(P2:MM VSCRIPT): MAP LOADED:"):
             parts = text[i].split(":")
             lastMap = ":".join(parts[3:]).strip()
             continue
