@@ -18,14 +18,14 @@
     {
         "title"     "#P2MM_Lobby"
         "subtitle"  "#P2MM_Lobby"
-        "command"   "p2mm_startsession mp_coop_lobby_3"
+        "command"   "p2mm_map mp_coop_lobby_3"
         "pic"       "vgui/p2mm/lobby3"
     }
     "lastmap"
     {
         "title"     "#P2MM_LastMap_t"
         "subtitle"  "#P2MM_LastMap_d"
-        "command"   "p2mm_startsession P2MM_LASTMAP"
+        "command"   "p2mm_map P2MM_LASTMAP"
         "pic"       "vgui/p2mm/lastmap"
     }
     "empty"
@@ -43,63 +43,63 @@
     {
         "title"     "#portal2_Chapter1_Title"
         "subtitle"  "#portal2_Chapter1_Subtitle"
-        "command"   "p2mm_startsession sp_a1_intro1"
+        "command"   "p2mm_map sp_a1_intro1"
         "pic"       "vgui/chapters/chapter1"
     }
     "chapter2"
     {
         "title"     "#portal2_Chapter2_Title"
         "subtitle"  "#portal2_Chapter2_Subtitle"
-        "command"   "p2mm_startsession sp_a2_laser_intro"
+        "command"   "p2mm_map sp_a2_laser_intro"
         "pic"       "vgui/chapters/chapter2"
     }
     "chapter3"
     {
         "title"     "#portal2_Chapter3_Title"
         "subtitle"  "#portal2_Chapter3_Subtitle"
-        "command"   "p2mm_startsession sp_a2_sphere_peek"
+        "command"   "p2mm_map sp_a2_sphere_peek"
         "pic"       "vgui/chapters/chapter3"
     }
     "chapter4"
     {
         "title"     "#portal2_Chapter4_Title"
         "subtitle"  "#portal2_Chapter4_Subtitle"
-        "command"   "p2mm_startsession sp_a2_column_blocker"
+        "command"   "p2mm_map sp_a2_column_blocker"
         "pic"       "vgui/chapters/chapter4"
     }
     "chapter5"
     {
         "title"     "#portal2_Chapter5_Title"
         "subtitle"  "#portal2_Chapter5_Subtitle"
-        "command"   "p2mm_startsession sp_a2_bts3"
+        "command"   "p2mm_map sp_a2_bts3"
         "pic"       "vgui/chapters/chapter5"
     }
     "chapter6"
     {
         "title"     "#portal2_Chapter6_Title"
         "subtitle"  "#portal2_Chapter6_Subtitle"
-        "command"   "p2mm_startsession sp_a3_00"
+        "command"   "p2mm_map sp_a3_00"
         "pic"       "vgui/chapters/chapter6"
     }
     "chapter7"
     {
         "title"     "#portal2_Chapter7_Title"
         "subtitle"  "#portal2_Chapter7_Subtitle"
-        "command"   "p2mm_startsession sp_a3_speed_ramp"
+        "command"   "p2mm_map sp_a3_speed_ramp"
         "pic"       "vgui/chapters/chapter7"
     }
     "chapter8"
     {
         "title"     "#portal2_Chapter8_Title"
         "subtitle"  "#portal2_Chapter8_Subtitle"
-        "command"   "p2mm_startsession sp_a4_intro"
+        "command"   "p2mm_map sp_a4_intro"
         "pic"       "vgui/chapters/chapter8"
     }
     "chapter9"
     {
         "title"     "#portal2_Chapter9_Title"
         "subtitle"  "#portal2_Chapter9_Subtitle"
-        "command"   "p2mm_startsession sp_a4_finale1"
+        "command"   "p2mm_map sp_a4_finale1"
         "pic"       "vgui/chapters/chapter9"
     }
     "e1912"
@@ -107,7 +107,7 @@
 		"title"		"#PORTAL2_Extras_E1912Title"
 		"subtitle"	"#PORTAL2_Extras_E1912Subtitle"
 		"pic"		"vgui/extras/e1912"
-		"command"   "p2mm_startsession e1912"
+		"command"   "p2mm_map e1912"
 	}
     "empty"
 	{

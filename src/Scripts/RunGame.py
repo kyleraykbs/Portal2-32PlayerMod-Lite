@@ -87,39 +87,45 @@ def MountMod(gamepath: str) -> None:
 
     modFilesPath = GVars.modFilesPath + os.sep + "Portal 2" + os.sep + "install_dlc"
 
-    # find a place to mount the dlc
-    dlcmountpoint = FindAvailableDLC(gamepath)
+    # find a place to mount the mod folder
+    modFolderMountPoint = PrepareTempContent(gamepath)
     
-    destination = BF.CopyFolder(modFilesPath + os.sep+".", gamepath + os.sep + dlcmountpoint)
+    destination = BF.CopyFolder(modFilesPath + os.sep + ".", gamepath + os.sep + modFolderMountPoint)
     Log(f"Successfully copied the ModFiles to {destination}")
 
-    nutConfigFile = gamepath + os.sep + dlcmountpoint + os.sep + "scripts" + os.sep + "vscripts" + os.sep + "multiplayermod" + os.sep + "config.nut"
+    nutConfigFile = gamepath + os.sep + modFolderMountPoint + os.sep + "scripts" + os.sep + "vscripts" + os.sep + "multiplayermod" + os.sep + "config.nut"
     if os.path.exists(nutConfigFile):
         SetVScriptConfigFile(nutConfigFile)
 
     Log("            ___________Mounting Mod End__________")
 
-# Using the identifier file in P2MM's DLC folder, it can be determined
-# which DLC that is mounted to Portal 2 is in fact P2MM's DLC folder
-def FindP2MMDLCFolder(gamepath: str) -> str | bool:
+# Using the identifier file in P2MM's portal2_tempcontent folder, it can be determined
+# which portal2_tempcontent folder that is mounted to Portal 2 is in fact P2MM's DLC folder
+def FindP2MMFolder(gamepath: str) -> str | bool:
     for file in os.listdir(gamepath):
-        # find all the folders that start with "portal2_dlc"
-        if file.startswith("portal2_dlc") and os.path.isdir(gamepath + os.sep + file):
-
-            # find and return where the identifier file is
+        # Find all the folders that start with "portal2_tempcontent".
+        if file.startswith("portal2_tempcontent") and os.path.isdir(gamepath + os.sep + file):
+            # Find and return where the identifier file is.
             if ("p2mm.identifier" in os.listdir(gamepath + os.sep + file)):
-                p2mmDLCFolder = gamepath + os.sep + file
-                Log("Found P2MM's DLC folder: " + p2mmDLCFolder)
-                return p2mmDLCFolder
-    Log("P2MM's DLC folder was not found!")
-    Log("It's most likely not been mounted to Portal 2 yet, already been unmounted, or the gamepath is incorrect...")
+                p2mmFolder = gamepath + os.sep + file
+                Log("Found P2MM's portal2_tempcontent folder: " + p2mmFolder)
+                return p2mmFolder
+            else: # Found another portal2_tempcontent folder that is the users. Rename to save it from being used.
+                Log("Found a different portal2_tempcontent folder!")
+                Log("Have to rename the folder so we can use our portal2_tempcontent folder.")
+                if (not os.path.exists(gamepath + os.sep + "p2mm--" + file)):
+                    os.rename(gamepath + os.sep + file, gamepath + os.sep + "p2mm--" + file)
+                else: # Hopefully nobody already has a p2mm2--portal2_tempcontent folder :D
+                    os.rename(gamepath + os.sep + file, gamepath + os.sep + "p2mm2--" + file)
+    Log("P2MM's portal2_tempcontent folder was not found!")
+    Log("It's most likely not been mounted to Portal 2 yet, already been unmounted, or the game path is incorrect...")
     return False
 
-# Make sure the dlc folders that come with Portal 2 exist
-# They are required since they include stuff for multiplayer and fixes for other things Portal 2 related
-# portal2_dlc1 is required for multiplayer to work since it includes mp_coop_lobby_3 (although mp_coop_lobby_2 exists as a backup) and the stuff for the DLC course Art Therapy
-# portal2_dlc2 is also required, while its mainly for PeTi, it also includes a bunch of other assets and fixes for Portal 2 that Valve had done
-# If either of these folders are not detected P2MM won't start or be mounted
+# Make sure the dlc folders that come with Portal 2 exist.
+# They are required since they include stuff for multiplayer and fixes for other things Portal 2 related.
+# portal2_dlc1 is required for multiplayer to work since it includes mp_coop_lobby_3 (although mp_coop_lobby_2 exists as a backup) and the stuff for the DLC course Art Therapy.
+# portal2_dlc2 is also required, while its mainly for PeTi, it also includes a bunch of other assets and fixes for Portal 2 that Valve had done.
+# If either of these folders are not detected P2MM won't start or be mounted.
 def CheckForRequiredDLC(gamepath: str) -> bool:
     Log("Checking for DLC folders portal2_dlc1 and portal2_dlc2...")
 
@@ -130,7 +136,7 @@ def CheckForRequiredDLC(gamepath: str) -> bool:
     Log("DLC folders were found...")
     return True
 
-# Find and delete P2MM's portal2_dlc folder
+# Find and delete P2MM's portal2_tempcontent folder
 def DeleteP2MMDLC(gamepath: str) -> bool:
     if (not os.path.exists(gamepath)):
         Log("Portal 2 game path not found! Can't remove P2MM DLC folders!")
@@ -138,45 +144,35 @@ def DeleteP2MMDLC(gamepath: str) -> bool:
     
     Log("           _________Deleting Any P2MM DLC Folders________")
 
-    foundP2MMDLCFolder = FindP2MMDLCFolder(gamepath)
-    if foundP2MMDLCFolder:
-        Log("Found old DLC: " + foundP2MMDLCFolder)
+    foundP2MMFolder = FindP2MMFolder(gamepath)
+    if foundP2MMFolder:
+        Log("Found old temp content folder: " + foundP2MMFolder)
         # delete the folder even if it's not empty
-        BF.DeleteFolder(foundP2MMDLCFolder)
-        Log("Deleted old DLC: " + foundP2MMDLCFolder)
+        BF.DeleteFolder(foundP2MMFolder)
+        Log("Deleted old temp content folder: " + foundP2MMFolder)
+    # Rename any saved portal2_tempcontent files that were renamed before back to what they were named
+    if os.path.isdir(gamepath + os.sep + "p2mm--portal2_tempcontent"):
+        os.rename(gamepath + os.sep + "p2mm--portal2_tempcontent", gamepath + os.sep + "portal2_tempcontent")
+    if os.path.isdir(gamepath + os.sep + "p2mm2--portal2_tempcontent"):
+        os.rename(gamepath + os.sep + "p2mm2--portal2_tempcontent", gamepath + os.sep + "portal2_tempcontent")
 
-# Find what DLC folders exist for Portal 2 and create a incremented folder for P2MM
-def FindAvailableDLC(gamepath: str) -> str:
-    Log("Finding the next increment in DLC folders...")
-    dlcs = []
-
-    DeleteP2MMDLC(gamepath)
+# Prepare the location for portal2_tempcontent for P2MM's files. Renaming any preexisting ones so it 
+def PrepareTempContent(gamepath: str) -> str:
+    Log("Preparing game directory for P2MM's portal2_tempcontent folder...")
     
-    # go through each file in the gamepath
+    # Go through each file in the gamepath to find any existing portal2_tempcontent folders
     for file in os.listdir(gamepath):
-        # find all the folders that start with "portal2_dlc"
-        if file.startswith("portal2_dlc") and os.path.isdir(gamepath + os.sep + file):
-            # get everything after "portal2_dlc"
-            try:
-                dlcnumber = file.split("portal2_dlc")[1]
-            except Exception as e:
-                Log("Error getting DLC name! Probably a slice error. Moving on!")
-                Log("Error: " + str(e))
-                # move on to the next file
-                continue
-
-            # if dlcnumber contains any letters, it's not a number
-            if any(char.isalpha() for char in dlcnumber):
-                Log("DLC " + dlcnumber + " is not a number!")
-            else:
-                dlcs.append(str(dlcnumber))
-                Log("Adding DLC: " + dlcnumber + " to our internal list to ignore...")
-
-    # sort each dlc number lower to higher
-    dlcs.sort(key=int)
-    # return the folder where to mount the mod
-    return "portal2_dlc" + str(int(dlcs[len(dlcs)-1]) + 1)
-
+        # Find all the folders that start with "portal2_tempcontent", there should only be one.
+        # If any folder we find is a portal2_tempcontent folder without the identifier file inside 
+        if file.startswith("portal2_tempcontent") and os.path.isdir(gamepath + os.sep + file) and not os.path.exists(gamepath + os.sep + file + os.sep + "p2mm.identifier"):
+            Log("Found a different portal2_tempcontent folder!")
+            Log("Have to rename the folder so we can use our portal2_tempcontent folder.")
+            if (not os.path.exists(gamepath + os.sep + "p2mm--" + file)):
+                os.rename(gamepath + os.sep + file, gamepath + os.sep + "p2mm--" + file)
+            else: # Hopefully nobody already has a p2mm2--portal2_tempcontent folder :D
+                os.rename(gamepath + os.sep + file, gamepath + os.sep + "p2mm2--" + file)
+    return "portal2_tempcontent"
+    
 def Portal2Running() -> bool:
     """Check if Portal 2 is running.
 
@@ -195,18 +191,17 @@ def AssembleArgs() -> str | bool:
     #? "+p2mm_developer 0/1": When on, developer log messages for the plugin and VScript will appear in the console.
     #? "+p2mm_lastmap (map)": Used by Portal 2 for the main menu and for starting up singleplayer maps.
     #? "+p2mm_splitscreen 0/1": A ConVar for the launcher to pass and for the main menu to set to start sessions with splitscreen.
-    #? "+p2mm_startsession (map)": A console command used to start and setup P2:MM sessions.
-    #?   Sets up ConVars, variables, and flags, as well as handling starting a session on a singleplayer map.
+    #? "+p2mm_map (map)": A console command used to start and setup P2:MM sessions.
+    #?  Sets up ConVars, variables, and flags, as well as handling starting a session on a singleplayer map.
     
     try:
         # Working with the launch arguments and Custom-Launch-Options (CLO) as a table helps with making
         # any needed changes before it is turned into a string then passed on to the Portal 2 executable.
-        args = ["-novid", "-allowspectators", "-nosixense", "-conclearlog", "-condebug", "-usercon"]
+        args = ["-tempcontent", "-novid", "-allowspectators", "-nosixense", "-conclearlog", "-condebug", "-usercon"]
         CLO = []
 
         if GVars.configData['Portal2-VR-Mod']['value']: # Add launch arguments needed for the VR mod
             args.extend([
-                "-insecure", # VAC doesn't exist in Portal 2, but VR mod team still recommends having it just in case.
                 "-window",
                 "-width 1280",
                 "-height 720",
@@ -224,38 +219,45 @@ def AssembleArgs() -> str | bool:
             Log("'-vulkan' found in Custom Launch Options! Doesn't work with VR mod so it will be removed for the host.")
             args.remove(args[args.index("-vulkan")])
         
+        if not GVars.configData['Discord-RPC']['value']:
+            args.extend(["+p2mm_discord_rpc 0"])
+        
+        if GVars.configData['Discord-Webhook']['value']:
+            args.extend(["+p2mm_discord_webhooks 1"])
+            args.extend(["+p2mm_discord_webhooks_url \"" + GVars.configData['Discord-Webhook-URL']['value'] + "\""])
+        
         Log("Default launch args: " + str(args))
         Log("preCLO: " + str(preCLO))
         Log("CLO: " + str(CLO))
 
         # If "+ss_map" is in the CLO, set the plugin's splitscreen ConVar to true for "p2mm_startsession" to read,
-        # then replace any "+map" and "+ss_map" with "+p2mm_startsession" for the mod to properly start.
+        # then replace any "+map" and "+ss_map" with "+p2mm_map" for the mod to properly start.
         # The user can also manually specify "+p2mm_splitscreen", check for and if its not there add it in.
         if not ("+p2mm_splitscreen" in " ".join(CLO)):
             args.extend(("+p2mm_splitscreen 1" if "+ss_map" in " ".join(CLO) else "+p2mm_splitscreen 0").split(" "))
-        args.extend(" ".join(CLO).replace("+map", "+p2mm_startsession").replace("+ss_map", "+p2mm_startsession").split(" "))
+        args.extend(" ".join(CLO).replace("+map", "+p2mm_map").replace("+ss_map", "+p2mm_map").split(" "))
 
         # Add the last map played for the Last Map System if enabled, if a last map was recorded, and if the last map already isn't in Custom-Launch-Options (CLO).
         if ((GVars.configData["Start-From-Last-Map"]["value"]) and (len(GVars.configData["Last-Map"]["value"].strip()) > 0) and (not GVars.configData["Last-Map"]["value"].strip() in " ".join(args))):
             Log("Last Map System on and has value: " + GVars.configData["Last-Map"]["value"].strip())
             # Make sure that if last map is enabled, the last map is set for starting the session.
-            if ("+p2mm_startsession" in " ".join(args)):
-                args = list(map(lambda x: x.replace(args[args.index("+p2mm_startsession") + 1], GVars.configData["Last-Map"]["value"].strip()), args))
+            if ("+p2mm_map" in " ".join(args)):
+                args = list(map(lambda x: x.replace(args[args.index("+p2mm_map") + 1], GVars.configData["Last-Map"]["value"].strip()), args))
             else:
-                args.extend(["+p2mm_startsession", GVars.configData["Last-Map"]["value"].strip()])
+                args.extend(["+p2mm_map", GVars.configData["Last-Map"]["value"].strip()])
 
         # While the Last Map System can be disabled, the user can still pass "+p2mm_lastmap"
-        # to start at a certain map, while really they should just use "+p2mm_startsession".
+        # to start at a certain map, while really they should just use "+p2mm_map".
         # To reduce the number of map changes and reduce load time, replace the map specified with
-        # "+p2mm_startsession" with the one with "+p2mm_lastmap", then remove "+p2mm_lastmap" and its value.
+        # "+p2mm_map" with the one with "+p2mm_lastmap", then remove "+p2mm_lastmap" and its value.
         if ("+p2mm_lastmap" in " ".join(args)):
             Log("Forced +p2mm_lastmap in args.")
-            if ("+p2mm_startsession" in " ".join(args)):
-                args = list(map(lambda x: x.replace(args[args.index("+p2mm_startsession") + 1], args[args.index("+p2mm_lastmap") + 1]), args))
+            if ("+p2mm_map" in " ".join(args)):
+                args = list(map(lambda x: x.replace(args[args.index("+p2mm_map") + 1], args[args.index("+p2mm_lastmap") + 1]), args))
                 args.remove(args[args.index("+p2mm_lastmap") + 1])
                 args.remove("+p2mm_lastmap")
             else:
-                args.extend(["+p2mm_startsession", args[args.index("+p2mm_lastmap") + 1]])
+                args.extend(["+p2mm_map", args[args.index("+p2mm_lastmap") + 1]])
                 args.remove(args[args.index("+p2mm_lastmap") + 1])
                 args.remove("+p2mm_lastmap")
         

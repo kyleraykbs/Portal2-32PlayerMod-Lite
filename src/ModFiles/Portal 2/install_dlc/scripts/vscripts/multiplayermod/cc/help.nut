@@ -15,11 +15,12 @@ commandtable["speed"] <- "Changes your player speed. \"!speed (float arg)\""
 commandtable["tp"] <- "Teleport yourself, another player, or a target team to a destination. \"!tp (target arg: Specific player, team target. destination player if only this arg.) (destination arg: player)\""
 commandtable["vote"] <- "Invoke this to get a headcount on whether something should happen or not. \"!vote (vote choice arg: changelevel, kick, or duogunonly) (arg for changelevel map name or kick player name)\""
 switch (GetGameMainDir()) {
-    case "portal2" :
+    case "portal2":
         commandtable["spchapter"] <- "Changes the level to the specified singleplayer chapter. \"!spchapter (chapter integer 1-9)\""
-    case "portal_stories" :
+    case "portal_stories":
         commandtable["spchapter"] <- "Changes the level to the specified singleplayer chapter. \"!spchapter (chapter integer 1-5) (Optional: Story/Hard)\""
 }
+
 CommandList.push(
     class {
         name = "help"
@@ -33,7 +34,7 @@ CommandList.push(
                     SendChatMessage("[HELP] " + args[0] + ": " + commandtable[args[0]], p)
                 }
                 else {
-                    SendChatMessage("[HELP] Unknown chat command: " + args[0], p)
+                    SendChatMessage("[ERROR] Unknown chat command: " + args[0], p)
                 }
             } catch (exception) {
                 // Only print the command operations for the host when Config_HostOnlyChatCommands is enabled

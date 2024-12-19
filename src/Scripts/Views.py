@@ -51,6 +51,8 @@ def MainMenu(ui: Gui) -> tuple[list[Button], list[Label]]:
 def SettingsMenu(ui: Gui) -> None:
     Button_GeneralSettingsMenu = Button(
         GVars.translations["general_settings_button"], ui.Button_GeneralSettingsMenu_func)
+    Button_AdvancedSettingsMenu = Button(
+        GVars.translations["advanced_settings_button"], ui.Button_AdvancedSettingsMenu_func)
     Button_AdminsMenu = Button(
         GVars.translations["admins_button"], ui.Button_AdminsMenu_func, (0, 255, 255))
     Button_LanguageMenu = Button(
@@ -58,8 +60,8 @@ def SettingsMenu(ui: Gui) -> None:
     Button_Back = Button(
         GVars.translations["back_button"], ui.Button_Back_func)
     
-    Buttons = [Button_GeneralSettingsMenu, Button_AdminsMenu,
-               Button_LanguageMenu]
+    Buttons = [Button_GeneralSettingsMenu, Button_AdvancedSettingsMenu,
+               Button_AdminsMenu, Button_LanguageMenu]
 
     if ui.DevMode:
         Button_HiddenSettings = Button(

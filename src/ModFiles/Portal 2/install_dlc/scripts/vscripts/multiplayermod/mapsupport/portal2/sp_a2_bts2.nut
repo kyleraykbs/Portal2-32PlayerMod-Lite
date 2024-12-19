@@ -117,24 +117,11 @@ function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSO
                 if (Entities.FindByName(null, "EndDeathEventMPMod")) {
                     if (NoPlayerMadeItOnlyOnceSp_A2_Bts2) {
                         printlP2MM(0, false, "No Player Made It")
-                        PreviousTimeSP_A2_BTS2Again <- Time()
-                        // Create an on screen text message entity
-                        textnobodywin.__KeyValueFromString("targetname", "p2mm_failescapetext")
-                        textnobodywin.__KeyValueFromString("message", "Nobody Escaped...")
-                        textnobodywin.__KeyValueFromString("holdtime", "3")
-                        textnobodywin.__KeyValueFromString("fadeout", "2")
-                        textnobodywin.__KeyValueFromString("fadein", "0.75")
-                        textnobodywin.__KeyValueFromString("spawnflags", "1")
-                        textnobodywin.__KeyValueFromString("color", "230 30 30")
-                        textnobodywin.__KeyValueFromString("channel", "1")
-                        textnobodywin.__KeyValueFromString("x", "0.425")
-                        textnobodywin.__KeyValueFromString("y", "-0.2")
-
-                        DoEntFire("p2mm_failescapetext", "Display", "", 0.1, null, null)
                         DoEntFire("exit_fade", "fade", "", 0.1, null, null)
-                        NoPlayerMadeItOnlyOnceSp_A2_Bts2 <- false
-                        PreviousTimeSp_A2_Bts2Again <- Time()
+                        NoPlayerMadeItOnlyOnceSp_A2_Bts2 = false
+                        PreviousTimeSp_A2_Bts2Again = Time()
                         Entities.FindByName(null, "EndDeathEventMPMod").__KeyValueFromString("targetname", "EndDeathEventMPModDisMain")
+                        HudPrint(0, "Nobody Escaped...", Vector(0.425, -0.2, 1), 2, 0.1, Vector(230, 30, 30), 255, Vector(0, 0, 0), 0, Vector(0.15, 0.5, 3))
                     }
                 }
             }

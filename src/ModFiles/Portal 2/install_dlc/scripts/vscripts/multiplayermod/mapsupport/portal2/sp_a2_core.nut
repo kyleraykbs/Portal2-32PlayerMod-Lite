@@ -153,18 +153,16 @@ function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSO
 
     if (MSLoop) {
         if (!TempGrabControllerToggled) {
-            if (PluginLoaded) {
-                if (!g_bOverridePluginGrabController && !Entities.FindByName(null, "rv_player_clip")) {
-                    if (Entities.FindByName(null, "pit_clip")) {
-                        if (Entities.FindByClassnameWithin(null, "player", Vector(320, 0, 0), 128)) {
-                            SetPhysTypeConVar(-1)
-                        } else {
-                            SetPhysTypeConVar(0)
-                        }
+            if (!g_bOverridePluginGrabController && !Entities.FindByName(null, "rv_player_clip")) {
+                if (Entities.FindByName(null, "pit_clip")) {
+                    if (Entities.FindByClassnameWithin(null, "player", Vector(320, 0, 0), 128)) {
+                        SetPhysTypeConVar(-1)
                     } else {
-                        TempGrabControllerToggled <- true
-                        g_bOverridePluginGrabController = true
+                        SetPhysTypeConVar(0)
                     }
+                } else {
+                    TempGrabControllerToggled <- true
+                    g_bOverridePluginGrabController = true
                 }
             }
         }

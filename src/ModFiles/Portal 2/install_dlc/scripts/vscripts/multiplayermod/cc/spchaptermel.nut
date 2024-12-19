@@ -17,12 +17,12 @@ CommandList.push(
             try {
                 args[0] = args[0].tointeger()
             } catch (err){
-                SendChatMessage("Type in a valid number from 1 to 5, followed optionally by hard or story.", p)
+                SendChatMessage("[ERROR] Type in a valid number from 1 to 5, followed optionally by hard or story.", p)
                 return
             }
 
             if (args[0].tointeger() < 1 || args[0].tointeger() > 5) {
-                SendChatMessage("Type in a valid number from 1 to 5, followed optionally by hard or story.", p)
+                SendChatMessage("[ERROR] Type in a valid number from 1 to 5, followed optionally by hard or story.", p)
                 return
             }
 
