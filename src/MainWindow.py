@@ -995,11 +995,11 @@ def VerifyGamePath(shouldGetPath: bool = True) -> bool:
 def VerifyModFiles() -> bool:
     Log("Searching for ModFiles in: " + GVars.modFilesPath)
 
-    localIDPath = f"{GVars.modPath}{os.sep}ModFiles{os.sep}Portal 2{os.sep}install_dlc{os.sep}"
+    localIDPath = f"{GVars.modFilesPath}{os.sep}"
     if GVars.configData["Dev-Mode"]["value"]:
-        print("localIDPath and which identifier file exists?")
-        print(localIDPath)
-        print(localIDPath + "p2mm.identifier: " + str(os.path.exists(localIDPath + "p2mm.identifier")))
+        Log("localIDPath and which identifier file exists?")
+        Log(localIDPath)
+        Log(localIDPath + "p2mm.identifier: " + str(os.path.exists(localIDPath + "p2mm.identifier")))
 
     if (os.path.exists(GVars.modFilesPath)) and (os.path.exists(localIDPath + "p2mm.identifier")):
         Log("ModFiles found!")
@@ -1041,7 +1041,7 @@ def MountModOnly() -> bool:
         return False
 
     # Check if both of Portal 2's DLC folders exist
-    if not RG.CheckForRequiredDLC(gamePath):
+    if not RG.CheckForRequiredP2DLC(gamePath):
         Ui.CreateToast(
             GVars.translations["mount_nodlc_toast"], 5, (255, 21, 0))
         return False
@@ -1117,10 +1117,15 @@ def RunGameScript() -> None:
     MMO = MountModOnly()
     if MMO:
         gamePath = GVars.configData["Portal2-Path"]["value"]
-        args = RG.AssembleArgs()
+        args = RG.AssembleArgs(gamePath)
         if not args:
             Ui.CreateToast(GVars.translations["args-error"], 5)
-            RG.LaunchGame(gamePath, "-novid -allowspectators -nosixense -conclearlog -condebug -usercon")
+            defaultArgs = "-novid -allowspectators -nosixense -conclearlog -condebug -usercon"
+            if gamePath.find("Portal Stories Mel") != -1:
+                defaultArgs = "-game portal_stories " + defaultArgs
+            # elif gamePath.find("Aperture Tag") != -1:
+            #     defaultArgs = "-game aperturetag " + defaultArgs
+            RG.LaunchGame(gamePath, defaultArgs)
         else:
             RG.LaunchGame(gamePath, args)
             Ui.CreateToast(GVars.translations["game_launched"], 5, (75, 255, 75))
@@ -1140,7 +1145,7 @@ def UnmountScript(shouldGetPath: bool = True) -> bool:
     Log("___Unmounting Mod___")
     VerifyGamePath(shouldGetPath)
     gamePath = GVars.configData["Portal2-Path"]["value"]
-    RG.DeleteP2MMDLC(gamePath)
+    RG.DeleteModFolder(gamePath)
     Log("____DONE UNMOUNTING____")
     return True
 
@@ -1239,7 +1244,7 @@ def PostInitialize() -> None:
         if RG.Portal2Running():
             Log("Can't unmount because game is currently running!")
         else:
-            RG.DeleteP2MMDLC(GVars.configData["Portal2-Path"]["value"])
+            RG.DeleteModFolder(GVars.configData["Portal2-Path"]["value"])
 
     def NewAfterFunction() -> None:
         Ui.CreateToast(GVars.translations["game_exited"], 5, (125, 0, 125))

@@ -85,39 +85,41 @@ def MountMod(gamepath: str) -> None:
     Log("            __________Mounting Mod Start_________")
     Log("Gathering DLC folder data...")
 
-    modFilesPath = GVars.modFilesPath + os.sep + "Portal 2" + os.sep + "install_dlc"
-
     # find a place to mount the mod folder
     modFolderMountPoint = PrepareTempContent(gamepath)
-    
-    destination = BF.CopyFolder(modFilesPath + os.sep + ".", gamepath + os.sep + modFolderMountPoint)
-    Log(f"Successfully copied the ModFiles to {destination}")
 
-    nutConfigFile = gamepath + os.sep + modFolderMountPoint + os.sep + "scripts" + os.sep + "vscripts" + os.sep + "multiplayermod" + os.sep + "config.nut"
+    nutConfigFile = GVars.modFilesPath + os.sep + "scripts" + os.sep + "vscripts" + os.sep + "multiplayermod" + os.sep + "config.nut"
     if os.path.exists(nutConfigFile):
         SetVScriptConfigFile(nutConfigFile)
+    
+    destination = BF.CopyFolder(GVars.modFilesPath + os.sep + ".", gamepath + os.sep + modFolderMountPoint)
+    Log(f"Successfully copied the ModFiles to {destination}!")
+
+    mountedModFiles = gamepath + os.sep + modFolderMountPoint
+    if gamepath.find("Portal 2") != -1:
+        os.rename(mountedModFiles + os.sep + "media_portal2", mountedModFiles + os.sep + "media")
+        os.rename(mountedModFiles + os.sep + "maps" + os.sep + "soundcache_portal2", mountedModFiles + os.sep + "maps" + os.sep + "soundcache")
+        os.rename(mountedModFiles + os.sep + "scripts" + os.sep + "extras_portal2.txt", mountedModFiles + os.sep + "scripts" + os.sep + "extras.txt")
+    elif gamepath.find("Portal Stories Mel") != -1:
+        os.rename(mountedModFiles + os.sep + "maps" + os.sep + "soundcache_portal_stories", mountedModFiles + os.sep + "maps" + os.sep + "soundcache")
+        os.rename(mountedModFiles + os.sep + "scripts" + os.sep + "extras_portal_stories.txt", mountedModFiles + os.sep + "scripts" + os.sep + "extras.txt")
+        os.rename(mountedModFiles + os.sep + "scripts" + os.sep + "vscripts" + os.sep + "transitions_portal_stories", mountedModFiles + os.sep + "scripts" + os.sep + "vscripts" + os.sep + "transitions")
+    # elif gamePath.find("Aperture Tag") != -1:
+    #   os.rename(mountedModFiles + os.sep + "maps" + os.sep + "soundcache_aperturetag", mountedModFiles + os.sep + "maps" + os.sep + "soundcache")
+    #   os.rename(mountedModFiles + os.sep + "scripts" + os.sep + "extras_aperturetag.txt", mountedModFiles + os.sep + "scripts" + os.sep + "extras.txt")
 
     Log("            ___________Mounting Mod End__________")
 
-# Using the identifier file in P2MM's portal2_tempcontent folder, it can be determined
-# which portal2_tempcontent folder that is mounted to Portal 2 is in fact P2MM's DLC folder
+# Using the identifier file in P2MM's (basegamedir)_tempcontent folder, it can be determined
+# which (basegamedir)_tempcontent folder that is mounted to Portal 2 is in fact P2MM's DLC folder
 def FindP2MMFolder(gamepath: str) -> str | bool:
     for file in os.listdir(gamepath):
-        # Find all the folders that start with "portal2_tempcontent".
-        if file.startswith("portal2_tempcontent") and os.path.isdir(gamepath + os.sep + file):
-            # Find and return where the identifier file is.
-            if ("p2mm.identifier" in os.listdir(gamepath + os.sep + file)):
-                p2mmFolder = gamepath + os.sep + file
-                Log("Found P2MM's portal2_tempcontent folder: " + p2mmFolder)
-                return p2mmFolder
-            else: # Found another portal2_tempcontent folder that is the users. Rename to save it from being used.
-                Log("Found a different portal2_tempcontent folder!")
-                Log("Have to rename the folder so we can use our portal2_tempcontent folder.")
-                if (not os.path.exists(gamepath + os.sep + "p2mm--" + file)):
-                    os.rename(gamepath + os.sep + file, gamepath + os.sep + "p2mm--" + file)
-                else: # Hopefully nobody already has a p2mm2--portal2_tempcontent folder :D
-                    os.rename(gamepath + os.sep + file, gamepath + os.sep + "p2mm2--" + file)
-    Log("P2MM's portal2_tempcontent folder was not found!")
+        # Find all the folders that start with "(basegamedir)_tempcontent" and check if they have the identifier.
+        if file.endswith("_tempcontent") and os.path.isdir(gamepath + os.sep + file) and ("p2mm.identifier" in os.listdir(gamepath + os.sep + file)):
+            p2mmFolder = gamepath + os.sep + file
+            Log("Found P2MM's (basegamedir)_tempcontent folder: " + p2mmFolder)
+            return p2mmFolder
+    Log("P2MM's (basegamedir)_tempcontent folder was not found!")
     Log("It's most likely not been mounted to Portal 2 yet, already been unmounted, or the game path is incorrect...")
     return False
 
@@ -126,7 +128,7 @@ def FindP2MMFolder(gamepath: str) -> str | bool:
 # portal2_dlc1 is required for multiplayer to work since it includes mp_coop_lobby_3 (although mp_coop_lobby_2 exists as a backup) and the stuff for the DLC course Art Therapy.
 # portal2_dlc2 is also required, while its mainly for PeTi, it also includes a bunch of other assets and fixes for Portal 2 that Valve had done.
 # If either of these folders are not detected P2MM won't start or be mounted.
-def CheckForRequiredDLC(gamepath: str) -> bool:
+def CheckForRequiredP2DLC(gamepath: str) -> bool:
     Log("Checking for DLC folders portal2_dlc1 and portal2_dlc2...")
 
     if (not (os.path.exists(gamepath + os.sep + "portal2_dlc1") or os.path.exists(gamepath + os.sep + "portal2_dlc2"))):
@@ -136,10 +138,10 @@ def CheckForRequiredDLC(gamepath: str) -> bool:
     Log("DLC folders were found...")
     return True
 
-# Find and delete P2MM's portal2_tempcontent folder
-def DeleteP2MMDLC(gamepath: str) -> bool:
+# Find and delete P2MM's (basegamedir)_tempcontent folder
+def DeleteModFolder(gamepath: str) -> bool:
     if (not os.path.exists(gamepath)):
-        Log("Portal 2 game path not found! Can't remove P2MM DLC folders!")
+        Log("Portal 2 game path not found! Can't remove P2MM temp content folders!")
         return False
     
     Log("           _________Deleting Any P2MM DLC Folders________")
@@ -150,27 +152,31 @@ def DeleteP2MMDLC(gamepath: str) -> bool:
         # delete the folder even if it's not empty
         BF.DeleteFolder(foundP2MMFolder)
         Log("Deleted old temp content folder: " + foundP2MMFolder)
-    # Rename any saved portal2_tempcontent files that were renamed before back to what they were named
-    if os.path.isdir(gamepath + os.sep + "p2mm--portal2_tempcontent"):
-        os.rename(gamepath + os.sep + "p2mm--portal2_tempcontent", gamepath + os.sep + "portal2_tempcontent")
-    if os.path.isdir(gamepath + os.sep + "p2mm2--portal2_tempcontent"):
-        os.rename(gamepath + os.sep + "p2mm2--portal2_tempcontent", gamepath + os.sep + "portal2_tempcontent")
-
-# Prepare the location for portal2_tempcontent for P2MM's files. Renaming any preexisting ones so it 
-def PrepareTempContent(gamepath: str) -> str:
-    Log("Preparing game directory for P2MM's portal2_tempcontent folder...")
     
-    # Go through each file in the gamepath to find any existing portal2_tempcontent folders
+    # Rename p2mm_override_(basegamedir)_tempcontent folder, if it exists, back to what that it was named before
     for file in os.listdir(gamepath):
-        # Find all the folders that start with "portal2_tempcontent", there should only be one.
-        # If any folder we find is a portal2_tempcontent folder without the identifier file inside 
-        if file.startswith("portal2_tempcontent") and os.path.isdir(gamepath + os.sep + file) and not os.path.exists(gamepath + os.sep + file + os.sep + "p2mm.identifier"):
-            Log("Found a different portal2_tempcontent folder!")
-            Log("Have to rename the folder so we can use our portal2_tempcontent folder.")
-            if (not os.path.exists(gamepath + os.sep + "p2mm--" + file)):
-                os.rename(gamepath + os.sep + file, gamepath + os.sep + "p2mm--" + file)
-            else: # Hopefully nobody already has a p2mm2--portal2_tempcontent folder :D
-                os.rename(gamepath + os.sep + file, gamepath + os.sep + "p2mm2--" + file)
+        if file.startswith("p2mm_override_") and os.path.isdir(gamepath + os.sep + file):
+            os.rename(gamepath + os.sep + file, gamepath + os.sep + file[14:])
+            break
+
+# Prepare the location for (basegamedir)_tempcontent for P2MM's files. Renaming any preexisting ones so it 
+def PrepareTempContent(gamepath: str) -> str:
+    Log("Preparing game directory for P2MM's (basegamedir)_tempcontent folder...")
+    
+    # Go through each file in the gamepath to find any existing temp content folders
+    for file in os.listdir(gamepath):
+        # Find all the folders that start with "_tempcontent", there should only be one.
+        # If any folder we find is a (basegamedir)_tempcontent folder without the identifier file inside 
+        if file.endswith("_tempcontent") and os.path.isdir(gamepath + os.sep + file) and not os.path.exists(gamepath + os.sep + file + os.sep + "p2mm.identifier"):
+            Log("Found a different (basegamedir)_tempcontent folder!")
+            Log("Have to rename the folder so we can use our (basegamedir)_tempcontent folder.")
+            # Hopefully nobody already has a p2mm_override_(basegamedir)_tempcontent folder :D
+            if (not os.path.exists(gamepath + os.sep + "p2mm_override_" + file)):
+                os.rename(gamepath + os.sep + file, gamepath + os.sep + "p2mm_override_" + file)
+    if gamepath.find("Portal Stories Mel") != -1:
+        return "portal_stories_tempcontent"
+    # elif gamepath.find("Aperture Tag") != -1:
+    #     return "aperturetag_tempcontent"
     return "portal2_tempcontent"
     
 def Portal2Running() -> bool:
@@ -186,7 +192,7 @@ def Portal2Running() -> bool:
 # █ █░▀█ █ ░█░
 
 # Parse the launch arguments with whats in the Custom-Launch-Options (CLO).
-def AssembleArgs() -> str | bool:
+def AssembleArgs(gamepath: str) -> str | bool:
     #* ConVars/Console Command used here created by plugin:
     #? "+p2mm_developer 0/1": When on, developer log messages for the plugin and VScript will appear in the console.
     #? "+p2mm_lastmap (map)": Used by Portal 2 for the main menu and for starting up singleplayer maps.
@@ -199,6 +205,11 @@ def AssembleArgs() -> str | bool:
         # any needed changes before it is turned into a string then passed on to the Portal 2 executable.
         args = ["-tempcontent", "-novid", "-allowspectators", "-nosixense", "-conclearlog", "-condebug", "-usercon"]
         CLO = []
+
+        if gamepath.find("Portal Stories Mel") != -1:
+            args.insert(1, "-game portal_stories")
+        # elif gamePath.find("Aperture Tag") != -1:
+        #   args.insert(1, "-game aperturetag")
 
         if GVars.configData['Portal2-VR-Mod']['value']: # Add launch arguments needed for the VR mod
             args.extend([
