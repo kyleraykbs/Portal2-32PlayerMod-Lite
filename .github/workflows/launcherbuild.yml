@@ -2,6 +2,7 @@ on:
   push:
     paths:
       - 'src/**'
+      - '.github/workflows**'
       - '!src/ModFiles/**'
       - '!src/ModFilesVPK/**'
 
@@ -36,7 +37,7 @@ jobs:
         with:
           nuitka-version: main
           script-name: src/MainWindow.py
-          onefile: true
+          mode: app
           noinclude-data-files: "pygame/freesansbold.ttf"
           include-data-dir: |
               src/Languages=Languages
