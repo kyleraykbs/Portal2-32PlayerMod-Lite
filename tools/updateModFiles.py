@@ -17,7 +17,7 @@ import shutil, os, sys, platform, ctypes
 def FindLocalP2MM() -> str:
     destinationFolder: str = ""
 
-    print("Getting users local p2mm/ModFiles path...")
+    print("Getting users local p2mm path...")
     if (sys.platform == "win32"): # if using a Windows system
         # Thanks stackOverflow for this
         # This code allows us to get the document's folder on any windows pc with any language
@@ -28,15 +28,15 @@ def FindLocalP2MM() -> str:
         ctypes.windll.shell32.SHGetFolderPathW(None, CSIDL_PERSONAL, None, SHGFP_TYPE_CURRENT, buf)
 
         # Set the modPath to the users documents folder
-        destinationFolder = buf.value + os.sep + "p2mm" + os.sep + "ModFiles"
+        destinationFolder = buf.value + os.sep + "p2mm"
     elif (sys.platform.startswith("linux")): # if using a Linux system
         if ("valve" in platform.release()): # if using the Steam OS 3.0 distro
-            destinationFolder = os.path.expanduser("~") + os.sep + "Documents/p2mm/ModFiles"
+            destinationFolder = os.path.expanduser("~") + os.sep + "Documents" + os.sep + "p2mm"
         else:
-            destinationFolder = os.path.expanduser("~") + os.sep + ".config/p2mm/ModFiles"
+            destinationFolder = os.path.expanduser("~") + os.sep + ".config" + os.sep + "p2mm"
 
     if not os.path.exists(destinationFolder):
-        print("Could not get users local p2mm/ModFiles path! Exiting...")
+        print("Could not get users local p2mm path! Doesn't exist! Exiting...")
         exit(1)
     
     return destinationFolder
@@ -52,13 +52,13 @@ def CopyFiles():
     p2mmModFilesPath: str = FindLocalP2MM()
     
     # Remove the old p2mm/ModFiles
-    if os.path.isdir(p2mmModFilesPath):
+    if os.path.isdir(p2mmModFilesPath + os.sep + "ModFiles"):
         print("Removing old p2mm/ModFiles...")
-        shutil.rmtree(p2mmModFilesPath)
+        shutil.rmtree(p2mmModFilesPath + os.sep + "ModFiles")
 
     # Copy over the new src/ModFiles
     print("Copying over files from src/ModFiles to the users p2mm folder...")
-    shutil.copytree("src" + os.sep + "ModFiles", p2mmModFilesPath, dirs_exist_ok=True)
+    shutil.copytree("src" + os.sep + "ModFiles", p2mmModFilesPath + os.sep + "ModFiles", dirs_exist_ok=True)
 
 CopyFiles()
 print("src/ModFiles copied over to p2mm/ModFiles! :D")

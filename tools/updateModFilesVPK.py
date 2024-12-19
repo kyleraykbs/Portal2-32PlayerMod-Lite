@@ -16,7 +16,7 @@ import os, shutil, subprocess
 p2VPKPath = input("Input your Portal 2 installation path: ").strip()
 p2VPKPath = p2VPKPath + os.sep + "bin" + os.sep + "vpk.exe"
 vpkWorkPath = f"{os.getcwd() + os.sep}src{os.sep}ModFilesVPK"
-modFilesVPKPath = f"src{os.sep}ModFiles{os.sep}Portal 2{os.sep}install_dlc{os.sep}pak01_dir.vpk"
+modFilesVPKPath = f"src{os.sep}ModFiles{os.sep}pak01_dir.vpk"
 
 # Remove the old pak01_dir.vpk so a new one can be made
 print("Removing old pak01_dir.vpk...")
@@ -35,7 +35,7 @@ if os.path.exists(modFilesVPKPath):
     print("Removing old pak01_dir.vpk file...")
     os.remove(modFilesVPKPath)
 
-print("Copying over pak01_dir.vpk from src/ModFilesVPK to the src/ModFiles/Portal 2/install_dlc folder...")
+print("Copying over pak01_dir.vpk from src/ModFilesVPK to the src/ModFiles folder...")
 shutil.copyfile(f"{vpkWorkPath + os.sep}pak01_dir.vpk", modFilesVPKPath)
 
 print("New pak01_dir.vpk created and copied over! :D")
