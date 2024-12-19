@@ -63,12 +63,9 @@ Logs/
 configs.cfg
 *.AppImage
 *.AppImage.zsync
-!src/ModFiles/portal2
-# normal folder
-!src/ModFiles/Portal 2/install_dlc/addons/p2mm.dll
-!src/ModFiles/Portal 2/install_dlc/addons/p2mm.so
-!src/ModFiles/Portal 2/install_dlc/p2mm.dll
-!src/ModFiles/Portal 2/install_dlc/p2mm.so
+!src/ModFiles/*
+!src/ModFiles/addons/p2mm.dll
+!src/ModFiles/addons/p2mm.so
 
 ##################################################################################
 # default list of files to ignore for python
