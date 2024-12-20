@@ -454,8 +454,6 @@ function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSO
         // So nobody spawns here.
         Entities.FindByClassname(null, "info_player_start").Destroy()
 
-        // remove 
-
         // Remove test chamber VGUI screen as it doesn't work.
         EntFire("info_sign-info_panel", "Kill")
         EntFire("info_sign-info_panel", "Kill", "", 0.1)
@@ -546,6 +544,10 @@ function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSO
         EntFire("trigger_orange_wins", "AddOutput", "OnStartTouch !activator:RunScriptCode:KillLosers(activator)")
         EntFire("glados_7", "AddOutput", "OnCompletion glados_6_p2mmoverride:Kill")
         EntFire("trigger_orange_wins", "Enable")
+
+        // Turn off death icons and turn on instant respawn
+        SetConVarInt("p2mm_deathicons", 0)
+        SetConVarInt("p2mm_instantrespawn", 1)
 
         // Tournament mode stuff
         if (bTournamentMode) {
