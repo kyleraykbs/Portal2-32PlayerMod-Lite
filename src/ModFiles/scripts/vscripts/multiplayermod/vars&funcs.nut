@@ -1508,23 +1508,27 @@ function BestGuessSpawnpoint() {
         local FinalSpawnBlue = Vector(0, 0, 0)
         local FinalRotationBlue = Vector(0, 0, 0)
 
-        // Singlepayer spawn stuff
+        // Singleplayer spawn stuff
 
         // New Aperture
         if (Entities.FindByModel(null, "models/elevator/elevator_tube_opener.mdl")) {
-            for (local ent = null; ent = Entities.FindByModel(ent, "models/elevator/elevator_tube_opener.mdl");) {
-                local elevator = Entities.FindByName(null, "arrival_elevator-elevator_1")
-                // Get the nearest elevator
-                local elevator_pos = elevator.GetOrigin()
-                local ent_pos = ent.GetOrigin()
+            for (local ent = null; ent = Entities.FindByClassname(ent, "trigger_once");) {
+                if (ent.GetName().find("-leaving_elevator_trigger") == null) continue
 
-                local currentscore = elevator_pos - ent_pos
+                // Get the position of the elevator and the elevator tube to determine where players should spawn
+                local elevator = Entities.FindByName(null, split(ent.GetName(), "-")[0] + "-elevator_1")
+                
+                local elevator_pos = elevator.GetOrigin()
+                local elevator_model = Entities.FindByName(null, split(ent.GetName(), "-")[0] + "-elevator_tube_opener")
+                local elevator_model_pos = elevator_model.GetOrigin()
+
+                local currentscore = elevator_pos - elevator_model_pos
                 currentscore = UnNegative(currentscore)
                 printlP2MM(0, true, currentscore.tostring())
                 currentscore = currentscore.x + currentscore.y + currentscore.z
                 if (currentscore < ourclosest) {
                     ourclosest = currentscore
-                    spawnmiddle = ent
+                    spawnmiddle = elevator_model
                 }
             }
 

@@ -541,14 +541,16 @@ function PostPlayerSpawn() {
     EntFire("p2mm_servercommand", "command", "script CreatePropsForLevel(false, true)")
 
     // Remove scoreboard
-    //! BROKEN BY VALVE! ANY FIXES ARE APPRECIATED!
-    // if (!IsLocalSplitScreen() && !IsDedicatedServer() && !g_bIsCommunityCoopHub /*&& !Player2Joined*/) {
-    //     for (local ent; ent = Entities.FindByClassname(ent, "player");) {
-    //         // TODO: Is there a better way to trigger this for the host player on a listen server?
-    //         // Right now, this will enter -score for every player
-    //         EntFireByHandle(p2mm_clientcommand, "Command", "-score", 0, ent, ent)
-    //     }
-    // }
+    if (GetGameMainDir() == "portal_stories") {
+        if (!IsLocalSplitScreen() && !IsDedicatedServer() && !g_bIsCommunityCoopHub /*&& !Player2Joined*/) {
+            for (local ent; ent = Entities.FindByClassname(ent, "player");) {
+                // TODO: Is there a better way to trigger this for the host player on a listen server?
+                // Right now, this will enter -score for every player
+                EntFireByHandle(p2mm_clientcommand, "Command", "-score", 0, ent, ent)
+            }
+        }
+    }
+
 
     // Random Turret and Frankenturret colors and models, but once!
     if (Config_RandomTurret) {
@@ -632,7 +634,7 @@ function PostPlayerSpawn() {
     // Display First Run Prompt
     if (Config_FirstRunPrompt) {
         EntFire("p2mm_servercommand", "command", "script CallFirstRunPrompt()", 1)
-    } 
+    }
 }
 
 // 4
@@ -777,6 +779,9 @@ function OnPlayerJoin(p) {
     p.ValidateScriptScope()
     local script_scope = p.GetScriptScope()
 
+    // SETUP THE CLASS /////////////////
+    local currentplayerclass = CreateGenericPlayerClass(p)
+
     // Trigger map-specific code
     MapSupport(false, false, false, false, true, false, false)
 
@@ -838,6 +843,9 @@ function OnPlayerJoin(p) {
         printlP2MM(1, true, "Failed to rename portals: " + exception)
     }
 
+    FindPlayerClass(p).portal1 = portal1
+    FindPlayerClass(p).portal2 = portal2
+
     //# Set viewmodel targetnames so they can be told apart #//
     for (local ent; ent = Entities.FindByClassname(ent, "predicted_viewmodel");) {
         EntFireByHandle(ent, "AddOutput", "targetname predicted_viewmodel_player" + ent.GetRootMoveParent().entindex(), 0, null, null)
@@ -875,26 +883,17 @@ function OnPlayerJoin(p) {
     EntFire("p2mm_servercommand", "command", "con_filter_enable 1; con_filter_text_out \"EntryMatchList\"") // Blocks repeated sound errors at around 13 players
 
     // Motion blur is very intense for some reason
-    //! BROKEN BY VALVE! ANY FIXES ARE APPRECIATED!
-    //EntFireByHandle(p2mm_clientcommand, "Command", "stopvideos; r_portal_fastpath 0; r_portal_use_pvs_optimization 0; mat_motion_blur_forward_enabled 0", 0, p, p)
+    if (GetGameMainDir() == "portal_stories") {
+        EntFireByHandle(p2mm_clientcommand, "Command", "stopvideos; r_portal_fastpath 0; r_portal_use_pvs_optimization 0; mat_motion_blur_forward_enabled 0", 0, p, p)
 
-    // SETUP THE CLASS /////////////////
-    local currentplayerclass = CreateGenericPlayerClass(p)
-
-    // UPDATE THE CLASS
-    FindPlayerClass(p).portal1 = portal1
-    FindPlayerClass(p).portal2 = portal2
-
-    /////////////////////////////////////
-
-    // Show scoreboard
-    //! BROKEN BY VALVE! ANY FIXES ARE APPRECIATED!
-    // if (!IsLocalSplitScreen() && !IsDedicatedServer() && !g_bIsCommunityCoopHub && !Player2Joined) {
-    //     local p = Entities.FindByClassname(null, "player")
-    //     if (FindPlayerClass(p).id == 1) {
-    //         EntFireByHandle(p2mm_clientcommand, "Command", "+score", 0, p, p)
-    //     }
-    // }
+        // show scoreboard
+        if (!IsLocalSplitScreen() && !IsDedicatedServer() && !g_bIsCommunityCoopHub && !Player2Joined) {
+            local p = Entities.FindByClassname(null, "player")
+            if (FindPlayerClass(p).id == 1) {
+                EntFireByHandle(p2mm_clientcommand, "Command", "+score", 0, p, p)
+            }
+        }
+    }
 
     // Don't show the join text for the listen server host
     // TODO: Possibly need to rework "y" offset for dedicated?

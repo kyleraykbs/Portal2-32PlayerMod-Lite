@@ -35,6 +35,9 @@ if (Entities.FindByName(null, "p2mm_servercommand")){
 } else {
     // Create a global point_servercommand entity for us to pass through commands
     Entities.CreateByClassname("point_servercommand").__KeyValueFromString("targetname", "p2mm_servercommand")
+    if (GetGameMainDir() == "portal_stories") {
+        Entities.CreateByClassname("point_clientcommand").__KeyValueFromString("targetname", "p2mm_clientcommand")
+    }
 }
 
 printlP2MM(0, true, "Session info...")
@@ -124,9 +127,20 @@ function LoadMapSupportCode(gametype) {
         IncludeScript("multiplayermod/mapsupport/" + gametype + "/" + GetMapName() + ".nut")
     } catch (exception) {
         if (gametype == "portal2") {
-            printlP2MM(1, false, "Failed to load mapsupport for " + GetMapName() + "\n")
+            printlP2MM(1, false, "Failed to load or no map support to load for \"" + GetMapName() + "\"\n")
+            return
         }
-        else {
+        if (gametype == "portal_stories") {
+            // For mel, there are the advanced (sp_) and story (st_) maps.
+            // Map supports were made primarily for advanced mode, but if a story map is loaded, it needs to fallback to the advanced mode map support.
+            try {
+                printlP2MM(0, false, "Story map was possibly loaded, trying to load \"multiplayermod/mapsupport/" + gametype + "/sp" + GetMapName().slice(2) + ".nut\"...")
+                IncludeScript("multiplayermod/mapsupport/" + gametype + "/sp" + GetMapName().slice(2) + ".nut")
+            } catch (exception) {
+               printlP2MM(1, false, "Failed to load or no map support to load for \"" + GetMapName() + "\"\n")
+               return
+            }
+        } else {
             printlP2MM(1, false, "Failed to load " + gametype + " mapsupport code! Reverting to standard Portal 2 mapsupport...")
             return LoadMapSupportCode("portal2")
         }
@@ -139,8 +153,9 @@ printlP2MM(0, true, "GetGameMainDir(): " + GetGameMainDir())
 printlP2MM(0, true, "GetGameBaseDir(): " + GetGameBaseDir())
 switch (GetGameMainDir()) {
     case "portal2": LoadMapSupportCode("portal2"); break
+    case "portal_stories": LoadMapSupportCode("portal_stories"); break
     default:
-        printlP2MM(1, false, "Invalid game directory has been retrieved! Defaulting to portal2 map supports...")
+        printlP2MM(1, false, "Invalid GetGameMainDir() value, defaulting to standard Portal 2 mapsupport.")
         LoadMapSupportCode("portal2")
         break
 }
