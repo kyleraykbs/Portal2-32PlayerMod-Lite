@@ -10,6 +10,7 @@ OnlyOnceSp_A4_Intro_1 <- true
 
 function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSOnPlayerJoin, MSOnDeath, MSOnRespawn) {
     if (MSInstantRun) {
+        GlobalSpawnClass.m_bUseAutoCountEnd <- true
         GlobalSpawnClass.m_bUseAutoSpawn <- true
         PermaPotato = true
         rollang <- 0

@@ -8,6 +8,7 @@
 function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSOnPlayerJoin, MSOnDeath, MSOnRespawn) {
     // Music doesn't play at the end (Moja)
     if (MSInstantRun) {
+        GlobalSpawnClass.m_bUseAutoCountEnd <- true
         PermaPotato = true
         // GlobalSpawnClass.m_cBluePlayers.spawnpoint <- Vector(-609.265137, 1875.096680, -100)
         // GlobalSpawnClass.m_cRedPlayers.spawnpoint <- Vector(-609.265137, 1875.096680, -100)

@@ -26,6 +26,8 @@ function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSO
 
         // Set func_portal_detector to detect all portals
         Entities.FindByName(null, "blindness_detector").__KeyValueFromString("CheckAllIDs", "1")
+
+        sInstantTransitionMap = "sp_a2_bts4"
     }
 
     if (MSPostPlayerSpawn) {
@@ -45,11 +47,7 @@ function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSO
 
         // Make our own changelevel trigger
         for (local p = null; p = Entities.FindByClassnameWithin(p, "player", Vector(5952, 4624, -1736), 100);) {
-            if (!alreadyFading) {
-                EntFire("InstanceAuto9-exit_fade", "fade")
-                alreadyFading = true
-            }
-            EntFire("p2mm_servercommand", "command", "changelevel sp_a2_bts4", 2)
+            StartCountTransition(p)
         }
 
         // Turn this players light off when they get to the lit up area and enable checkpoint

@@ -8,6 +8,11 @@
 function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSOnPlayerJoin, MSOnDeath, MSOnRespawn) {
     if (MSInstantRun) {
         GlobalSpawnClass.m_bUseAutoSpawn <- true
+
+        Entities.FindByClassnameNearest("trigger_multiple", Vector(-176, 392, -160), 32).Destroy()
+        local hCountdownEnableTrigger = Entities.FindByName(null, "transition_trigger")
+        EntFireByHandle(hCountdownEnableTrigger, "Disable", "", 0, null, null)
+
         EntFireByHandle(Entities.FindByName(null, "arrival_elevator-elevator_1"), "startforward", "", 0, null, null)
         // Destroy objects
         Entities.FindByName(null, "door_0-close_door_rl").Destroy()
@@ -18,6 +23,13 @@ function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSO
                     
         // Make changing levels work
         EntFire("transition_trigger", "AddOutput", "OnStartTouch p2mm_servercommand:Command:changelevel sp_a2_laser_relays:0.45", 0, null)
+    }
+
+    if (MSLoop) {
+        // Trigger for starting/reaching the end of the map countdown
+        foreach (player in CreateTrigger("player", -160, 488, -256, -256, 296, -64)) {
+            StartCountTransition(player)
+        }
     }
 
     if (MSPostPlayerSpawn) {

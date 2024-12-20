@@ -10,6 +10,9 @@ OneTimeRunSp_A2_Bts1 <- true
 function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSOnPlayerJoin, MSOnDeath, MSOnRespawn) {
     if (MSInstantRun) {
         GlobalSpawnClass.m_bUseAutoSpawn <- true
+
+        sInstantTransitionMap = "sp_a2_bts2"
+        
         EntFireByHandle(Entities.FindByName(null, "arrival_elevator-elevator_1"), "startforward", "", 0, null, null)
         // Destroy objects
         Entities.FindByName(null, "chamber_door-close_door_rl").Destroy()
@@ -77,8 +80,9 @@ function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSO
 
         // Make our own changelevel trigger
         for (local p = null; p = Entities.FindByClassnameWithin(p, "player", Vector(1253.4089355469, -1319.4395751953, -320.2317199707), 104.79999542236);) {
-            EntFire("instanceauto91-exit_fade", "fade")
-            EntFire("p2mm_servercommand", "command", "changelevel sp_a2_bts2", 2)
+            // EntFire("instanceauto91-exit_fade", "fade")
+            // EntFire("p2mm_servercommand", "command", "changelevel sp_a2_bts2", 2)
+            StartCountTransition(p)
         }
     }
 }

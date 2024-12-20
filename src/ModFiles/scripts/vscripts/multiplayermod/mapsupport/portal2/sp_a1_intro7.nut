@@ -14,6 +14,9 @@ function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSO
         UTIL_Team.Pinging(true)
         UTIL_Team.Taunting(true)
 
+        hCountdownEnableTrigger = Entities.FindByName(null, "transition_trigger")
+        EntFireByHandle(hCountdownEnableTrigger, "Disable", "", 0, null, null)
+
         EntFireByHandle(Entities.FindByName(null, "arrival_elevator-elevator_1"), "startforward", "", 0, null, null)
         EntFire("@sphere", "AddOutput", "OnPlayerPickup p2mm_servercommand:command:script disablewheatleyplayerpickup()", 0, null)
         EntFire("@sphere", "AddOutput", "OnPlayerDrop p2mm_servercommand:command:script enablewheatleyplayerpickup()", 0, null)
@@ -79,6 +82,11 @@ function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSO
         // Wheatley made it past the locked door (pancake one)
         if (Entities.FindByNameWithin(null, "@sphere", Vector(-1500, -415.95, 1280), 128)) {
             g_bOverridePluginGrabController = true
+        }
+
+        // Trigger for starting/reaching the end of the map countdown
+        foreach (player in CreateTrigger("player", -2112, 480, 1216, -2304, 224, 1344)) {
+            StartCountTransition(player)
         }
     }
 }

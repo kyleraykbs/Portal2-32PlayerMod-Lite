@@ -8,6 +8,11 @@
 function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSOnPlayerJoin, MSOnDeath, MSOnRespawn) {
     if (MSInstantRun) {
         GlobalSpawnClass.m_bUseAutoSpawn <- true
+
+        local hCountdownEnableTrigger = Entities.FindByClassnameNearest("trigger_once", Vector(4494, 1152, -652), 32)
+        EntFireByHandle(hCountdownEnableTrigger, "Disable", "", 0, null, null)
+        EntFire("@exit_elevator_cleanser", "AddOutput", "OnStartTouch !activator:RunScriptCode:StartCountTransition(activator)", 0, null)
+
         EntFireByHandle(Entities.FindByName(null, "arrival_elevator-elevator_1"), "startforward", "", 0, null, null)
         Entities.FindByName(null, "lower_panel_1-airlock_lower_panel_1").__KeyValueFromString("targetname", "P2MMLower_Panel_1Override")
         Entities.FindByName(null, "lower_panel_1-airlock_lower_panel_1").__KeyValueFromString("targetname", "P2MMLower_Panel_1Override")

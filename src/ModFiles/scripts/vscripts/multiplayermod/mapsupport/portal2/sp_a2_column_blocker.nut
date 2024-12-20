@@ -11,7 +11,8 @@ OnlyOnceSpA2ColumBlocker2 <- true
 function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSOnPlayerJoin, MSOnDeath, MSOnRespawn) {
     if (MSInstantRun) {
         GlobalSpawnClass.m_bUseAutoSpawn <- true
-
+        GlobalSpawnClass.m_bUseAutoCountEnd <- true
+        
         // Enable pinging and taunting
         UTIL_Team.Pinging(true)
         UTIL_Team.Taunting(true)
