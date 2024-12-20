@@ -115,7 +115,7 @@ def MountMod(gamepath: str) -> None:
 def FindP2MMFolder(gamepath: str) -> str | bool:
     for file in os.listdir(gamepath):
         # Find all the folders that start with "(basegamedir)_tempcontent" and check if they have the identifier.
-        if file.endswith("_tempcontent") and os.path.isdir(gamepath + os.sep + file) and ("p2mm.identifier" in os.listdir(gamepath + os.sep + file)):
+        if file.endswith("_tempcontent") and not file.startswith("p2mm_override_") and os.path.isdir(gamepath + os.sep + file) and ("p2mm.identifier" in os.listdir(gamepath + os.sep + file)):
             p2mmFolder = gamepath + os.sep + file
             Log("Found P2MM's (basegamedir)_tempcontent folder: " + p2mmFolder)
             return p2mmFolder
@@ -203,7 +203,7 @@ def AssembleArgs(gamepath: str) -> str | bool:
     try:
         # Working with the launch arguments and Custom-Launch-Options (CLO) as a table helps with making
         # any needed changes before it is turned into a string then passed on to the Portal 2 executable.
-        args = ["-tempcontent", "-novid", "-allowspectators", "-nosixense", "-conclearlog", "-condebug", "-usercon"]
+        args = ["-tempcontent", "-novid", "-allowspectators", "-nosixense", "-condebug p2mm.log", "-usercon"]
         CLO = []
 
         if gamepath.find("Portal Stories Mel") != -1:
