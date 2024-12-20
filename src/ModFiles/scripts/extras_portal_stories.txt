@@ -28,7 +28,7 @@
 	}
 	"empty"
 	{
-		"title"		    "Portal Stories: Mel Story Mode"
+		"title"		    "#P2MM_PSM_SM"
 		"subtitle" 	    ""
 		"pic"       	"vgui/chapters/chapter1"
 	}
@@ -69,7 +69,7 @@
     }
 	"empty"
 	{
-		"title"			"Advanced Mode:"
+		"title"			"#P2MM_PSM_HM"
 		"subtitle" 	    "The original mod, with harder puzzles"
 		"pic"       	"vgui/chapters/chapter1"
 	}
