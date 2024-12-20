@@ -11,7 +11,7 @@ from datetime import datetime
 
 #? User Process:
 #* 1- Run script from the root directory. `python tools\updateModFilesIndex.py`
-#* 2- Copy the relative path of the identifier file. (ex: src\ModFiles\Portal 2\install_dlc\p2mm.identifier)
+#* 2- Copy the relative path of the identifier file. (ex: src\ModFiles\p2mm.identifier)
 #* 3- Input the path when the script asks for it.
 #* 4- A file should be created/updated (ModIndex.json) that means everything ran correctly, the identifier given will also be updated.
 #* 5- Push the changes to GitHub.
@@ -36,7 +36,7 @@ def SaveData():
     }
     
     # Define path to identifier file and json index file
-    filesData["Path"] = f"src{os.sep}ModFiles{os.sep}Portal 2{os.sep}install_dlc{os.sep}p2mm.identifier"
+    filesData["Path"] = f"src{os.sep}ModFiles{os.sep}p2mm.identifier"
     indexPath = f"{os.getcwd() + os.sep}ModIndex.json"
 
     # Check if the identifier file exists

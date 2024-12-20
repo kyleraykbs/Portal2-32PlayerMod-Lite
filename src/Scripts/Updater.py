@@ -193,7 +193,7 @@ def CheckForNewFiles() -> bool:
     # download all the files and delete the old ones
 
     # check if the identifier file exists or not
-    localIDPath = f"{GVars.modPath}{os.sep}ModFiles{os.sep}Portal 2{os.sep}install_dlc{os.sep}"
+    localIDPath = f"{GVars.modFilesPath}{os.sep}"
     if GVars.configData["Dev-Mode"]["value"]:
         print("localIDPath and which identifier file exists?")
         print(localIDPath)
@@ -260,15 +260,15 @@ def DownloadNewFiles() -> bool:
 
     try:
         # when downloading is done delete the old ModFiles
-        BF.DeleteFolder(BF.NormalizePath(
-            GVars.modPath + "/ModFiles/Portal 2/install_dlc"))
+        BF.DeleteFolder(BF.NormalizePath(GVars.modFilesPath))
+            #GVars.modPath + "/ModFiles/Portal 2/install_dlc"))
         Log("Deleted old files!")
     except Exception as e:
         Log("There was no old ModFiles...")
         Log(str(e))
 
     # then copy the new files there
-    shutil.move(tempPath, BF.NormalizePath(
-        GVars.modPath + "/ModFiles/Portal 2/install_dlc"))
-    Log("Copied new files to " + GVars.modPath +
-        BF.NormalizePath("/ModFiles/Portal 2/install_dlc"))
+    shutil.move(tempPath, BF.NormalizePath(GVars.modFilesPath))
+        #GVars.modPath + "/ModFiles/Portal 2/install_dlc"))
+    Log("Copied new files to " + GVars.modFilesPath)
+        #BF.NormalizePath("/ModFiles/Portal 2/install_dlc"))
