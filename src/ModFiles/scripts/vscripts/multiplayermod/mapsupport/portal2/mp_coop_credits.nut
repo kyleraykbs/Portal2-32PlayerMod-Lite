@@ -57,7 +57,7 @@ MPMCoopCreditNames <- [
     "---------------------------------",
     "[_____ P2:MM Contributors: _____]",
     "---------------------------------",
-    "Playtesting | tnp/thewoodster75/\\n",
+    "Playtesting | \\n",
     "Speedrun Mode Ideas, Playtesting, French Translation | sear",
     "French Translation | Meb",
     "Mod Promotion | PieCreeper",
