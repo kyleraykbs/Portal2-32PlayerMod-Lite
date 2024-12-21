@@ -413,12 +413,24 @@ function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSO
         fan.SetOrigin(Vector(-9127, -1588, -36))
         fan.__KeyValueFromString("model", "models/props_bts/fan01.mdl")
         fan.__KeyValueFromString("targetname", "stupidfan")
+        fan.__KeyValueFromString("solid", "6")
+        fan.__KeyValueFromString("physicsmode", "1")
         InitializeEntity(fan)
 
         local stand = Entities.CreateByClassname("prop_dynamic")
         stand.SetOrigin(Vector(-9152, -1589, -496))
         stand.__KeyValueFromString("model", "models/props_bts/huge_fan_support.mdl")
+        stand.__KeyValueFromString("solid", "6")
+        stand.__KeyValueFromString("physicsmode", "1")
         InitializeEntity(stand)
+
+        areablock <- Entities.CreateByClassname("prop_dynamic")
+        areablock.SetOrigin(Vector(-8380, -1535, -30))
+        areablock.SetAngles(0, 30, 0)
+        areablock.__KeyValueFromString("model", "models/props_bts/gantry_hoist_a.mdl")
+        areablock.__KeyValueFromString("solid", "6")
+        areablock.__KeyValueFromString("physicsmode", "1")
+        InitializeEntity(areablock)
 
         Entities.FindByName(null, "launch_arm12").Destroy()
         Entities.FindByName(null, "catapult12").Destroy()
@@ -453,8 +465,6 @@ function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSO
 
         // So nobody spawns here.
         Entities.FindByClassname(null, "info_player_start").Destroy()
-
-        // remove 
 
         // Remove test chamber VGUI screen as it doesn't work.
         EntFire("info_sign-info_panel", "Kill")
@@ -546,6 +556,10 @@ function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSO
         EntFire("trigger_orange_wins", "AddOutput", "OnStartTouch !activator:RunScriptCode:KillLosers(activator)")
         EntFire("glados_7", "AddOutput", "OnCompletion glados_6_p2mmoverride:Kill")
         EntFire("trigger_orange_wins", "Enable")
+
+        // Turn off death icons and turn on instant respawn
+        SetConVarInt("p2mm_deathicons", 0)
+        SetConVarInt("p2mm_instantrespawn", 1)
 
         // Tournament mode stuff
         if (bTournamentMode) {

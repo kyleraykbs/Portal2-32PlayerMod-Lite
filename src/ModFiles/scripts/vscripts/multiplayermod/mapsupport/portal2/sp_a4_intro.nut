@@ -19,6 +19,7 @@ function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSO
         Entities.FindByName(null, "wheatley_mad_sound1").__KeyValueFromString("message", "ambient\\industrial\\delivery_tubes_lp_01.wav")
         Entities.FindByName(null, "wheatley_mad_sound1").__KeyValueFromString("spawnflags", "0")
         Entities.FindByName(null, "catwalk_lift_door").__KeyValueFromString("dmg", "100")
+        Entities.FindByName(null, "departure_elevator-elevator_1").__KeyValueFromString("dmg", "100")
         Entities.FindByName(null, "recapture_areaportal1").__KeyValueFromString("FadeStartDist", "1750")
         Entities.FindByName(null, "recapture_areaportal1").__KeyValueFromString("FadeDist", "1950")
         Entities.FindByName(null, "recapture_areaportal2").__KeyValueFromString("FadeStartDist", "1750")

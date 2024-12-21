@@ -445,6 +445,10 @@ function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSO
         EntFire("glados_7", "AddOutput", "OnCompletion glados_6_p2mmoverride:Kill")
         EntFire("trigger_orange_wins", "Enable")
 
+        // Turn off death icons and turn on instant respawn
+        SetConVarInt("p2mm_deathicons", 0)
+        SetConVarInt("p2mm_instantrespawn", 1)
+
         // Tournament mode stuff
         if (bTournamentMode) {
             Config_HostOnlyChatCommands <- true // Make sure no other chat commands can be used.

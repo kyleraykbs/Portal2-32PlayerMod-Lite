@@ -455,6 +455,10 @@ function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSO
             EntFireByHandle(button, "AddOutput", "OnPressed !activator:RunScriptCode:HostStartGame(activator)", 0, null, null)
         }
 
+        // Turn off death icons and turn on instant respawn
+        SetConVarInt("p2mm_deathicons", 0)
+        SetConVarInt("p2mm_instantrespawn", 1)
+
         // Tournament mode stuff
         if (bTournamentMode) {
             Config_HostOnlyChatCommands <- true // Make sure no other chat commands can be used.

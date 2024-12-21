@@ -421,6 +421,10 @@ function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSO
         Entities.FindByClassname(null, "point_viewcontrol_multiplayer").Destroy()
         Entities.FindByClassname(null, "point_viewcontrol_multiplayer").Destroy()
 
+        // Turn off death icons and turn on instant respawn
+        SetConVarInt("p2mm_deathicons", 0)
+        SetConVarInt("p2mm_instantrespawn", 1)
+
         // Tournament mode stuff
         if (bTournamentMode) {
             Config_HostOnlyChatCommands <- true // Make sure no other chat commands can be used.
