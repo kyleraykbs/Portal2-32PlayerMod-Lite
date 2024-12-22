@@ -97,6 +97,7 @@ local IncludeScriptCC = function(script) {
 // Organized alphabetically...
 
 IncludeScriptCC("adminmodify")
+IncludeScriptCC("ban")
 IncludeScriptCC("changeteam")
 IncludeScriptCC("help")
 IncludeScriptCC("kick")

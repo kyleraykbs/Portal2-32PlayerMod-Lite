@@ -1,9 +1,10 @@
 commandtable <- {}
 commandtable["adminmodify"] <- "Prints the admin level of someone or assigns them a new level. \"!adminmodify (target player) (level 1-6)\""
+commandtable["ban"] <- "Open UI to ban player from server. This will prevent them from rejoining until the game restarts or they are unbanned. \"!ban\""
 commandtable["changeteam"] <- "Changes your current team. \"!changeteam (optional team arg: 0 Singleplayer, 2 P-Body, 3 Atlas)\""
 commandtable["help"] <- "List available commands or print a description of a specific one. \"!help (optional sepecific command)\""
 commandtable["hub"] <- "Quick and easy way to return to the cooperative lobby. \"!hub\""
-commandtable["kick"] <- "Kicks the player from the server. This will not prevent them from rejoinning. \"!kick (target player\""
+commandtable["kick"] <- "Open UI to kick player from server. This will not prevent them from rejoining. \"!kick\""
 commandtable["kill"] <- "Kill yourself, another player, or a target team. \"!kill (target player/target team/self)\""
 commandtable["mpcourse"] <- "Changes the level to the specified cooperative course. \"!mpcourse (course integer 1-6)\""
 commandtable["noclip"] <- "Toggles your noclip status. \"!noclip\""
