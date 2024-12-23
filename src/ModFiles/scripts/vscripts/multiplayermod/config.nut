@@ -91,7 +91,7 @@ Config_HostOnlyChatCommands <- false
 // [2]: "playercolor (for someone else)", "speed", "tp"
 // [3]: "kill (someone else)", "noclip", "restartlevel", calling a vote with "vote"
 // [4]: "slap", "rocket (optionally someone)", "hub", "mpcourse", "spcourse"
-// [5]: "kick"
+// [5]: "kick", "ban"
 // [6]: "adminmodify" 
 //
 // Example on how to format the list:
