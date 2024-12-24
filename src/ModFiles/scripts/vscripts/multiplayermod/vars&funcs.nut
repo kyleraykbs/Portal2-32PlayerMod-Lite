@@ -2106,34 +2106,31 @@ function FindPlayerByName(name) {
 }
 
 function StartCountTransition(player) {
-    if (player != null) {
-        if (Config_UseCountdown) {
-            if (!doCountdown && playersfinished.len() == 0) {
-                printlP2MM(0, true, "Changelevel Countdown Started!")
-                printlP2MM(0, true, player.tostring() + " finished the map")
-                doCountdown = true
-                Countdown = Time().tointeger() + Config_CountdownTimer
-                playersfinished.append(player)
-            } else {
-            
-                local doAdd = true
-                foreach (p in playersfinished) {
-                    if (player == p) doAdd = false
-                }
-                if (doAdd) {
-                    printlP2MM(0, true, player.tostring() + " finished the map")
-                    playersfinished.append(player)
-                }
-            }
-
-        } else if (sInstantTransitionMap == "") {
-            EntFireByHandle(hCountdownEnableTrigger, "Enable", "", 0, null, null)
+    if (Config_UseCountdown && GetMapName().find("workshop/") == null) {
+        if (!doCountdown && playersfinished.len() == 0) {
+            printlP2MM(0, true, "Changelevel Countdown Started!")
+            printlP2MM(0, true, player.tostring() + " finished the map")
+            doCountdown = true
+            Countdown = Time().tointeger() + Config_CountdownTimer
+            playersfinished.append(player)
         } else {
-            for (local fade = null; fade = Entities.FindByClassname(fade, "env_fade");) {
-                if (fade.GetName().find("exit") != null) {
-                    EntFireByHandle(fade, "fade", "", 0, null, null)
-                    EntFire("p2mm_servercommand", "command", "changelevel " + sInstantTransitionMap, 2)
-                }
+            local doAdd = true
+            foreach (p in playersfinished) {
+                if (player == p) doAdd = false
+            }
+            if (doAdd) {
+                printlP2MM(0, true, player.tostring() + " finished the map")
+                playersfinished.append(player)
+            }
+        }
+    
+    } else if (sInstantTransitionMap == "") {
+        EntFireByHandle(hCountdownEnableTrigger, "Enable", "", 0, null, null)
+    } else {
+        for (local fade = null; fade = Entities.FindByClassname(fade, "env_fade");) {
+            if (fade.GetName().find("exit") != null) {
+                EntFireByHandle(fade, "fade", "", 0, null, null)
+                EntFire("p2mm_servercommand", "command", "changelevel " + sInstantTransitionMap, 2)
             }
         }
     }

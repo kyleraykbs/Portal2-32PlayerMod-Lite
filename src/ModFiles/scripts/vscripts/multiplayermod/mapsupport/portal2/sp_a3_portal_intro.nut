@@ -43,7 +43,7 @@ function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSO
 
         // Make changing levels work
         EntFire("transition_trigger", "AddOutput", "OnStartTouch p2mm_servercommand:Command:changelevel sp_a3_end:0.3", 0, null)
-        local hCountdownEnableTrigger = Entities.FindByClassnameNearest("trigger_once", Vector(3840, 336, 5696), 32)
+        hCountdownEnableTrigger = Entities.FindByClassnameNearest("trigger_once", Vector(3840, 336, 5696), 32)
         EntFireByHandle(hCountdownEnableTrigger, "Disable", "", 0, null, null)
     }
 

@@ -66,22 +66,6 @@ function InstantRun() {
         EntFireByHandle(Entities.FindByName(null, "p2mm_env_global03"), "turnon", "", delay, null, null)
         EntFireByHandle(Entities.FindByName(null, "p2mm_env_global04"), "turnon", "", delay, null, null)
     }
-    if (GetMapName().len() == 37) {
-        try {
-            local level = Replace(GetMapName(), "workshop/", "")
-            level = Replace(level, "/", "")
-            level = level.tointeger()
-            // most likely a PETI/BEE2 map
-            for (local coopman = null; coopman = Entities.FindByClassname(coopman, "logic_coop_manager");) {
-                if (coopman.GetName().find("coopman_exit_level") != null) {
-                    EntFireByHandle(coopman, "AddOutput", "OnChangeToAllTrue @rl_start_exit:Trigger", 0, null, null)
-                    EntFire("@rl_start_exit", "AddOutput", "OnTrigger p2mm_servercommand:Command:changelevel mp_coop_lobby_3:10")
-                }
-            }
-        }
-        catch (exception) {}
-    }
-    
 }
 
 // 2
@@ -708,7 +692,7 @@ function PostPlayerSpawn() {
             EntFireByHandle(hCountdownEnableTrigger, "Disable", "", 0, null, null)
             EntFireByHandle(Entities.FindByClassnameWithin(hCountdownEnableTrigger, "trigger_once", hCountdownEnableTrigger.GetOrigin(), 256), "AddOutput", "OnStartTouch !activator:RunScriptCode:StartCountTransition(activator)", 0, null, null)
         }
-    } else if (Config_UseCountdown && GetMapName().find("mp_coop_lobby_") == null) {
+    } else if (Config_UseCountdown && GetMapName().find("workshop/") == null) {
         // Coop
         if (GetMapName().find("mp_coop_paint_") != null) {
             EntFire("blue_trigger_close", "Disable")

@@ -10,7 +10,7 @@ function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSO
         GlobalSpawnClass.m_bUseAutoSpawn <- true
 
         Entities.FindByClassnameNearest("trigger_multiple", Vector(-176, 392, -160), 32).Destroy()
-        local hCountdownEnableTrigger = Entities.FindByName(null, "transition_trigger")
+        hCountdownEnableTrigger = Entities.FindByName(null, "transition_trigger")
         EntFireByHandle(hCountdownEnableTrigger, "Disable", "", 0, null, null)
 
         EntFireByHandle(Entities.FindByName(null, "arrival_elevator-elevator_1"), "startforward", "", 0, null, null)

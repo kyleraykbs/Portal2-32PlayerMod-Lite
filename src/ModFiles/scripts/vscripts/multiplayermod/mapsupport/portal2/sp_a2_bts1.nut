@@ -80,8 +80,6 @@ function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSO
 
         // Make our own changelevel trigger
         for (local p = null; p = Entities.FindByClassnameWithin(p, "player", Vector(1253.4089355469, -1319.4395751953, -320.2317199707), 104.79999542236);) {
-            // EntFire("instanceauto91-exit_fade", "fade")
-            // EntFire("p2mm_servercommand", "command", "changelevel sp_a2_bts2", 2)
             StartCountTransition(p)
         }
     }
