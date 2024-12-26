@@ -46,7 +46,7 @@ Config_UseCountdown <- true
 
 //! Note: Countdown configs are useless if Config_UseCountdown is set to false.
 // Set to the PERCENTAGE of players that you want to reach the end before the transition enables.
-Config_CountdownPercentage <- 70
+Config_CountdownPercentage <- 75
 
 // Set to the amount of time (in seconds) you allow players to get to the end after someone reaches it (if ^ percentage isnt met in time)
 Config_CountdownTimer <- 30
@@ -267,11 +267,11 @@ try {
 
 try {
     if (typeof(Config_CountdownPercentage) != "integer") {
-        Config_CountdownPercentage <- 50
+        Config_CountdownPercentage <- 75
         ConfigValueError("Invalid", "Config_CountdownPercentage")
     }
 } catch (exception) {
-    Config_CountdownPercentage <- 50
+    Config_CountdownPercentage <- 75
     ConfigValueError("Undefined", "Config_CountdownPercentage")
 }
 
