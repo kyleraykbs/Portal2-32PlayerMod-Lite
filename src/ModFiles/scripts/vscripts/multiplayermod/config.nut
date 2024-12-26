@@ -6,9 +6,6 @@
 //          switch levels after modifying!
 //---------------------------------------------------
 
-//-----------------------------------
-// Dev variables
-//-----------------------------------
 // Set true/false if you want to see the P2:MM debug info in the console
 Config_DevMode <- false
 
@@ -36,7 +33,6 @@ Config_DisableMelCutscenes <- false
 Config_RandomTurret <- false
 Config_RandomTurretLoop <- false
 
-
 // Set true/false if you want the server to wait a bit to allow other players to reach the end of the level before allowing someone to start the elevator (default: true)
 Config_UseCountdown <- true
 
@@ -46,7 +42,6 @@ Config_CountdownPercentage <- 75
 
 // Set to the amount of time (in seconds) you allow players to get to the end after someone reaches it (if ^ percentage isnt met in time)
 Config_CountdownTimer <- 30
-
 
 // Set true/false if you want to randomize the size of all portals every second
 Config_RandomPortalSize <- false
@@ -63,9 +58,6 @@ Config_EnableEmoting <- true
 // Set true/false if you want players to be able to use the ping tool for all maps
 Config_EnablePinging <- true
 
-//-----------------------------------
-// Server variables
-//-----------------------------------
 // Set true/false if you want to enable the Safeguard functionality against server vscript functions from people connecting to you.
 // "true" is highly recommended if this is a public server
 Config_SafeGuard <- true

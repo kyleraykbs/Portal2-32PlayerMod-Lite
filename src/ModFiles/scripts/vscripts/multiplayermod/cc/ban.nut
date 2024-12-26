@@ -4,6 +4,6 @@ CommandList.push(
         level = 5
 
         // !ban
-        function CC(p, args) { RemovePlayerUI(true) }
+        function CC(p, args) { RemovePlayerUI(p.entindex(), true) }
     }
 )

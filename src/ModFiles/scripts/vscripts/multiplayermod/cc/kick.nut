@@ -4,6 +4,6 @@ CommandList.push(
         level = 5
 
         // !kick
-        function CC(p, args) { RemovePlayerUI(false) }
+        function CC(p, args) { RemovePlayerUI(p.entindex(), false) }
     }
 )
