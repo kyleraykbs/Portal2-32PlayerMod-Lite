@@ -23,6 +23,9 @@ function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSO
         Entities.FindByName(null, "@transition_from_map").Destroy()
         Entities.FindByName(null, "powerup_door_trigger").Destroy()
         Entities.FindByClassnameNearest("trigger_once", Vector(-6080, -2812, -5160), 20).Destroy()
+
+        hCountdownEnableTrigger = Entities.FindByClassnameNearest("trigger_once", Vector(-3633, 1258, -2472), 32)
+        EntFireByHandle(hCountdownEnableTrigger, "Disable", "", 0, null, null)
     }
 
     if (MSPostPlayerSpawn) {
@@ -63,6 +66,10 @@ function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSO
         for (local p = null; p = Entities.FindByClassnameWithin(p, "player", Vector(-3631, 1284, -2100), 100);) {
             EntFire("exit_fade", "fade")
             EntFire("p2mm_servercommand", "command", "changelevel sp_a3_jump_intro", 2)
+        }
+
+        foreach(player in CreateTrigger("player", -2768, 1792, -1920, -2640, 1744, -2080)) {
+            StartCountTransition(player)
         }
     }
 }

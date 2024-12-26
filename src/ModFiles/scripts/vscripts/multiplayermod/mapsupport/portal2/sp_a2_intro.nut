@@ -15,6 +15,7 @@ function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSO
         // Disable pinging and taunting
         UTIL_Team.Pinging(false)
         UTIL_Team.Taunting(false)
+        GlobalSpawnClass.m_bUseAutoCountEnd <- true
 
         Entities.FindByName(null, "incinerator_death_fade").Destroy()
         Entities.FindByName(null, "camera_ghostAnim").Destroy()

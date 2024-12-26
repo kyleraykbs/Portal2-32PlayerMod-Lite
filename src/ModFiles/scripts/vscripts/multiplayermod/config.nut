@@ -36,6 +36,18 @@ Config_DisableMelCutscenes <- false
 Config_RandomTurret <- false
 Config_RandomTurretLoop <- false
 
+
+// Set true/false if you want the server to wait a bit to allow other players to reach the end of the level before allowing someone to start the elevator (default: true)
+Config_UseCountdown <- true
+
+//! Note: Countdown configs are useless if Config_UseCountdown is set to false.
+// Set to the PERCENTAGE of players that you want to reach the end before the transition enables.
+Config_CountdownPercentage <- 75
+
+// Set to the amount of time (in seconds) you allow players to get to the end after someone reaches it (if ^ percentage isnt met in time)
+Config_CountdownTimer <- 30
+
+
 // Set true/false if you want to randomize the size of all portals every second
 Config_RandomPortalSize <- false
 
@@ -227,6 +239,36 @@ try {
 } catch (exception) {
     Config_RandomTurretLoop <- false
     ConfigValueError("Undefined", "Config_RandomTurretLoop")
+}
+
+try {
+    if (typeof(Config_UseCountdown) != "bool") {
+        Config_UseCountdown <- false
+        ConfigValueError("Invalid", "Config_UseCountdown")
+    }
+} catch (exception) {
+    Config_UseCountdown <- false
+    ConfigValueError("Undefined", "Config_UseCountdown")
+}
+
+try {
+    if (typeof(Config_CountdownPercentage) != "integer") {
+        Config_CountdownPercentage <- 75
+        ConfigValueError("Invalid", "Config_CountdownPercentage")
+    }
+} catch (exception) {
+    Config_CountdownPercentage <- 75
+    ConfigValueError("Undefined", "Config_CountdownPercentage")
+}
+
+try {
+    if (typeof(Config_CountdownTimer) != "integer") {
+        Config_CountdownTimer <- 30
+        ConfigValueError("Invalid", "Config_CountdownTimer")
+    }
+} catch (exception) {
+    Config_CountdownTimer <- 30
+    ConfigValueError("Undefined", "Config_CountdownTimer")
 }
 
 try {

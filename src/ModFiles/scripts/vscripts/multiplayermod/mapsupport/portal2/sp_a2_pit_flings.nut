@@ -13,7 +13,11 @@ bPlayerOutOfPit <- false
 function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSOnPlayerJoin, MSOnDeath, MSOnRespawn) {
     if (MSInstantRun) {
         GlobalSpawnClass.m_bUseAutoSpawn <- true
+
+        hCountdownEnableTrigger = Entities.FindByClassnameNearest("trigger_once", Vector(-896, 1230, -140), 32)
+        EntFireByHandle(hCountdownEnableTrigger, "Disable", "", 0, null, null)
         EntFireByHandle(Entities.FindByName(null, "arrival_elevator-elevator_1"), "startforward", "", 0, null, null)
+
         // Destroy objects
         Entities.FindByName(null, "door_0-close_door_rl").Destroy()
         Entities.FindByName(null, "walltunnel_1_Cover_clip").Destroy()
@@ -41,6 +45,10 @@ function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSO
     }
     
     if (MSLoop) {
+        // Trigger for starting/reaching the end of the map countdown
+        foreach (player in CreateTrigger("player", -832, 608, 0, -960, 736, 128)) {
+            StartCountTransition(player)
+        }
         if (CreateTrigger("player", -704, 256, -256, 704, -672, 128).len() != 0) {
             bPlayerOutOfPit = true
         } else {

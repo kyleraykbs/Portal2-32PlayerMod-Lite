@@ -98,7 +98,7 @@ function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSO
                 tube_path1.__KeyValueFromString("target", "tube_path2")
                 tube_path1.__KeyValueFromString("orientationtype", "0")
 
-                EntFire("Sp_A2_Bts5ServerCommand", "command", "changelevel sp_a2_bts6", 2, null)
+                EntFire("p2mm_servercommand", "command", "changelevel sp_a2_bts6", 2, null)
 
                 for (local p = null; p = Entities.FindByClassname(p, "player");) {
                     p.SetOrigin(Vector(-1964, 331, -2479))

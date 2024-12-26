@@ -23,7 +23,7 @@ function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSO
         Entities.FindByName(null, "knockout-teleport-destination").Destroy()
         Entities.FindByClassnameNearest("logic_auto", Vector(-10304, 2544, 112), 20).Destroy()
         Entities.FindByClassnameNearest("trigger_multiple", Vector(-640, -1520, 456), 20).Destroy()
-        
+        sInstantTransitionMap = "sp_a3_03"
     }
 
     if (MSPostPlayerSpawn) {
@@ -93,8 +93,7 @@ function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSO
 
         // Elevator changelevel
         for (local p = null; p = Entities.FindByClassnameWithin(p, "player", Vector(6016, 4496, -448), 100);) {
-            EntFire("instanceauto1-exit_fade", "fade")
-            EntFire("p2mm_servercommand", "command", "changelevel sp_a3_03", 2)
+            StartCountTransition(p)
         }
     }
 }

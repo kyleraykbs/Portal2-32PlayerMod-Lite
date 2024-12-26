@@ -14,6 +14,7 @@
 class GlobalSpawnClass {
     m_bUseAutoSpawn = false // Try To Make All Spawns Global
     m_bUseSetSpawn = false // Use Set Spawnpoint
+    m_bUseAutoCountEnd = false // Use Automatic detection for map countdowns.
 
     // Set SpawnPoint
     m_cSetSpawn = class {
@@ -60,7 +61,7 @@ g_bDoneWaiting <- false
 fogs <- false
 g_bOverridePluginGrabController <- true // By default unless specified in mapsupport
 g_bHasSpawned <- false
-
+doCountdown <- false
 // Check entire map string
 if (GetMapName().slice(0, GetMapName().len()) == "mp_coop_community_hub") {
     g_bIsCommunityCoopHub <- true
@@ -105,6 +106,7 @@ PlayerID <- 0
 PreviousNametagItter <- 0
 PreviousTime1Sec <- 0
 PreviousTime5Sec <- 0
+Countdown <- 0
 
 if (Config_RandomPortalSize) {
     randomportalsize <- 34
@@ -116,6 +118,7 @@ TickSpeed <- 0.00
 //---------------
 // Arrays/Tables
 //---------------
+playersfinished <- []
 entityclasses <- []
 ExpendableEntities <- [
     "logic_auto",
@@ -180,7 +183,8 @@ OrangeOldPlayerPos <- null
 OriginalAngle <- null
 OriginalPosMain <- null
 setspot <- Vector(0, 0, 250) //Vector(5107, 3566, -250)
-
+hCountdownEnableTrigger <- null
+sInstantTransitionMap <- ""
 //* FUNCTIONS *\\
 
 function GetHighest(inpvec) {
@@ -2099,4 +2103,34 @@ function FindPlayerByName(name) {
         }
     }
     return best
+}
+
+function StartCountTransition(player) {
+    if (Config_UseCountdown && GetMapName().find("workshop/") == null) {
+        if (!doCountdown && playersfinished.len() == 0) {
+            printlP2MM(0, true, "Changelevel Countdown Started!")
+            printlP2MM(0, true, player.tostring() + " finished the map")
+            doCountdown = true
+            Countdown = Time().tointeger() + Config_CountdownTimer
+            playersfinished.append(player)
+        } else {
+            foreach (p in playersfinished) {
+                if (player == p) return
+            }
+            printlP2MM(0, true, player.tostring() + " finished the map")
+            playersfinished.append(player)
+            return
+        }
+    
+    } else if (sInstantTransitionMap == "") { // if countdown isnt enabled, transition without it
+        EntFireByHandle(hCountdownEnableTrigger, "Enable", "", 0, null, null)
+    } else {
+        for (local fade = null; fade = Entities.FindByClassname(fade, "env_fade");) {
+            if (fade.GetName().find("exit") != null) {
+                EntFireByHandle(fade, "fade", "", 0, null, null)
+                break
+            }
+        }
+        EntFire("p2mm_servercommand", "command", "changelevel " + sInstantTransitionMap, 2)
+    }
 }

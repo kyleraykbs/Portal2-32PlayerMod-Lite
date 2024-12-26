@@ -23,6 +23,9 @@ function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSO
 
         // Make changing levels work
         EntFire("transition_trigger", "AddOutput", "OnStartTouch p2mm_servercommand:Command:changelevel sp_a4_speed_tb_catch:0.45", 0, null)
+        
+        hCountdownEnableTrigger = Entities.FindByClassnameNearest("trigger_once", Vector(4088, -528, -2080), 32)
+        EntFireByHandle(hCountdownEnableTrigger, "Disable", "", 0, null, null)
     }
 
     if (MSPostPlayerSpawn) {
@@ -43,6 +46,9 @@ function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSO
                 p.SetOrigin(Vector(2385, -600, -88))
                 p.SetAngles(0 0 0)
             }
+        }
+        foreach (player in CreateTrigger("player", 3616, -1184, -2512, 3360, -928, -2412)) {
+            StartCountTransition(player)
         }
     }
 }

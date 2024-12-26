@@ -106,7 +106,7 @@ function P2MMLoop() {
         }
     }
 
-    // //## Nametags ##//
+    //## Nametags ##//
     if (Config_UseNametags && g_bAllowNametags) {
         if (Time() - PreviousNametagItter > 0.1) {
             PreviousNametagItter = Time()
@@ -386,6 +386,62 @@ function P2MMLoop() {
                 }
             }
         }
+        
+        // Coop Countdown logic
+        if (Config_UseCountdown && GetMapName().find("mp_coop_lobby_") == null) {
+            for (local t = null; t = Entities.FindByClassname(t, "trigger_playerteam");) {
+                // having to do this nested check hurts my soul, but the names arent consistent
+                if (t.GetName().find("trigger_exit_lift") != null) {
+                    for (local p = null; p = Entities.FindByClassnameWithin(p, "player", t.GetOrigin(), 448);) {
+                        StartCountTransition(p)
+                    }
+                }
+            }
+            if (Entities.FindByName(null, "coop_man_start_transition") != null) {
+                for (local p = null; p = Entities.FindByClassnameWithin(p, "player", Entities.FindByName(null, "coop_man_start_transition").GetOrigin(), 256);) {
+                    StartCountTransition(p)
+                }
+            }
+        }
+
+        // Add a countdown to allow more players to reach the end of level before transition
+        if (doCountdown) {
+            local canTransition = false
+            if (Countdown > Time()) {
+                HudPrint(0, "Time: " + (Countdown - Time().tointeger()).tostring() + "s\n" + playersfinished.len() + "/" + CalcNumPlayers().tostring(), Vector(-1, 0.8, 2), 0, 0, Vector(0, 150, 255), 255, Vector(0, 0, 0), 0, Vector(0.5, 0.5, 1))
+            } else {
+                canTransition = true
+                HudPrint(0, "Time: 0s", Vector(-1, 0.8, 2), 0, 0, Vector(255, 0, 0), 255, Vector(0, 0, 0), 0, Vector(0.5, 0.5, 1))
+            }
+            if (playersfinished.len() >= CalcNumPlayers() * (Config_CountdownPercentage / 100.0)) {
+                canTransition = true
+                HudPrint(0, "\n" + playersfinished.len() + "/" + CalcNumPlayers().tostring(), Vector(-1, 0.8, 2), 0, 0, Vector(0, 255, 0), 255, Vector(0, 0, 0), 0, Vector(0.5, 0.5, 1))
+            }
+            if (canTransition) {
+                doCountdown = false
+                // Coop
+                if (GetMapName().find("mp_coop_paint_") != null) {
+                    EntFire("blue_trigger_close", "Enable")
+                    EntFire("orange_trigger_close", "Enable")
+                }
+                for (local t = null; t = Entities.FindByClassname(t, "trigger_playerteam");) {
+                    if (t.GetName().find("trigger_exit_lift") != null) {
+                        EntFireByHandle(t, "Enable", "", 0, null, null)
+                    }
+                }
+                
+                if (sInstantTransitionMap == "") {
+                    EntFireByHandle(hCountdownEnableTrigger, "Enable", "", 0, null, null)
+                } else {
+                    for (local fade = null; fade = Entities.FindByClassname(fade, "env_fade");) {
+                        if (fade.GetName().find("exit") != null) {
+                            EntFireByHandle(fade, "fade", "", 0, null, null)
+                            EntFire("p2mm_servercommand", "command", "changelevel " + sInstantTransitionMap, 2)
+                        }
+                    }
+                }
+            }
+        }
     }
 }
 
@@ -582,6 +638,71 @@ function PostPlayerSpawn() {
             local b = randFrankColor.b
 
             EntFireByHandle(frank, "Color", (r + " " + g + " " + b), 0, null, null)
+        }
+    }
+
+    if (Config_UseCountdown && GlobalSpawnClass.m_bUseAutoCountEnd) {
+        // setup if the host has the wait config enabled
+        if (Entities.FindByModel(null, "models/props_underground/elevator_a.mdl") == null) {
+            // a1-a2 elevators
+            guessedtrigger <- Entities.FindByClassnameNearest("trigger_once", Entities.FindByName(null, "departure_elevator-elevator_1").GetOrigin(), 64)
+            if (guessedtrigger == null) {
+                // need an offset here because of the other trigger that detects when the player is colliding with the elevator
+                // a4 elevator uses a trigger multiple.... Because.
+                local elevator = Entities.FindByName(null, "departure_elevator-elevator_1").GetOrigin()
+                guessedtrigger = Entities.FindByClassnameNearest("trigger_multiple", Vector(elevator.x, elevator.y, elevator.z - 66), 256)
+                printlP2MM(0, true, guessedtrigger.tostring())
+            }
+
+
+            EntFireByHandle(guessedtrigger, "Disable", "", 0, null, null)
+            hCountdownEnableTrigger = guessedtrigger
+            exittrigger <- null
+            local doornumber = -1
+            for (local foundtrigger = null; foundtrigger = Entities.FindByClassname(foundtrigger, "trigger_multiple");) {
+                if (foundtrigger.GetName().find("in_door_trigger") != null && foundtrigger.GetName().find("entry") == null) {
+                    if (foundtrigger.GetName().find("exit_door-player_in_door_trigger") != null && foundtrigger.GetName().find("exit_door-player_in_door_trigger") < 3) {
+                        exittrigger = foundtrigger
+                        break
+                    }
+                    printlP2MM(0, true, foundtrigger.GetName())
+                    printlP2MM(0, true, foundtrigger.GetName().slice(5, 6))
+                    try {
+                        if (foundtrigger.GetName().slice(5, 6).tointeger() > doornumber) {
+                            exittrigger = foundtrigger
+                            doornumber = foundtrigger.GetName().slice(5, 6).tointeger()
+                            printlP2MM(0, true, "trigger number is higher, setting as guessed trigger.")
+                        } else {printlP2MM(0, true, "trigger number is lower, ignoring")}
+                    } catch (exception) {} // if the trigger name doesnt have a number, just ignore it
+                }
+            }
+            printlP2MM(0, true, exittrigger.GetName())
+            EntFireByHandle(exittrigger, "AddOutput", "OnStartTouch !activator:RunScriptCode:StartCountTransition(activator)", 0, null, null)
+            // EntFireByHandle(Entities.FindByName(null, "@exit_elevator_cleanser"), "AddOutput", "OnStartTouch !activator:RunScriptCode:if(activator!=null){printl(activator)}", 0, null, null)
+        } else if (GetMapName().find("sp_a3") != null) {
+            // a3 elevators
+            local elevator = null
+            for (local bestelevator = null; bestelevator = Entities.FindByClassname(bestelevator, "path_track");) {
+                if (bestelevator.GetName().find("exit_lift_train_path_1") != null) {
+                    elevator = bestelevator
+                    break
+                }
+            }
+            hCountdownEnableTrigger = Entities.FindByClassnameNearest("trigger_once", elevator.GetOrigin(), 32)
+            EntFireByHandle(hCountdownEnableTrigger, "Disable", "", 0, null, null)
+            EntFireByHandle(Entities.FindByClassnameWithin(hCountdownEnableTrigger, "trigger_once", hCountdownEnableTrigger.GetOrigin(), 256), "AddOutput", "OnStartTouch !activator:RunScriptCode:StartCountTransition(activator)", 0, null, null)
+        }
+    } else if (Config_UseCountdown && GetMapName().find("workshop/") == null) {
+        // Coop
+        if (GetMapName().find("mp_coop_paint_") != null) {
+            EntFire("blue_trigger_close", "Disable")
+            EntFire("orange_trigger_close", "Disable")
+        } else {
+            for (local t = null; t = Entities.FindByClassname(t, "trigger_playerteam");) {
+                if (t.GetName().find("trigger_exit_lift") != null) {
+                    EntFireByHandle(t, "Disable", "", 0, null, null)
+                }
+            }
         }
     }
 

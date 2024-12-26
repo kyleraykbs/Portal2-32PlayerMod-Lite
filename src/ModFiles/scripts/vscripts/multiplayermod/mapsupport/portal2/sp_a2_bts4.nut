@@ -42,6 +42,7 @@ function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSO
         // Fix dummy room door closing
         local ent = Entities.FindByName(null, "dummy_shoot_entry_door").__KeyValueFromString("targetname", "moja")
         EntFire("moja", "setanimation", "Open", 2, null)
+        sInstantTransitionMap = "sp_a2_bts5"
     }
 
     if (MSPostPlayerSpawn) {
@@ -127,11 +128,7 @@ function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSO
 
         // Make our own changelevel trigger
         for (local p = null; p = Entities.FindByClassnameWithin(p, "player", Vector(-4080, -7232, 6328), 64);) {
-            if (!alreadyFading) {
-                EntFire("instanceauto17-exit_fade", "fade")
-                alreadyFading = true
-            }
-            EntFire("p2mm_servercommand", "command", "changelevel sp_a2_bts5", 2)
+            StartCountTransition(p)
         }
     }
 }
