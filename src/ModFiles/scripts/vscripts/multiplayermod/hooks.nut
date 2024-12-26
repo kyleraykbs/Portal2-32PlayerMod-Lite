@@ -658,7 +658,7 @@ function PostPlayerSpawn() {
             EntFireByHandle(guessedtrigger, "Disable", "", 0, null, null)
             hCountdownEnableTrigger = guessedtrigger
             exittrigger <- null
-            local ie = -1
+            local doornumber = -1
             for (local foundtrigger = null; foundtrigger = Entities.FindByClassname(foundtrigger, "trigger_multiple");) {
                 if (foundtrigger.GetName().find("in_door_trigger") != null && foundtrigger.GetName().find("entry") == null) {
                     if (foundtrigger.GetName().find("exit_door-player_in_door_trigger") != null && foundtrigger.GetName().find("exit_door-player_in_door_trigger") < 3) {
@@ -668,9 +668,9 @@ function PostPlayerSpawn() {
                     printlP2MM(0, true, foundtrigger.GetName())
                     printlP2MM(0, true, foundtrigger.GetName().slice(5, 6))
                     try {
-                        if (foundtrigger.GetName().slice(5, 6).tointeger() > ie) {
+                        if (foundtrigger.GetName().slice(5, 6).tointeger() > doornumber) {
                             exittrigger = foundtrigger
-                            ie = foundtrigger.GetName().slice(5, 6).tointeger()
+                            doornumber = foundtrigger.GetName().slice(5, 6).tointeger()
                             printlP2MM(0, true, "trigger number is higher, setting as guessed trigger.")
                         } else {printlP2MM(0, true, "trigger number is lower, ignoring")}
                     } catch (exception) {} // if the trigger name doesnt have a number, just ignore it

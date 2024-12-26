@@ -2114,24 +2114,23 @@ function StartCountTransition(player) {
             Countdown = Time().tointeger() + Config_CountdownTimer
             playersfinished.append(player)
         } else {
-            local doAdd = true
             foreach (p in playersfinished) {
-                if (player == p) doAdd = false
+                if (player == p) return
             }
-            if (doAdd) {
-                printlP2MM(0, true, player.tostring() + " finished the map")
-                playersfinished.append(player)
-            }
+            printlP2MM(0, true, player.tostring() + " finished the map")
+            playersfinished.append(player)
+            return
         }
     
-    } else if (sInstantTransitionMap == "") {
+    } else if (sInstantTransitionMap == "") { // if countdown isnt enabled, transition without it
         EntFireByHandle(hCountdownEnableTrigger, "Enable", "", 0, null, null)
     } else {
         for (local fade = null; fade = Entities.FindByClassname(fade, "env_fade");) {
             if (fade.GetName().find("exit") != null) {
                 EntFireByHandle(fade, "fade", "", 0, null, null)
-                EntFire("p2mm_servercommand", "command", "changelevel " + sInstantTransitionMap, 2)
+                break
             }
         }
+        EntFire("p2mm_servercommand", "command", "changelevel " + sInstantTransitionMap, 2)
     }
 }
