@@ -9,6 +9,7 @@ function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSO
     if (MSInstantRun) {
         // Offset coop repsawn nodes for elevators (left and right side)
         GlobalSpawnClass.m_bUseAutoSpawn <- true
+        GlobalSpawnClass.m_bUseAutoCountEnd <- true
 
         // This could be repurposed for speedrun mode where the teleport node
         // is offset exactly where we want to spawn players in the actual elevator

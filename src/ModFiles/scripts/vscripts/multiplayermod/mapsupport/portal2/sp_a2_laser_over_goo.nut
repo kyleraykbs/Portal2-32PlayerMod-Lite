@@ -8,6 +8,7 @@
 function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSOnPlayerJoin, MSOnDeath, MSOnRespawn) {
     if (MSInstantRun) {
         GlobalSpawnClass.m_bUseAutoSpawn <- true
+        GlobalSpawnClass.m_bUseAutoCountEnd <- true
         EntFireByHandle(Entities.FindByName(null, "arrival_elevator-elevator_1"), "startforward", "", 0, null, null)
         Entities.FindByName(null, "wall_panel_2-robo_powerup_corridor_01bendy02").__KeyValueFromString("HoldAnimation", "1")
         Entities.FindByName(null, "wall_panel_2-robo_powerup_corridor_02bendy02").__KeyValueFromString("HoldAnimation", "1")

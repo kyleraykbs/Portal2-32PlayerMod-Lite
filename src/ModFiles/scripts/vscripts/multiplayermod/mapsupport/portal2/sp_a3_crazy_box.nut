@@ -15,6 +15,7 @@ function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSO
     if (MSInstantRun) {
         // 2231.027100 187.758835 -386.163635;
          GlobalSpawnClass.m_bUseAutoSpawn <- true
+         GlobalSpawnClass.m_bUseAutoCountEnd <- true
         // GlobalSpawnClass.m_bUseSetSpawn <- true
         // GlobalSpawnClass.m_cSetSpawn.position <- Vector(2231.027100, 187.758835, -386.163635)
         // GlobalSpawnClass.m_cSetSpawn.radius <- 200

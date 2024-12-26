@@ -31,6 +31,8 @@ function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSO
         Entities.FindByName(null, "bts_door_2-close_door_fast").Destroy()
         Entities.FindByClassnameNearest("logic_auto", Vector(3903, 902, -55), 20).Destroy()
         Entities.FindByClassnameNearest("trigger_once", Vector(-3152, -1928, -240), 20).Destroy()
+
+        sInstantTransitionMap = "sp_a4_finale3"
     }
 
     if (MSPostPlayerSpawn) {
@@ -41,8 +43,7 @@ function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSO
     if (MSLoop) {
         // Make our own changelevel trigger
         for (local p; p = Entities.FindByClassnameWithin(p, "player", Vector(-3152, -1928, -240), 100);) {
-            EntFire("global_ents-exit_fade", "fade")
-            EntFire("p2mm_servercommand", "command", "changelevel sp_a4_finale3", 2)
+            StartCountTransition(p)
         }
     }
 }

@@ -32,6 +32,11 @@ function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSO
         Entities.FindByName(null, "portal_orange_mtg").Destroy()
         Entities.FindByName(null, "emitter_orange_mtg").Destroy()
 
+        local guessedtrigger = Entities.FindByClassnameNearest("trigger_once", Entities.FindByName(null, "departure_elevator-elevator_1").GetOrigin(), 64)
+        EntFireByHandle(guessedtrigger, "Disable", "", 0, null, null)
+        hCountdownEnableTrigger = guessedtrigger
+        
+        EntFireByHandle(Entities.FindByName(null, "door_3-player_in_door_trigger"), "AddOutput", "OnStartTouch !activator:RunScriptCode:StartCountTransition(activator)", 0, null, null)
         EntFire("pickup_portalgun_rl", "AddOutput", "OnTrigger !self:RunScriptCode:a1HasPortalGun()", 0, null)
         
         // Make changing levels work
