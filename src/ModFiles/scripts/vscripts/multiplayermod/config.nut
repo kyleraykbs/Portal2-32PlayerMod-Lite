@@ -23,10 +23,6 @@ Config_VScriptDebug <- false
 // Set true/false if you want to see the visual debug lines in-game for ray tracing
 Config_VisualDebug <- false
 
-// Set true/false if you are a developer and wish to load your custom player model in-game
-// Currently does not work on dedicated servers
-Config_UseCustomDevModels <- false
-
 // Set false if you want to disable the prompt that appears once at the start at every play session.
 Config_FirstRunPrompt <- true
 
@@ -191,16 +187,6 @@ try {
 } catch (exception) {
     Config_VisualDebug <- false
     ConfigValueError("Undefined", "Config_VisualDebug")
-}
-
-try {
-    if (typeof(Config_UseCustomDevModels) != "bool") {
-        Config_UseCustomDevModels <- false
-        ConfigValueError("Invalid", "Config_UseCustomDevModels")
-    }
-} catch (exception) {
-    Config_UseCustomDevModels <- false
-    ConfigValueError("Undefined", "Config_UseCustomDevModels")
 }
 
 try {

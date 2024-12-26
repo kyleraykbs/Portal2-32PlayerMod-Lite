@@ -912,19 +912,6 @@ function OnPlayerJoin(p) {
     EntFireByHandle(p, "Color", (pcolor.r + " " + pcolor.g + " " + pcolor.b), 0, null, null)
     script_scope.Colored <- true
 
-    // Set dev cosmetics
-    if (Config_UseCustomDevModels) {
-        // Currently doesn't work on dedicated... need a new way to precache models for everyone
-        if (!IsDedicatedServer()) {
-            switch (FindPlayerClass(p).steamid) {
-                case 290760494: SetPlayerModel(p, "models/props_foliage/mall_tree_medium01.mdl");       break; // Nanoman2525
-                case 182933216: SetPlayerModel(p, "models/info_character/info_character_player.mdl");   break; // kyleraykbs
-                case 242453954: SetPlayerModel(p, "models/car_wrecked_dest/car_wrecked_b.mdl");         break; // sear
-                case 181670710: SetPlayerModel(p, "models/handles_map_editor/torus.mdl");               break; // Bumpy
-            }
-        }
-    }
-
     // Set fog controller
     if (g_bHasSpawned) {
         if (usefogcontroller) {
