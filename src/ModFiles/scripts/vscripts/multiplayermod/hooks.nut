@@ -537,6 +537,16 @@ function PostPlayerSpawn() {
                     if (ent.GetModelName() == "models/props_backstage/item_dropper.mdl") {
                         EntFireByHandle(ent, "setanimation", "item_dropper_open", 0, null, null)
                     }
+
+                    local instancename = split(ent.GetName(), "-")[0]
+                    if (OverrideName == "Red") { 
+                        Entities.FindByName(null, instancename + "-red_dropper-relay_tube_close").Destroy()
+                        Entities.FindByName(null, instancename + "-red_dropper-relay_tube_open").Destroy()
+                    }
+                    else {
+                        Entities.FindByName(null, instancename + "-blue_dropper-relay_tube_close").Destroy()
+                        Entities.FindByName(null, instancename + "-blue_dropper-relay_tube_open").Destroy()
+                    }
                     // ent.__KeyValueFromString("targetname", OverrideName + "DropperForcedOpenP2MM") // Has no purpose right now
                 }
             }
