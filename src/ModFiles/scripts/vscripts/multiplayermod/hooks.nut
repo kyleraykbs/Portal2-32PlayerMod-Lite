@@ -702,7 +702,7 @@ function PostPlayerSpawn() {
             EntFireByHandle(hCountdownEnableTrigger, "Disable", "", 0, null, null)
             EntFireByHandle(Entities.FindByClassnameWithin(hCountdownEnableTrigger, "trigger_once", hCountdownEnableTrigger.GetOrigin(), 256), "AddOutput", "OnStartTouch !activator:RunScriptCode:StartCountTransition(activator)", 0, null, null)
         }
-    } else if (Config_UseCountdown && GetMapName().find("workshop/") == null) {
+    } else if (Config_UseCountdown && GetMapName().find("workshop/") == null && GetMapName().find("mp_coop_lobby_") == null) {
         // Coop
         if (GetMapName().find("mp_coop_paint_") != null) {
             EntFire("blue_trigger_close", "Disable")
