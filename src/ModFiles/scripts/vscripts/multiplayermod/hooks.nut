@@ -336,9 +336,9 @@ function P2MMLoop() {
 
         //## Singleplayer check that must be looped in case sv_cheats was changed ##//
         if (g_bOverridePluginGrabController && g_bIsOnSingleplayerMaps) {
-            SetPhysTypeConVar(0) // enable real-time physics
+            SetConVarInt("player_held_object_use_view_model", 0) // enable real-time physics
         } else {
-            SetPhysTypeConVar(-1) // enable viewmodel physics, in case of changes. MP Gamerules already defaults to this without plugin
+            SetConVarInt("player_held_object_use_view_model", -1) // enable viewmodel physics, in case of changes. MP Gamerules already defaults to this without plugin.
         }
 
         //## Vote CC Timer Force End ##//
@@ -764,7 +764,7 @@ function PostMapSpawn() {
     MapSupport(false, false, false, true, false, false, false)
 
     if (!IsDedicatedServer()) {
-        SetMaxPortalSeparationConvar(Config_SetPlayerElasticity)
+        SetConVarInt("portal_max_separation_force", Config_SetPlayerElasticity)
     }
 
     //## Cheat detection ##//
