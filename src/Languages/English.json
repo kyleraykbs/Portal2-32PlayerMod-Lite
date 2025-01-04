@@ -108,10 +108,13 @@
   "Discord-RPC": "Discord RPC",
   "Discord-RPC-description": "Enable Discord Rich Presence for P2:MM.",
   "Discord-Webhook": "Discord Webhook",
-  "Discord-Webhook-description": "Webhook URL used to send webhook events to from your server.",
-  "Discord-Webhook-warning": "Console in Portal 2 will report if URL is invalid.",
-  "Discord-Webhook-prompt": "Webhook used to send webhook events to from your server.",
+  "Discord-Webhook-description": "Enable if you want messages in chat as well as server statuses sent over a webhook to Discord.",
+  "Discord-Webhook-warning": "Discord Webhook URL must be specified for this to work.",
+  "Discord-Webhook-URL": "Discord Webhook URL",
+  "Discord-Webhook-URL-description": "Webhook URL used to send webhook events to Discord from your server.",
+  "Discord-Webhook-URL-warning": "Console in Portal 2 will report if URL is invalid.",
+  "Discord-Webhook-URL-prompt": "Webhook used to send webhook events to Discord from your server.",
   "Dev-Mode": "Developer Mode",
   "Dev-Mode-description": "Enables debugging.",
-  "Dev-Mode-warning": "Only enable this if you know what you're doing!!"
+  "Dev-Mode-warning": "Only enable this if you know what you're doing!"
 }

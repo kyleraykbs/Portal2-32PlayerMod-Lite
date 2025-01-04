@@ -118,14 +118,14 @@ DefaultConfig = {
     "Discord-Webhook": {
         "value": False,
         "menu": "advanced",
-        "description": "Turn on using a webhook to send chat messages to Discord.",
+        "description": "Enable if you want messages in chat as well as server statuses sent over a webhook to Discord.",
         "warning": "Discord-Webhook-URL must be specified for this to work.",
         "prompt": ""
     },
     "Discord-Webhook-URL": {
         "value": "",
         "menu": "advanced",
-        "description": "Webhook URL used to send webhook events to from your server.",
+        "description": "Webhook URL used to send webhook events to Discord from your server.",
         "warning": "Console in Portal 2 will report if URL is invalid.",
         "prompt": "Webhook used to send webhook events to from your server."
     },

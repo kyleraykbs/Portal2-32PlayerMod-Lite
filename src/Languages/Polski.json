@@ -107,11 +107,14 @@
   "Portal2-VR-Mod-warning": "Wymagana jest wersja P2VR v0.1.5, ponieważ ostatnia wersja wstępna jest niestabilna. Upewnij się, że P2VR działa przed użyciem go z P2MM!",
   "Discord-RPC": "Discord RPC",
   "Discord-RPC-description": "Włącz Discord Rich Presence dla P2:MM.",
-  "Discord-Webhook": "Webhook Discord",
-  "Discord-Webhook-description": "Adres URL webhooka używany do wysyłania zdarzeń webhook z Twojego serwera.",
-  "Discord-Webhook-warning": "Konsola w Portal 2 zgłosi, jeśli URL jest nieprawidłowy.",
-  "Discord-Webhook-prompt": "Webhook używany do wysyłania zdarzeń webhook z Twojego serwera.",
+  "Discord-Webhook": "Webhook Discorda",
+  "Discord-Webhook-description": "Włącz, jeśli chcesz, aby wiadomości na czacie i statusy serwera były wysyłane przez webhook do Discorda.",
+  "Discord-Webhook-warning": "Należy określić URL webhooka Discorda, aby to działało.",
+  "Discord-Webhook-URL": "URL webhooka Discorda",
+  "Discord-Webhook-URL-description": "URL webhooka używanego do wysyłania wydarzeń webhooka do Discorda z Twojego serwera.",
+  "Discord-Webhook-URL-warning": "Konsola w Portal 2 zgłosi, jeśli URL jest nieprawidłowy.",
+  "Discord-Webhook-URL-prompt": "Webhook używany do wysyłania wydarzeń webhooka do Discorda z Twojego serwera.",
   "Dev-Mode": "Tryb deweloperski",
   "Dev-Mode-description": "Umożliwia debugowanie.",
-  "Dev-Mode-warning": "Włącz to tylko jeśli wiesz co robisz!!"
+  "Dev-Mode-warning": "Włącz to tylko jeśli wiesz co robisz!"
 }

@@ -108,10 +108,13 @@
   "Discord-RPC": "Discord RPC",
   "Discord-RPC-description": "为 P2:MM 启用 Discord Rich Presence。",
   "Discord-Webhook": "Discord Webhook",
-  "Discord-Webhook-description": "Webhook URL，用于从你的服务器发送 webhook 事件。",
-  "Discord-Webhook-warning": "Portal 2 控制台将报告如果 URL 无效。",
-  "Discord-Webhook-prompt": "Webhook，用于从你的服务器发送 webhook 事件。",
+  "Discord-Webhook-description": "如果你希望将聊天消息以及服务器状态通过 Webhook 发送到 Discord，请启用此功能。",
+  "Discord-Webhook-warning": "必须指定 Discord Webhook URL 才能使此功能生效。",
+  "Discord-Webhook-URL": "Discord Webhook URL",
+  "Discord-Webhook-URL-description": "用于从您的服务器将 Webhook 事件发送到 Discord 的 Webhook URL。",
+  "Discord-Webhook-URL-warning": "Portal 2 中的控制台将报告 URL 是否无效。",
+  "Discord-Webhook-URL-prompt": "用于从您的服务器将 Webhook 事件发送到 Discord 的 Webhook。",
   "Dev-Mode": "开发者模式",
   "Dev-Mode-description": "启用调试。",
-  "Dev-Mode-warning": "只有在你知道自己在做什么时才启用这个功能！！"
+  "Dev-Mode-warning": "只有在你知道自己在做什么时才启用这个功能！"
 }

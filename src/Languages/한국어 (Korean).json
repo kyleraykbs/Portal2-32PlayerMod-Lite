@@ -107,11 +107,14 @@
     "Portal2-VR-Mod-warning": "P2VR v0.1.5가 필요합니다. 최신 미리보기 버전은 불안정하므로 P2VR이 작동하는지 확인한 후 P2MM과 함께 사용하세요!",
     "Discord-RPC": "Discord RPC",
     "Discord-RPC-description": "P2:MM을 위한 Discord Rich Presence를 활성화합니다.",
-    "Discord-Webhook": "Discord Webhook",
-    "Discord-Webhook-description": "서버에서 webhook 이벤트를 보내는 데 사용되는 Webhook URL.",
-    "Discord-Webhook-warning": "Portal 2의 콘솔은 URL이 유효하지 않으면 경고합니다.",
-    "Discord-Webhook-prompt": "서버에서 webhook 이벤트를 보내는 데 사용되는 Webhook.",
+    "Discord-Webhook": "Discord 웹훅",
+    "Discord-Webhook-description": "채팅 메시지와 서버 상태를 Discord로 전송하려면 이 기능을 활성화하세요.",
+    "Discord-Webhook-warning": "이 기능이 작동하려면 Discord 웹훅 URL을 지정해야 합니다.",
+    "Discord-Webhook-URL": "Discord 웹훅 URL",
+    "Discord-Webhook-URL-description": "서버에서 Discord로 웹훅 이벤트를 전송하는 데 사용되는 웹훅 URL입니다.",
+    "Discord-Webhook-URL-warning": "Portal 2의 콘솔에서 URL이 유효하지 않으면 보고됩니다.",
+    "Discord-Webhook-URL-prompt": "서버에서 Discord로 웹훅 이벤트를 전송하는 데 사용되는 웹훅입니다.",  
     "Dev-Mode": "개발자 모드",
     "Dev-Mode-description": "디버깅 활성화.",
-    "Dev-Mode-warning": "이 모드를 활성화하려면 어떤 동작을 하는지 알아야 합니다!!"
+    "Dev-Mode-warning": "이 모드를 활성화하려면 어떤 동작을 하는지 알아야 합니다!"
   }

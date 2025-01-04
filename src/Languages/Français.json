@@ -108,10 +108,13 @@
   "Discord-RPC": "Discord RPC",
   "Discord-RPC-description": "Activez la présence enrichie de Discord pour P2:MM.",
   "Discord-Webhook": "Webhook Discord",
-  "Discord-Webhook-description": "URL de Webhook utilisée pour envoyer des événements webhook depuis votre serveur.",
-  "Discord-Webhook-warning": "La console dans Portal 2 signalera si l'URL est invalide.",
-  "Discord-Webhook-prompt": "Webhook utilisé pour envoyer des événements webhook depuis votre serveur.",
+  "Discord-Webhook-description": "Activez cette option si vous souhaitez que les messages du chat ainsi que les statuts du serveur soient envoyés via un webhook à Discord.",
+  "Discord-Webhook-warning": "L'URL du Webhook Discord doit être spécifiée pour que cela fonctionne.",
+  "Discord-Webhook-URL": "URL du Webhook Discord",
+  "Discord-Webhook-URL-description": "URL du webhook utilisée pour envoyer les événements de webhook à Discord depuis votre serveur.",
+  "Discord-Webhook-URL-warning": "La console dans Portal 2 signalera si l'URL est invalide.",
+  "Discord-Webhook-URL-prompt": "Webhook utilisé pour envoyer les événements de webhook à Discord depuis votre serveur.",
   "Dev-Mode": "Mode développeur",
   "Dev-Mode-description": "Active le débogage.",
-  "Dev-Mode-warning": "Activez ceci uniquement si vous savez ce que vous faites!!"
+  "Dev-Mode-warning": "Activez ceci uniquement si vous savez ce que vous faites!"
 }
