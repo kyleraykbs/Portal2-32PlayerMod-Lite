@@ -39,7 +39,6 @@ class GlobalSpawnClass {
 //---------------
 // Constants
 //---------------
-// enum is weird in VScript
 // Player team constants.
 const TEAM_SINGLEPLAYER = 0
 const TEAM_SPECTATOR	= 1
@@ -83,6 +82,17 @@ if (g_bIsOnSingleplayerMaps) {
     function PrecacheMovie(string) {}
     function CoopPingTool(int1, int2) {}
     function CoopBotAnimation(int1, int2) {}
+}
+
+// g_iCurGameIndex definition.
+g_iCurGameIndex <- -1
+switch (GetGameMainDir()) {
+    case "portal2":         g_iCurGameIndex = PORTAL_2;           break;
+    case "portal_stories":  g_iCurGameIndex = PORTAL_STORIES_MEL; break;
+    case "aperturetag":     g_iCurGameIndex = APERTURE_TAG;       break;
+    case "portalreloaded":  g_iCurGameIndex = PORTAL_RELOADED;    break;
+    case "infra":           g_iCurGameIndex = INFRA;              break;
+    case "divinity":        g_iCurGameIndex = DIVINITY;           break;
 }
 
 MadeSpawnClass <- false

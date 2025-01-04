@@ -66,6 +66,13 @@ function InstantRun() {
         EntFireByHandle(Entities.FindByName(null, "p2mm_env_global03"), "turnon", "", delay, null, null)
         EntFireByHandle(Entities.FindByName(null, "p2mm_env_global04"), "turnon", "", delay, null, null)
     }
+
+    // Remove unneeded entities in maps
+    // logic_autosaves don't work in multiplayer
+    for (local ent = null; ent = Entities.FindByClassname(ent, "logic_autosave");)
+    {
+        ent.Destroy()
+    }
 }
 
 // 2
@@ -597,7 +604,7 @@ function PostPlayerSpawn() {
     EntFire("p2mm_servercommand", "command", "script CreatePropsForLevel(false, true)")
 
     // Remove scoreboard
-    if (GetGameMainDir() == "portal_stories") {
+    if (g_iCurGameIndex != PORTAL_2 && g_iCurGameIndex != DIVINITY) {
         if (!IsLocalSplitScreen() && !IsDedicatedServer() && !g_bIsCommunityCoopHub /*&& !Player2Joined*/) {
             for (local ent; ent = Entities.FindByClassname(ent, "player");) {
                 // TODO: Is there a better way to trigger this for the host player on a listen server?
@@ -1004,7 +1011,7 @@ function OnPlayerJoin(p) {
     EntFire("p2mm_servercommand", "command", "con_filter_enable 1; con_filter_text_out \"EntryMatchList\"") // Blocks repeated sound errors at around 13 players
 
     // Motion blur is very intense for some reason
-    if (GetGameMainDir() == "portal_stories") {
+    if (g_iCurGameIndex != PORTAL_2 && g_iCurGameIndex != DIVINITY) {
         EntFireByHandle(p2mm_clientcommand, "Command", "stopvideos; r_portal_fastpath 0; r_portal_use_pvs_optimization 0; mat_motion_blur_forward_enabled 0", 0, p, p)
 
         // show scoreboard

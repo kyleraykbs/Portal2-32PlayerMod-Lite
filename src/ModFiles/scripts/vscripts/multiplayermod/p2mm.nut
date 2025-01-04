@@ -14,39 +14,40 @@
 //                 fixes for 3+ MP.
 //---------------------------------------------------
 
-/*
-    TODO:
-    - Redo the entire system for LoadMapSupportCode
-        - Better to merge everything into one nut file per map, even with gamemode differences
-*/
-
-// In case this is the client VM...
+// Stop the client VM from running this script.
 if (!("Entities" in this)) { return }
 
 printl("\n---------------------")
 printl("==== calling p2mm.nut")
 printl("---------------------\n")
 
+// iCurGameIndex constants.
+const PORTAL_2           = 0
+const PORTAL_STORIES_MEL = 1
+const APERTURE_TAG       = 2
+const PORTAL_RELOADED    = 3
+const INFRA              = 4
+const DIVINITY           = 5
+
+IncludeScript("multiplayermod/config.nut") // Import the user configuration and preferences and make sure nothing is invalid and compensate if so.
+IncludeScript("multiplayermod/vars&funcs.nut") // Load global variables and functions.
+
 // Bad way to check, but what else can we do?
 if (Entities.FindByName(null, "p2mm_servercommand")){
     // Primary check in case the script attempts to execute midgame and it already has
-    printlP2MM(1, false, "p2mm.nut is attempting to run again! Stopping...")
+    printlP2MM(1, false, "p2mm.nut is attempting to run again! Stopping!")
     return
 } else {
     // Create a global point_servercommand entity for us to pass through commands
     Entities.CreateByClassname("point_servercommand").__KeyValueFromString("targetname", "p2mm_servercommand")
-    if (GetGameMainDir() == "portal_stories") {
-        Entities.CreateByClassname("point_clientcommand").__KeyValueFromString("targetname", "p2mm_clientcommand")
-    }
+    Entities.CreateByClassname("point_clientcommand").__KeyValueFromString("targetname", "p2mm_clientcommand")
 }
 
 printlP2MM(0, true, "Session info...")
 printlP2MM(0, true, "- Current map: " + GetMapName())
 printlP2MM(0, true, "- Max players allowed on the server: " + GetMaxPlayers())
 printlP2MM(0, true, "- Dedicated server: " + IsDedicatedServer())
-printlP2MM(0, true, "\n")
-
-IncludeScript("multiplayermod/config.nut") // Import the user configuration and preferences and make sure nothing was invalid and compensate
+printl("")
 
 printlP2MM(0, true, "FirstRunState(-1): " + FirstRunState(-1).tostring())
 printlP2MM(0, true, "GetLastMap(): " + GetLastMap())
@@ -85,8 +86,6 @@ printlP2MM(0, false, "MAP LOADED: " + GetMapName())
 //-------------------------------------------------------------------------------------------
 
 // Continue loading the P2:MM fixes, game mode, and features
-
-IncludeScript("multiplayermod/vars&funcs.nut")
 IncludeScript("multiplayermod/safeguard.nut")
 IncludeScript("multiplayermod/hooks.nut")
 IncludeScript("multiplayermod/chatcommands.nut")
@@ -105,60 +104,69 @@ ConsoleAscii <- [
 "########...#######.......##.###.##.##.###.##",
 "##........##.........##..##.....##.##.....##",
 "##........##........####.##.....##.##.....##",
-"##........#########..##..##.....##.##.....##"
+"##........#########..##..##.....##.##.....##",
+"                VERSION 2.3.0               "
 ]
+printl("")
 foreach (line in ConsoleAscii) { printl(line) }
 delete ConsoleAscii
 printl("")
 
 //---------------------------------------------------
 
-// Now, manage everything the player has set in config.nut
-// If the gamemode has exceptions of any kind, it will revert to standard Portal 2 mapsupport
-
 // Import map support code
-// Map name will be wonky if the client VM attempts to get the map name
+// If the g_iCurGameIndex is invalid. nothing will load.
+// Can't use the consts here as consts are compiled into the file and the file with them are only included later at runtime.
 function LoadMapSupportCode(gametype) {
     printlP2MM(0, false, "=============================================================")
-    printlP2MM(0, false, "Attempting to load " + gametype + " mapsupport code!")
-    printlP2MM(0, false, "=============================================================\n")
+    switch (g_iCurGameIndex) {
+        case (PORTAL_2):           printlP2MM(0, false, "Loading Portal 2 map support code..."); break;
+        case (PORTAL_STORIES_MEL): printlP2MM(0, false, "Loading Portal Stories: Mel map support code..."); break;
+        case (APERTURE_TAG):       printlP2MM(0, false, "Loading Aperture Tag map support code..."); break;
+        case (PORTAL_RELOADED):    printlP2MM(0, false, "Loading Portal Reloaded map support code..."); break;
+        case (INFRA):              printlP2MM(0, false, "Loading Infra map support code..."); break;
+        case (DIVINITY):           printlP2MM(0, false, "Loading Portal: Divinity map support code..."); break;
+        default:
+            printlP2MM(1, false, "Invalid g_iCurGameIndex value! P2:MM has been loaded with a unsupported game/mod! Nothing will be loaded, issues might occur!")
+            printlP2MM(0, false, "=============================================================\n")
+            return
+    }
 
     try {
-        IncludeScript("multiplayermod/mapsupport/" + gametype + "/" + GetMapName() + ".nut")
+        switch (g_iCurGameIndex) {
+            case (PORTAL_2): IncludeScript("multiplayermod/mapsupport/portal2/" + GetMapName() + ".nut"); break;
+            case (PORTAL_STORIES_MEL): IncludeScript("multiplayermod/mapsupport/portal_stories/" + GetMapName() + ".nut"); break;
+            case (APERTURE_TAG): IncludeScript("multiplayermod/mapsupport/aperturetag/" + GetMapName() + ".nut"); break;
+            case (PORTAL_RELOADED): IncludeScript("multiplayermod/mapsupport/portalreloaded/" + GetMapName() + ".nut"); break;
+            case (INFRA): IncludeScript("multiplayermod/mapsupport/infra/" + GetMapName() + ".nut"); break;
+            case (DIVINITY): IncludeScript("multiplayermod/mapsupport/divinity/" + GetMapName() + ".nut"); break;
+        }
     } catch (exception) {
-        if (gametype == "portal2") {
-            printlP2MM(1, false, "Failed to load or no map support to load for \"" + GetMapName() + "\"\n")
-            return
-        }
-        if (gametype == "portal_stories") {
-            // For mel, there are the advanced (sp_) and story (st_) maps.
-            // Map supports were made primarily for advanced mode, but if a story map is loaded, it needs to fallback to the advanced mode map support.
+        // For mel, there are the advanced (sp_) and story (st_) maps.
+        // Map supports were made primarily for advanced mode, but if a story map is loaded, it needs to fallback to the advanced mode map support.
+        if (g_iCurGameIndex == PORTAL_STORIES_MEL) {
+            printlP2MM(0, false, "Failed to load map for Portal Stories: Mel! Story map was possibly loaded, loading advanced mode map support \"multiplayermod/mapsupport/portal_stories/sp" + GetMapName().slice(2) + ".nut\"...")
             try {
-                printlP2MM(0, false, "Story map was possibly loaded, trying to load \"multiplayermod/mapsupport/" + gametype + "/sp" + GetMapName().slice(2) + ".nut\"...")
-                IncludeScript("multiplayermod/mapsupport/" + gametype + "/sp" + GetMapName().slice(2) + ".nut")
-            } catch (exception) {
-               printlP2MM(1, false, "Failed to load or no map support to load for \"" + GetMapName() + "\"\n")
-               return
-            }
-        } else {
-            printlP2MM(1, false, "Failed to load " + gametype + " mapsupport code! Reverting to standard Portal 2 mapsupport...")
-            return LoadMapSupportCode("portal2")
+                IncludeScript("multiplayermod/mapsupport/portal_stories/sp" + GetMapName().slice(2) + ".nut")
+                printlP2MM(0, false, "Map support loaded successfully!")
+                printlP2MM(0, false, "=============================================================\n")
+                return
+            } catch (exception) {}
         }
+        printlP2MM(1, false, "Failed to load or no map support to load for \"" + GetMapName() + "\"")
+        printlP2MM(1, true, "Exception: " + exception)
+        printlP2MM(0, false, "=============================================================\n")
+        return
     }
+    printlP2MM(0, false, "Map support loaded successfully!")
+    printlP2MM(0, false, "=============================================================\n")
 }
 
 // Now, manage everything the player has set in config.nut
 // If the gamemode has exceptions of any kind, it will revert to standard Portal 2 mapsupport
 printlP2MM(0, true, "GetGameMainDir(): " + GetGameMainDir())
-printlP2MM(0, true, "GetGameBaseDir(): " + GetGameBaseDir())
-switch (GetGameMainDir()) {
-    case "portal2": LoadMapSupportCode("portal2"); break
-    case "portal_stories": LoadMapSupportCode("portal_stories"); break
-    default:
-        printlP2MM(1, false, "Invalid GetGameMainDir() value, defaulting to standard Portal 2 mapsupport.")
-        LoadMapSupportCode("portal2")
-        break
-}
+printlP2MM(0, true, "GetGameRootDir(): " + GetGameRootDir())
+LoadMapSupportCode(g_iCurGameIndex)
 
 //---------------------------------------------------
 

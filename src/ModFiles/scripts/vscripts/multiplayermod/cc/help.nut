@@ -15,10 +15,10 @@ commandtable["slap"] <- "Slap yourself, another player, or a target team dealing
 commandtable["speed"] <- "Changes your player speed. \"!speed (float arg)\""
 commandtable["tp"] <- "Teleport yourself, another player, or a target team to a destination. \"!tp (target arg: Specific player, team target. destination player if only this arg.) (destination arg: player)\""
 commandtable["vote"] <- "Invoke this to get a headcount on whether something should happen or not. \"!vote (vote choice arg: changelevel, kick, or duogunonly) (arg for changelevel map name or kick player name)\""
-switch (GetGameMainDir()) {
-    case "portal2":
+switch (g_iCurGameIndex) {
+    case (PORTAL_2):
         commandtable["spchapter"] <- "Changes the level to the specified singleplayer chapter. \"!spchapter (chapter integer 1-9)\""
-    case "portal_stories":
+    case (PORTAL_STORIES_MEL):
         commandtable["spchapter"] <- "Changes the level to the specified singleplayer chapter. \"!spchapter (chapter integer 1-5) (Optional: Story/Hard)\""
 }
 

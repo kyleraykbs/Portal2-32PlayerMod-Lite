@@ -82,7 +82,7 @@ function Vote::BeginVote(arg1, arg2, pPlayer) {
             return SendChatMessage("[ERROR] Player not found!", pPlayer)
         }
         if (!IsDedicatedServer()) {
-            if (FindPlayerByName(arg2) == UTIL_PlayerByIndex(1)) {
+            if (FindPlayerByName(arg2) == PlayerByIndex(1)) {
                 return SendChatMessage("[ERROR] Cannot kick server operator!", pPlayer)
             }
         }

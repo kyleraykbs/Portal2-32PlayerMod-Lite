@@ -65,7 +65,7 @@ MAP_SPAWNPOINTS <- {
 }
 
 function DevFillPassedPoints(index) {
-    local playerClass = FindPlayerClass(UTIL_PlayerByIndex(index))
+    local playerClass = FindPlayerClass(PlayerByIndex(index))
     if (!playerClass) return
     playerClass.l_PassedCheckpoints.clear()
     playerClass.l_PassedCheckpoints.extend(MAP_CHECKPOINTS)
@@ -280,7 +280,7 @@ function GEPlayerRespawn(player) {
 
 // If a player dies, set spawn vector to be at the last applicable spawn point.
 function GEPlayerDeath(userid, attacker, entindex) {
-    local player = UTIL_PlayerByIndex(entindex) 
+    local player = PlayerByIndex(entindex) 
     local playerClass = FindPlayerClass(player)
 
     if (playerClass.s_LastCheckPoint == "start") { return }
