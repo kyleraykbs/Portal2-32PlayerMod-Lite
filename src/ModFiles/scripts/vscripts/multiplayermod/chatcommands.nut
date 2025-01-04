@@ -22,7 +22,7 @@ function RunChatCommand(cmd, args, plr) {
 function ChatCommands(rawText, iUserIndex) {
     local Message = strip(RemoveDangerousChars(rawText))
 
-    local pPlayer = UTIL_PlayerByIndex(iUserIndex)
+    local pPlayer = PlayerByIndex(iUserIndex)
     if ((pPlayer == null)) { return } // Invalid player or dedicated server console
 
     local AdminLevel = GetAdminLevel(pPlayer)
@@ -110,14 +110,15 @@ IncludeScriptCC("slap")
 IncludeScriptCC("speed")
 IncludeScriptCC("tp")
 IncludeScriptCC("vote")
-switch (GetGameMainDir()) {
-    case "portal2":
+switch (g_iCurGameIndex) {
+    case (PORTAL_2):
         IncludeScriptCC("mpcourse")
         IncludeScriptCC("hub")
         IncludeScriptCC("spchapterp2")
-
-    case "portal_stories":
+        break
+    case (PORTAL_STORIES_MEL):
         IncludeScriptCC("spchaptermel")
+        break
 }
 //--------------------------------------
 // Chat command function dependencies
@@ -170,7 +171,7 @@ function SetAdminLevel(NewLevel, iPlayerIndex) {
 
     local iAdminIndex = 0
     local bFoundIndex = false
-    local tPlayerClass = FindPlayerClass(UTIL_PlayerByIndex(iPlayerIndex))
+    local tPlayerClass = FindPlayerClass(PlayerByIndex(iPlayerIndex))
     foreach (admin in Admins) {
         // Separate the SteamID and the admin level
         local level = split(admin, "[]")[0]
