@@ -18,7 +18,7 @@
     {
         "title"         "#P2MM_LastMap_t"
         "subtitle"      "#P2MM_LastMap_d"
-        "command"       "p2mm_startsession P2MM_LASTMAP"
+        "command"       "p2mm_map P2MM_LASTMAP"
         "pic"           "vgui/p2mm/lastmap"
     }
     "empty"
@@ -36,35 +36,35 @@
     {
         "title"		    "#portal2_Chapter1_Title"
         "subtitle"  	"1952"
-        "command" 	    "p2mm_startsession st_a1_tramride"
+        "command" 	    "p2mm_map st_a1_tramride"
 		"pic"       	"vgui/chapters/chapter1"
     }
     "portalstories_lvl02"
     {
         "title"     	"#portal2_Chapter2_Title"
         "subtitle"  	"#PS_CHAPTER2"
-        "command"	    "p2mm_startsession st_a2_garden_de"
+        "command"	    "p2mm_map st_a2_garden_de"
 		"pic"       	"vgui/chapters/chapter2"
     }
     "portalstories_lvl03"
     {
         "title"     	"#portal2_Chapter3_Title"
         "subtitle"  	"#PS_CHAPTER3"
-        "command"       "p2mm_startsession st_a3_junkyard"
+        "command"       "p2mm_map st_a3_junkyard"
 		"pic"       	"vgui/chapters/chapter6"
     }
     "portalstories_lvl04"
     {
         "title"     	"#portal2_Chapter4_Title"
         "subtitle"  	"#PS_CHAPTER4"
-        "command"       "p2mm_startsession st_a4_overgrown"
+        "command"       "p2mm_map st_a4_overgrown"
 		"pic"      	    "vgui/chapters/chapter8"
     }
     "portalstories_lvl05"
     {
         "title"    	 	"portal2_Chapter5_Title"
         "subtitle" 	    "#PS_CHAPTER5"
-        "command"       "p2mm_startsession st_a4_core_access"
+        "command"       "p2mm_map st_a4_core_access"
 		"pic"       	"vgui/chapters/chapter10"
     }
 	"empty"
@@ -77,35 +77,35 @@
     {
         "title"    	 	"#portal2_Chapter1_Title"
         "subtitle"  	"1952"
-        "command" 	    "p2mm_startsession sp_a1_tramride"
+        "command" 	    "p2mm_map sp_a1_tramride"
 		"pic"       	"vgui/chapters/chapter1"
     }
     "portalstories_lvl02"
     {
         "title"     	"#portal2_Chapter2_Title"
         "subtitle"  	"#PS_CHAPTER2"
-        "command"	    "p2mm_startsession sp_a2_garden_de"
+        "command"	    "p2mm_map sp_a2_garden_de"
 		"pic"       	"vgui/chapters/chapter2"
     }
     "portalstories_lvl03"
 	{
 		"title"     	"#portal2_Chapter3_Title"
 		"subtitle"  	"#PS_CHAPTER3"
-		"command"       "p2mm_startsession sp_a3_junkyard"
+		"command"       "p2mm_map sp_a3_junkyard"
 		"pic"       	"vgui/chapters/chapter6"
 	}
 	"portalstories_lvl04"
 	{
 		"title"     	"#portal2_Chapter4_Title"
 		"subtitle"  	"#PS_CHAPTER4"
-		"command"       "p2mm_startsession sp_a4_overgrown"
+		"command"       "p2mm_map sp_a4_overgrown"
 		"pic"      	    "vgui/chapters/chapter8"
     }
     "portalstories_lvl05"
     {
         "title"    	 	"portal2_Chapter5_Title"
         "subtitle" 	    "#PS_CHAPTER5"
-        "command"       "p2mm_startsession sp_a4_core_access"
+        "command"       "p2mm_map sp_a4_core_access"
 		"pic"       	"vgui/chapters/chapter10"
     }
     "empty"
