@@ -1,0 +1,71 @@
+Extras
+{
+  "Ch1"
+{
+        "title" "Chapter 1: House of Leaves"
+	    "subtitle"	" "
+	    "pic"   "vgui/chapters/chapter1"
+}
+"empty"
+{
+	"title"			" "
+	"subtitle" 	        " "
+	"command"       	" "
+}
+ "Intro"
+{
+        "title" "Intro"
+        "subtitle"  "Chapter 1 - House of Leaves"
+        "command"   "p2mm_startsession sp_a1_divinity_intro"
+        "pic"   "vgui/chapters/chapter1"
+}
+ "Map2"
+{
+        "title" "Behind the Scenes"
+        "subtitle"  "Chapter 1 - House of Leaves"
+        "command"   "p2mm_startsession sp_a1_divinity_bts1"
+        "pic"   "vgui/chapters/chapter1"
+}
+ "Map3"
+{
+        "title" "Field Intro"
+        "subtitle"  "Chapter 1 - House of Leaves"
+        "command"   "p2mm_startsession sp_a1_divinity_field_intro"
+        "pic"   "vgui/chapters/chapter1"
+}
+ "Map4"
+{
+        "title" "Wall blocks Wall"
+        "subtitle"  "Chapter 1 - House of Leaves"
+        "command"   "p2mm_startsession sp_a1_divinity_wall_blocks_wall"
+        "pic"   "vgui/chapters/chapter1"
+}
+ "Map5"
+{
+        "title" "Traversal"
+        "subtitle"  "Chapter 1 - House of Leaves"
+        "command"   "p2mm_startsession sp_a1_divinity_traversal"
+        "pic"   "vgui/chapters/chapter1"
+}
+ "Map6"
+{
+        "title" "Funnel Tower"
+        "subtitle"  "Chapter 1 - House of Leaves"
+        "command"   "p2mm_startsession sp_a1_divinity_funnel_tower"
+        "pic"   "vgui/chapters/chapter1"
+}
+ "Map7"
+{
+        "title" "Pink Plate"
+        "subtitle"  "Chapter 1 - House of Leaves"
+        "command"   "p2mm_startsession sp_a1_divinity_pink_plate"
+        "pic"   "vgui/chapters/chapter1"
+}
+ "Map8"
+{
+        "title" "Core"
+        "subtitle"  "Chapter 1 - House of Leaves"
+        "command"   "p2mm_startsession sp_a1_divinity_core01"
+        "pic"   "vgui/chapters/chapter1"
+}
+}

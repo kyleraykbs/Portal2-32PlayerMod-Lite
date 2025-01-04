@@ -1897,20 +1897,25 @@ function GetType(var, simplify = true) {
     if (!simplify) {
         return type
     } else {
-        if (type == "float" || type == "integer") {
-            return "number"
-        } else if (type == "string") {
-            return "string"
-        } else if (type == "bool") {
-            return "bool"
-        } else if (type == "table" || type == "array") {
-            return "table"
-        } else if (type == "instance") {
-            return "entity"
-        } else if (type == "function") {
-            return "function"
-        } else {
-            return "unknown"
+        switch (type) {
+            case "float":
+            case "integer":
+                return "number"
+
+            case "table":
+            case "array":
+                return "table"
+
+            case "string":
+                return "string"
+            case "bool":
+                return "bool"
+            case "instance":
+                return "entity"
+            case "function":
+                return "function"
+            default:
+                return "unknown"
         }
     }
 }
