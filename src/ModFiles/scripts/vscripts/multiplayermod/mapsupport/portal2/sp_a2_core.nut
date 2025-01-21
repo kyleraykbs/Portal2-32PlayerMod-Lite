@@ -5,17 +5,8 @@
 // ██████╔╝██║    ██████████╗██║  ██║███████╗██████████╗╚█████╔╝╚█████╔╝██║  ██║███████╗
 // ╚═════╝ ╚═╝    ╚═════════╝╚═╝  ╚═╝╚══════╝╚═════════╝ ╚════╝  ╚════╝ ╚═╝  ╚═╝╚══════╝
 
-OnlyOnceSp_A2_Core_2 <- true
-OnlyOnceSp_A2_Core <- true
-TPSp_A2_Core <- true
 EnableMeSp_A2_Core <- false
-OnlyOnceMoveTeleportSp_A2_Core_2 <- true
 TeleportOutInSp_A2_Core <- false
-ONETIMEFOGCHANGESp_A2_Core_2 <- false
-ONETIMEFOGCHANGESp_A2_Core_2_white <- false
-ONETIMEFOGCHANGESp_A2_Core_2_evil <- false
-StalemateRoomExitSp_A2_Core_2 <- false
-StalemateButtonSp_A2_Core_2 <- false
 RoomLookAtPlayerSp_A2_Core <- true
 TempGrabControllerToggled <- false
 StartFadeDone <- false
@@ -31,19 +22,10 @@ function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSO
         p2mm_startfade.__KeyValueFromString("renderamt", "255")
         p2mm_startfade.__KeyValueFromString("spawnflags", "8")
 
-        Entities.CreateByClassname("prop_dynamic").__KeyValueFromString("targetname", "RedFogKillTriggerMPMOD")
-        EntFireByHandle(Entities.FindByName(null, "red_light_pit_open_relay"), "AddOutput", "OnTrigger RedFogKillTriggerMPMOD:kill", 1, null, null)
-
-        Entities.CreateByClassname("prop_dynamic").__KeyValueFromString("targetname", "WhiteFogKillTriggerMPMOD")
-        EntFireByHandle(Entities.FindByName(null, "wheatly_takes_over_relay"), "AddOutput", "OnTrigger WhiteFogKillTriggerMPMOD:kill", 1, null, null)
-
-        Entities.CreateByClassname("prop_dynamic").__KeyValueFromString("targetname", "EvilFogKillTriggerMPMOD")
-        EntFireByHandle(Entities.FindByName(null, "wheatly_turns_evil_relay"), "AddOutput", "OnTrigger EvilFogKillTriggerMPMOD:kill", 1, null, null)
-
-        Entities.CreateByClassname("prop_dynamic").__KeyValueFromString("targetname", "StaleMateButtonKillTrigger")
-        EntFireByHandle(Entities.FindByName(null, "StaleMateButtonKillTriggetr"), "AddOutput", "OnPressed StaleMateButtonKillTrigger:kill", 1, null, null)
-
-        Entities.CreateByClassname("prop_dynamic").__KeyValueFromString("targetname", "TPSp_A2_CoreForSure")
+        // Control the fog depending on where the current scene is at
+        EntFireByHandle(Entities.FindByName(null, "red_light_pit_open_relay"), "AddOutput", "OnTrigger !self:RunScriptCode:fog(1)", 1, null, null)
+        EntFireByHandle(Entities.FindByName(null, "wheatly_takes_over_relay"), "AddOutput", "OnTrigger !self:RunScriptCode:fog(2)", 1, null, null)
+        EntFireByHandle(Entities.FindByName(null, "wheatly_turns_evil_relay"), "AddOutput", "OnTrigger !self:RunScriptCode:fog(3)", 1, null, null)
 
         Entities.FindByName(null, "music_sp_a2_core_b3_2").__KeyValueFromString("targetname", "MUSICOVERRIDEMPMOD")
 
@@ -132,6 +114,15 @@ function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSO
         Entities.FindByName(null, "close_stalemate_room_doors_relay").Destroy()
         Entities.FindByClassnameNearest("trigger_once", Vector(0, 304, -10438), 20).Destroy()
 
+        // move the trap box
+        EntFire("rv_start_moving_trigger", "AddOutput", "OnTrigger !self:RunScriptCode:moveBox():0:1")
+
+        // start the elevator scene
+        EntFire("exit_elevator_departure_trigger", "AddOutput", "OnTrigger !self:RunScriptCode:elevatorScene():0:1")
+
+        // Handle logic when someone reaches the button room
+        EntFire("player_inside_stalemate_room_trigger", "AddOutput", "OnTrigger !self:RunScriptCode:playerInStalemateRoom():0:1")
+
         UTIL_Team.Pinging(true, "all", 1)
         UTIL_Team.Taunting(true, "all", 1)
     }
@@ -139,15 +130,13 @@ function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSO
     if (MSOnPlayerJoin) {
         // Find all players
         for (local p = null; p = Entities.FindByClassname(p, "player");) {
-            EntFireByHandle(p2mm_clientcommand, "Command", "r_flashlightbrightness 1", 0, p, p)
             EntFireByHandle(p, "setfogcontroller", "@environment_darkness_fog", 0, null, null)
         }
-        EntFire("Sp_A2_CoreViewcontrol", "disable", "", 0, null)
         EntFire("Sp_A2_CoreViewcontrol", "Disable", "", 0.1, null)
     }
 
     if (MSPostPlayerSpawn) {
-        StartFadeDone <- true
+        StartFadeDone = true
         EntFire("start_fade", "Fade", "", 0, null)
     }
 
@@ -161,7 +150,7 @@ function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSO
                         SetConVarInt("player_held_object_use_view_model", 0)
                     }
                 } else {
-                    TempGrabControllerToggled <- true
+                    TempGrabControllerToggled = true
                     g_bOverridePluginGrabController = true
                 }
             }
@@ -173,9 +162,8 @@ function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSO
 
         if (!TeleportOutInSp_A2_Core) {
             foreach (player in CreateTrigger("player", 293.857941, 313.969910, -126.097076, -610.639771, -467.855042, 133.613190)) {
-                if (player.GetClassname() == "player") {
-                    TeleportOutInSp_A2_Core <- true
-                }
+                TeleportOutInSp_A2_Core = true
+                break
             }
         }
 
@@ -192,127 +180,6 @@ function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSO
                     p.SetAngles(0, 0, 0)
                     p.SetVelocity(Vector(0, 0, 0))
                 }
-            }
-        }
-
-        if (OnlyOnceSp_A2_Core_2) {
-            if (!Entities.FindByName(null, "rv_start_moving_trigger")) {
-                EntFireByHandle(Entities.FindByName(null, "start_rv_scene_rl"), "Trigger", "", 8, null, null)
-                EntFireByHandle(Entities.FindByName(null, "MUSICOVERRIDEMPMOD"), "PlaySound", "", 8, null, null)
-                Entities.CreateByClassname("prop_dynamic").__KeyValueFromString("targetname", "OnMoveStartOnlyOnceSp_A2_Core_2DIS")
-                EntFire("OnMoveStartOnlyOnceSp_A2_Core_2DIS", "AddOutput", "targetname OnMoveStartOnlyOnceSp_A2_Core_2", 8, null)
-                OnlyOnceSp_A2_Core_2 <- false
-            }
-        }
-
-        if (!ONETIMEFOGCHANGESp_A2_Core_2) {
-            if (!Entities.FindByName(null, "RedFogKillTriggerMPMOD")) {
-                for (local p = null; p = Entities.FindByClassname(p, "player");) {
-                    EntFireByHandle(p, "setfogcontroller", "@environment_red_state", 0, null, null)
-                }
-                ONETIMEFOGCHANGESp_A2_Core_2 <- true
-            }
-        }
-
-        if (!ONETIMEFOGCHANGESp_A2_Core_2_white) {
-            if (!Entities.FindByName(null, "WhiteFogKillTriggerMPMOD")) {
-                for (local p = null; p = Entities.FindByClassname(p, "player");) {
-                    EntFireByHandle(p, "setfogcontroller", "@environment_wheatly_state_01", 0, null, null)
-                }
-                RoomLookAtPlayerSp_A2_Core <- true
-                ONETIMEFOGCHANGESp_A2_Core_2_white <- true
-            }
-        }
-
-        if (!ONETIMEFOGCHANGESp_A2_Core_2_evil) {
-            if (!Entities.FindByName(null, "EvilFogKillTriggerMPMOD")) {
-                for (local p = null; p = Entities.FindByClassname(p, "player");) {
-                    EntFireByHandle(p, "setfogcontroller", "@environment_wheatly_state_02", 0, null, null)
-                }
-                ONETIMEFOGCHANGESp_A2_Core_2_evil <- true
-            }
-        }
-
-        if (!StalemateButtonSp_A2_Core_2) {
-            if (!Entities.FindByName(null, "StaleMateButtonKillTrigger")) {
-                Entities.FindByName(null, "statemate_double_arm_01").__KeyValueFromString("targetname", "statemate_double_arm_01DIS")
-                Entities.FindByName(null, "statemate_double_arm_02").__KeyValueFromString("targetname", "statemate_double_arm_02DIS")
-                Entities.FindByName(null, "statemate_double_arm_03").__KeyValueFromString("targetname", "statemate_double_arm_03DIS")
-                StalemateButtonSp_A2_Core_2 <- true
-            }
-        }
-
-        if (!StalemateRoomExitSp_A2_Core_2) {
-            if (!Entities.FindByName(null, "player_inside_stalemate_room_trigger")) {
-                RoomLookAtPlayerSp_A2_Core <- false
-                EntFire("core_receptacle_pointer_1", "SetTargetEntity", "lookat_glados_bullseye", 0, null)
-                EntFire("glados_pointer", "SetTargetEntity", "lookat_receptacle_bullseye", 0, null)
-                StalemateRoomExitSp_A2_Core_2 <- true
-            }
-        }
-
-        if (OnlyOnceMoveTeleportSp_A2_Core_2) {
-            if (Entities.FindByName(null, "OnMoveStartOnlyOnceSp_A2_Core_2")) {
-                // Find all players
-                for (local p = null; p = Entities.FindByClassname(p, "player");) {
-                    local InsideArea = false
-                    for (local p2 = null; p2 = Entities.FindByClassnameWithin(p2, "player", Vector(-1836.2550048828, -0.81460344791412, -31.667282104492), 151.99999809265);) {
-                        if (p2 == p) {
-                            InsideArea = true
-                        }
-                    }
-
-                    if (!InsideArea) {
-                        p.SetOrigin(Vector(-1839, 0, 8))
-                        p.SetAngles(0, 0, 0)
-                        p.SetVelocity(Vector(0, 0, 0))
-                    }
-                    EntFireByHandle(p, "setfogcontroller", "@environment_glados", 10, null, null)
-                }
-                OnlyOnceMoveTeleportSp_A2_Core_2 <- false
-            }
-        }
-
-        if (OnlyOnceSp_A2_Core) {
-            if (!Entities.FindByName(null, "exit_elevator_departure_trigger")) {
-                printlP2MM(0, true, "Elevator viewcontrol activated!")
-                // Elevator viewcontrol
-                Sp_A2_CoreViewcontrol <- Entities.CreateByClassname("point_viewcontrol_multiplayer")
-                Sp_A2_CoreViewcontrol.__KeyValueFromString("target_team", "-1")
-                Sp_A2_CoreViewcontrol.__KeyValueFromString("targetname", "Sp_A2_CoreViewcontrol")
-                Sp_A2_CoreViewcontrol.SetOrigin(Vector(0, 324, 0))
-                EntFire("Sp_A2_CoreViewcontrol", "setparent", "exit_elevator_train", 0, null)
-                Sp_A2_CoreViewcontrol.SetAngles(0, 270, 0)
-                EntFire("Sp_A2_CoreViewcontrol", "Enable", "", 0, null)
-                EntFire("Sp_A2_CoreViewcontrol", "disable", "", 144.8, null)
-                EntFire("TPSp_A2_CoreForSure", "kill", "", 144.8, null)
-
-                Entities.CreateByClassname("point_servercommand").__KeyValueFromString("targetname", "Sp_A2_CoreServerCommand")
-                Entities.FindByName(null, "rv_trap_floor_down_door_1").Destroy()
-                EntFire("Sp_A2_CoreServerCommand", "command", "echo Changing level...", 150.8, null)
-                EntFire("Sp_A2_CoreServerCommand", "command", "changelevel sp_a3_00", 150.8, null)
-
-                OnlyOnceSp_A2_Core <- false
-                RoomLookAtPlayerSp_A2_Core <- false
-                EnableMeSp_A2_Core <- true
-
-                EntFire("glados_pointer", "SetTargetEntity", "lookat_exit_elevator_bullseye", 0, null)
-
-                UTIL_Team.Pinging(true, "all", 0.1)
-                UTIL_Team.Taunting(true, "all", 0.1)
-            }
-        }
-
-        // Second teleport into the elevator
-        if (TPSp_A2_Core) {
-            if (!Entities.FindByName(null, "TPSp_A2_CoreForSure")) {
-                EnableMeSp_A2_Core <- false
-                for (local p = null; p = Entities.FindByClassname(p, "player");) {
-                    p.SetOrigin(Vector(0, 290, -200))
-                    p.SetVelocity(Vector(0, 0, 0))
-                    p.SetAngles(80, 270, 0)
-                }
-                TPSp_A2_Core <- false
             }
         }
 
@@ -354,5 +221,99 @@ function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSO
                 EntFireByHandle(Entities.FindByName(null, "shield_1_pointer_2"), "SetTargetEntity", ClosestPlayerMain.GetName(), 0, null, null)
             } catch(exception) {}
         }
+    }
+}
+
+function moveBox() {
+    EntFireByHandle(Entities.FindByName(null, "start_rv_scene_rl"), "Trigger", "", 8, null, null)
+    EntFireByHandle(Entities.FindByName(null, "MUSICOVERRIDEMPMOD"), "PlaySound", "", 8, null, null)
+    // Entities.CreateByClassname("prop_dynamic").__KeyValueFromString("targetname", "OnMoveStartOnlyOnceSp_A2_Core_2DIS")
+    // EntFire("OnMoveStartOnlyOnceSp_A2_Core_2DIS", "AddOutput", "targetname OnMoveStartOnlyOnceSp_A2_Core_2", 8, null)
+    EntFire("p2mm_servercommand", "RunScriptCode", "failSafe()", 8, null)
+}
+
+function failSafe() {
+    // Find all players
+    for (local p = null; p = Entities.FindByClassname(p, "player");) {
+        local InsideArea = false
+        for (local p2 = null; p2 = Entities.FindByClassnameWithin(p2, "player", Vector(-1836.2550048828, -0.81460344791412, -31.667282104492), 151.99999809265);) {
+            if (p2 == p) {
+                InsideArea = true
+            }
+        }
+
+        if (!InsideArea) {
+            p.SetOrigin(Vector(-1839, 0, 8))
+            p.SetAngles(0, 0, 0)
+            p.SetVelocity(Vector(0, 0, 0))
+        }
+        EntFireByHandle(p, "setfogcontroller", "@environment_glados", 10, null, null)
+    }
+}
+
+function elevatorScene() {
+    printlP2MM(0, true, "Elevator viewcontrol activated!")
+    // Elevator viewcontrol
+    Sp_A2_CoreViewcontrol <- Entities.CreateByClassname("point_viewcontrol_multiplayer")
+    Sp_A2_CoreViewcontrol.__KeyValueFromString("target_team", "-1")
+    Sp_A2_CoreViewcontrol.__KeyValueFromString("targetname", "Sp_A2_CoreViewcontrol")
+    Sp_A2_CoreViewcontrol.SetOrigin(Vector(0, 324, 0))
+    EntFire("Sp_A2_CoreViewcontrol", "setparent", "exit_elevator_train", 0, null)
+    Sp_A2_CoreViewcontrol.SetAngles(0, 270, 0)
+    EntFire("Sp_A2_CoreViewcontrol", "Enable", "", 0, null)
+    EntFire("Sp_A2_CoreViewcontrol", "disable", "", 144.8, null)
+    EntFire("p2mm_servercommand", "RunScriptCode", "teleportFailsafe()", 144.8) // for some reason i can't use !self?
+
+    Entities.CreateByClassname("point_servercommand").__KeyValueFromString("targetname", "Sp_A2_CoreServerCommand")
+    Entities.FindByName(null, "rv_trap_floor_down_door_1").Destroy()
+    EntFire("Sp_A2_CoreServerCommand", "command", "echo Changing level...", 150.8, null)
+    EntFire("Sp_A2_CoreServerCommand", "command", "changelevel sp_a3_00", 150.8, null)
+
+    RoomLookAtPlayerSp_A2_Core = false
+    EnableMeSp_A2_Core = true
+
+    EntFire("glados_pointer", "SetTargetEntity", "lookat_exit_elevator_bullseye", 0, null)
+
+    UTIL_Team.Pinging(false, "all", 0.1)
+    UTIL_Team.Taunting(false, "all", 0.1)
+}
+
+function fog(type) {
+    switch(type) {
+        case 1: 
+            for (local p = null; p = Entities.FindByClassname(p, "player");) {
+                EntFireByHandle(p, "setfogcontroller", "@environment_red_state", 0, null, null)
+            }
+            break
+    
+        case 2:
+            for (local p = null; p = Entities.FindByClassname(p, "player");) {
+                EntFireByHandle(p, "setfogcontroller", "@environment_wheatly_state_01", 0, null, null)
+            }
+            RoomLookAtPlayerSp_A2_Core = true
+            break
+
+        case 3:
+            for (local p = null; p = Entities.FindByClassname(p, "player");) {
+                EntFireByHandle(p, "setfogcontroller", "@environment_wheatly_state_02", 0, null, null)
+            }
+            break
+    }
+}
+
+function playerInStalemateRoom() {
+    RoomLookAtPlayerSp_A2_Core = false
+    EntFire("core_receptacle_pointer_1", "SetTargetEntity", "lookat_glados_bullseye", 0, null)
+    EntFire("glados_pointer", "SetTargetEntity", "lookat_receptacle_bullseye", 0, null)
+}
+
+function teleportFailsafe() {
+    // Second teleport into the elevator
+    EnableMeSp_A2_Core = false
+    TeleportOutInSp_A2_Core = false
+    for (local p = null; p = Entities.FindByClassname(p, "player");) {
+        p.SetOrigin(Vector(0, 290, -200))
+        p.SetVelocity(Vector(0, 0, 0))
+        p.SetAngles(80, 270, 0)
     }
 }

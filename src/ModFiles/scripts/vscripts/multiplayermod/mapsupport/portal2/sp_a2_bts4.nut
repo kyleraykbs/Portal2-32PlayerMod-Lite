@@ -5,14 +5,9 @@
 // ██████╔╝██║     ██████████╗██║  ██║███████╗██████████╗██████╦╝   ██║   ██████╔╝╚════██║
 // ╚═════╝ ╚═╝     ╚═════════╝╚═╝  ╚═╝╚══════╝╚═════════╝╚═════╝    ╚═╝   ╚═════╝      ╚═╝
 
-TriggerOnceSP_A2_BTS4_1 <- true
 DisableLookDisablerSP_A2_BTS4 <- false
 alreadyFading <- false
-
-TestingHackStart <- function() {
-    printlP2MM(0, true, "DOOR HACK START")
-    WheatleyPlayerLookSP_A2_BTS4 <- false
-}
+WheatleyPlayerLookSP_A2_BTS4 <- false
 
 function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSOnPlayerJoin, MSOnDeath, MSOnRespawn) {
     if (MSInstantRun) {
@@ -43,6 +38,11 @@ function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSO
         local ent = Entities.FindByName(null, "dummy_shoot_entry_door").__KeyValueFromString("targetname", "moja")
         EntFire("moja", "setanimation", "Open", 2, null)
         sInstantTransitionMap = "sp_a2_bts5"
+
+        // On trigger hit, smash the door 18 seconds later
+        EntFire("wheatley_scanner_intro_vcd_trigger", "AddOutput", "OnTrigger !self:RunScriptCode:printlP2MM(0 true \"Wheatley Sequence Started\")")
+        EntFire("wheatley_scanner_intro_vcd_trigger", "AddOutput", "OnTrigger wheatley_start_smash_window_relay:Trigger::18")
+        EntFire("wheatley_scanner_intro_vcd_trigger", "AddOutput", "OnTrigger @glados:RunScriptCode:FactoryControlRoomHackSuccess():18")
     }
 
     if (MSPostPlayerSpawn) {
@@ -51,70 +51,59 @@ function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSO
     }
 
     if (MSLoop) {
-        TestingHackStart
-        for (local p = null; p = Entities.FindByClassnameWithin(p, "player", Vector(-1689.0235595703, -7900.8461914062, 6707.0034179688), 78.400001525879*1.5);) {
-            DisableLookDisablerSP_A2_BTS4 <- true
+        for (local p = null; p = Entities.FindByClassnameWithin(p, "player", Vector(-1689.0235595703, -7900.8461914062, 6707.0034179688), 128);) {
+            DisableLookDisablerSP_A2_BTS4 = true
         }
 
-        WheatleyPlayerLookSP_A2_BTS4 <- true
+        WheatleyPlayerLookSP_A2_BTS4 = true
         if (!DisableLookDisablerSP_A2_BTS4) {
             // Make a custom trigger to disable player look
-            for (local p = null; p = Entities.FindByClassnameWithin(p, "player", Vector(-1028.5295410156, -7103.0068359375, 6741.3315429688), 163.19999694824*1.5);) {
-                WheatleyPlayerLookSP_A2_BTS4 <- false
+            for (local p = null; p = Entities.FindByClassnameWithin(p, "player", Vector(-1028.5295410156, -7103.0068359375, 6741.3315429688), 256);) {
+                WheatleyPlayerLookSP_A2_BTS4 = false
             }
 
-            for (local p = null; p = Entities.FindByClassnameWithin(p, "player", Vector(-1028.5295410156, -7103.0068359375, 6741.3315429688), 163.19999694824*1.5);) {
-                WheatleyPlayerLookSP_A2_BTS4 <- false
+            for (local p = null; p = Entities.FindByClassnameWithin(p, "player", Vector(-1028.5295410156, -7103.0068359375, 6741.3315429688), 256);) {
+                WheatleyPlayerLookSP_A2_BTS4 = false
             }
 
-            for (local p = null; p = Entities.FindByClassnameWithin(p, "player", Vector(-1028.5295410156, -7103.0068359375, 6741.3315429688), 163.19999694824*1.5);) {
-                WheatleyPlayerLookSP_A2_BTS4 <- false
+            for (local p = null; p = Entities.FindByClassnameWithin(p, "player", Vector(-1028.5295410156, -7103.0068359375, 6741.3315429688), 256);) {
+                WheatleyPlayerLookSP_A2_BTS4 = false
             }
 
-            for (local p = null; p = Entities.FindByClassnameWithin(p, "player", Vector(-1403.9912109375, -7096.8754882812, 6690.7314453125), 163.19999694824*1.5);) {
-                WheatleyPlayerLookSP_A2_BTS4 <- false
+            for (local p = null; p = Entities.FindByClassnameWithin(p, "player", Vector(-1403.9912109375, -7096.8754882812, 6690.7314453125), 256);) {
+                WheatleyPlayerLookSP_A2_BTS4 = false
             }
 
-            for (local p = null; p = Entities.FindByClassnameWithin(p, "player", Vector(-1403.9912109375, -7096.8754882812, 6690.7314453125), 163.19999694824*1.5);) {
-                WheatleyPlayerLookSP_A2_BTS4 <- false
+            for (local p = null; p = Entities.FindByClassnameWithin(p, "player", Vector(-1403.9912109375, -7096.8754882812, 6690.7314453125), 256);) {
+                WheatleyPlayerLookSP_A2_BTS4 = false
             }
 
-            for (local p = null; p = Entities.FindByClassnameWithin(p, "player", Vector(-1403.9912109375, -7096.8754882812, 6690.7314453125), 163.19999694824*1.5);) {
-                WheatleyPlayerLookSP_A2_BTS4 <- false
+            for (local p = null; p = Entities.FindByClassnameWithin(p, "player", Vector(-1403.9912109375, -7096.8754882812, 6690.7314453125), 256);) {
+                WheatleyPlayerLookSP_A2_BTS4 = false
             }
 
-            for (local p = null; p = Entities.FindByClassnameWithin(p, "player", Vector(-1789.1419677734, -7122.5893554688, 6749.4721679688), 163.19999694824*1.5);) {
-                WheatleyPlayerLookSP_A2_BTS4 <- false
+            for (local p = null; p = Entities.FindByClassnameWithin(p, "player", Vector(-1789.1419677734, -7122.5893554688, 6749.4721679688), 256);) {
+                WheatleyPlayerLookSP_A2_BTS4 = false
             }
 
-            for (local p = null; p = Entities.FindByClassnameWithin(p, "player", Vector(-1789.1419677734, -7122.5893554688, 6749.4721679688), 163.19999694824*1.5);) {
-                WheatleyPlayerLookSP_A2_BTS4 <- false
+            for (local p = null; p = Entities.FindByClassnameWithin(p, "player", Vector(-1789.1419677734, -7122.5893554688, 6749.4721679688), 256);) {
+                WheatleyPlayerLookSP_A2_BTS4 = false
             }
 
-            for (local p = null; p = Entities.FindByClassnameWithin(p, "player", Vector(-1789.1419677734, -7122.5893554688, 6749.4721679688), 163.19999694824*1.5);) {
-                WheatleyPlayerLookSP_A2_BTS4 <- false
+            for (local p = null; p = Entities.FindByClassnameWithin(p, "player", Vector(-1789.1419677734, -7122.5893554688, 6749.4721679688), 256);) {
+                WheatleyPlayerLookSP_A2_BTS4 = false
             }
 
-            for (local p = null; p = Entities.FindByClassnameWithin(p, "player", Vector(-1788.701171875, -7474.5654296875, 6731.2202148438), 163.19999694824*1.5);) {
-                WheatleyPlayerLookSP_A2_BTS4 <- false
+            for (local p = null; p = Entities.FindByClassnameWithin(p, "player", Vector(-1788.701171875, -7474.5654296875, 6731.2202148438), 256);) {
+                WheatleyPlayerLookSP_A2_BTS4 = false
             }
 
-            for (local p = null; p = Entities.FindByClassnameWithin(p, "player", Vector(-1788.701171875, -7474.5654296875, 6731.2202148438), 163.19999694824*1.5);) {
-                WheatleyPlayerLookSP_A2_BTS4 <- false
+            for (local p = null; p = Entities.FindByClassnameWithin(p, "player", Vector(-1788.701171875, -7474.5654296875, 6731.2202148438), 256);) {
+                WheatleyPlayerLookSP_A2_BTS4 = false
             }
 
-            for (local p = null; p = Entities.FindByClassnameWithin(p, "player", Vector(-1788.701171875, -7474.5654296875, 6731.2202148438), 163.19999694824*1.5);) {
-                WheatleyPlayerLookSP_A2_BTS4 <- false
-            }
-        }
-
-        // On trigger hit, smash the door 18 seconds later
-        if (TriggerOnceSP_A2_BTS4_1) {
-            if (!Entities.FindByName(null, "wheatley_scanner_intro_vcd_trigger")) {
-                printlP2MM(0, true "Wheatley Sequence Started")
-                EntFire("wheatley_start_smash_window_relay", "Trigger", "", 18, null)
-                EntFire("@glados", "RunScriptCode", "FactoryControlRoomHackSuccess()", 18, null)
-                TriggerOnceSP_A2_BTS4_1 = false
+            for (local p = null; p = Entities.FindByClassnameWithin(p, "player", Vector(-1788.701171875, -7474.5654296875, 6731.2202148438), 256);) {
+                WheatleyPlayerLookSP_A2_BTS4 = false
             }
         }
 
