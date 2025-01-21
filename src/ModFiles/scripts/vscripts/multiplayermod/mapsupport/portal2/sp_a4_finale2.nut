@@ -15,7 +15,7 @@ function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSO
         Entities.FindByName(null, "portal_chamber_4").__KeyValueFromString("targetname", "moja5")
         Entities.FindByName(null, "crusher_ride_tbeam").__KeyValueFromString("targetname", "moja6")
         Entities.FindByName(null, "areaportal_bts_door_2").__KeyValueFromString("targetname", "moja7")
-        // Here if we need to ent_fire something
+
         EntFireByHandle(Entities.FindByName(null, "brush_movechamber_struts"), "SetParentAttachmentMaintainOffset", "a4_chamber_fx_A_attach1", 1, null, null)
         EntFireByHandle(Entities.FindByName(null, "lighting_chamber_struts"), "SetParentAttachmentMaintainOffset", "a4_chamber_fx_A_attach1", 1, null, null)
         EntFireByHandle(Entities.FindByName(null, "relay_hatch_release"), "AddOutput", "OnTrigger moja1:Open::0.5", 0, null, null)

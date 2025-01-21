@@ -5,7 +5,6 @@
 // ██████╔╝██║     ██████████╗██║  ██║╚════██║██████████╗██║██║ ╚███║   ██║   ██║  ██║╚█████╔╝
 // ╚═════╝ ╚═╝     ╚═════════╝╚═╝  ╚═╝     ╚═╝╚═════════╝╚═╝╚═╝  ╚══╝   ╚═╝   ╚═╝  ╚═╝ ╚════╝
 
-OnlyOnceSpA4Intro <- true
 OnlyOnceSp_A4_Intro_1 <- true
 
 function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSOnPlayerJoin, MSOnDeath, MSOnRespawn) {
@@ -62,6 +61,12 @@ function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSO
         Entities.FindByName(null, "catwalk_gate2_door_right").Destroy()
         Entities.FindByName(null, "catwalk_gate2_door_left").Destroy()
         Entities.FindByName(null, "catwalk_lift_clip").Destroy()
+
+        // Remap the door closing relay
+        EntFire("room2_wall_open_trigger", "AddOutput", "OnTrigger @exit_door2-close_door_rl:AddOutput:targetname moja5")
+        EntFire("button_2_unpressed", "AddOutput", "OnTrigger moja5:Trigger")
+
+        EntFireByHandle(Entities.FindByClassnameNearest("trigger_once", Vector(1072, 384, 172.01), 20), "AddOutput", "OnTrigger p2mm_servercommand:RunScriptCode:openPanels():0:1", 0, null, null)
 
         Entities.CreateByClassname("prop_dynamic").__KeyValueFromString("targetname", "button_1_solved_TURRETNAMECHANGE")
         EntFire("button_1_solved", "AddOutput", "OnTrigger button_1_solved_TURRETNAMECHANGE:kill::17", 0.25, null)
@@ -175,23 +180,6 @@ function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSO
             }
         }
 
-        if (!Entities.FindByClassnameNearest("trigger_once", Vector(1072, 384, 172.01), 20)) {
-            if (OnlyOnceSp_A4_Intro_1) {
-                Entities.FindByName(null, "floor_gate1-cover_arm").SetOrigin(Vector(1056, 384, 128))
-                EntFireByHandle(Entities.FindByName(null, "floor_gate1-floor_panel"), "clearparent", "", 0, null, null)
-                Entities.FindByName(null, "floor_gate1-floor_panel").SetAngles(0, 0, 0)
-                EntFireByHandle(Entities.FindByName(null, "floor_gate1-floor_panel"), "setparent", "test_chamber1_platform", 0, null, null)
-                Entities.FindByName(null, "floor_gate1-floor_panel").__KeyValueFromString("rendermode", "10")
-                Entities.FindByName(null, "floor_gate1-cover_arm").__KeyValueFromString("rendermode", "10")
-                for (local p = null; p = Entities.FindByClassname(p, "player");) {
-                    p.SetOrigin(Vector(1053, 380, 185))
-                    p.SetAngles(0, 0, 0)
-                    p.SetVelocity(Vector(0, 0, 0))
-                }
-                OnlyOnceSp_A4_Intro_1 <- false
-            }
-        }
-
         // Change Spawn
         if (!Entities.FindByClassnameNearest("trigger_once", Vector(1072, 384, 172.01), 20)) {
             for (local p = null; p = Entities.FindByClassname(p, "player");) {
@@ -231,18 +219,6 @@ function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSO
                 ent.Destroy()
             }
         }
-
-        if (OnlyOnceSpA4Intro) {
-            if (!Entities.FindByName(null, "room2_wall_open_trigger")) {
-                printlP2MM(0, true, "Elevator viewcontrol activated!")
-                // Elevator viewcontrol
-                Entities.FindByName(null, "@exit_door2-close_door_rl").__KeyValueFromString("targetname", "moja5")
-
-                EntFireByHandle(Entities.FindByName(null, "button_2_unpressed"), "AddOutput", "OnTrigger moja5:Trigger", 0, null, null)
-
-                OnlyOnceSpA4Intro <- false
-            }
-        }
     }
 }
 
@@ -268,8 +244,7 @@ function MoveCubeDropper() {
     Entities.FindByName(null, "cube_dropper_box_spawner_override_p2mm").__KeyValueFromString("targetname", "cube_dropper_box_spawner")
     EntFire("cube_dropper_box_spawner", "forcespawn", "", 5, null)
     EntFire("cube_dropper_box_spawner", "forcespawn", "", 8.1, null)
-    EntFire("p2mm_servercommand", "command", "script Entities.FindByName(null, \"cube_dropper_box\").Destroy()", 6.45, null)
-    EntFire("p2mm_servercommand", "command", "script Entities.FindByName(null, \"cube_dropper_box\").Destroy()", 6.45, null)
+    EntFire("cube_dropper_box", "Kill", "", 6.45, null)
     Entities.FindByName(null, "cube_dropper_prop").SetOrigin(Vector(1504, -640, 808))
     Entities.FindByName(null, "cube_dropper_prop").SetAngles(0, 270, 0)
     // set anim to open item_dropper_openitem_dropper_open
@@ -280,4 +255,19 @@ function MoveCubeDropper() {
 
     // Entities.FindByName(null, "cube_dropper_box").SetOrigin(Vector(1504, -649, 1270))
     // EntFireByHandle(Entities.FindByName(null, "cube_dropper_box"), "wake", "", 0, null, null)
+}
+
+function openPanels() {
+    Entities.FindByName(null, "floor_gate1-cover_arm").SetOrigin(Vector(1056, 384, 128))
+    EntFireByHandle(Entities.FindByName(null, "floor_gate1-floor_panel"), "clearparent", "", 0, null, null)
+    Entities.FindByName(null, "floor_gate1-floor_panel").SetAngles(0, 0, 0)
+    EntFireByHandle(Entities.FindByName(null, "floor_gate1-floor_panel"), "setparent", "test_chamber1_platform", 0, null, null)
+    Entities.FindByName(null, "floor_gate1-floor_panel").__KeyValueFromString("rendermode", "10")
+    Entities.FindByName(null, "floor_gate1-cover_arm").__KeyValueFromString("rendermode", "10")
+    for (local p = null; p = Entities.FindByClassname(p, "player");) {
+        p.SetOrigin(Vector(1053, 380, 185))
+        p.SetAngles(0, 0, 0)
+        p.SetVelocity(Vector(0, 0, 0))
+    }
+    OnlyOnceSp_A4_Intro_1 <- false
 }

@@ -10,12 +10,6 @@ function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSO
     if (MSInstantRun) {
         GlobalSpawnClass.m_bUseAutoCountEnd <- true
         PermaPotato = true
-        // GlobalSpawnClass.m_cBluePlayers.spawnpoint <- Vector(-609.265137, 1875.096680, -100)
-        // GlobalSpawnClass.m_cRedPlayers.spawnpoint <- Vector(-609.265137, 1875.096680, -100)
-        // GlobalSpawnClass.m_cBluePlayers.rotation <- Vector(0, -90, 0)
-        // GlobalSpawnClass.m_cRedPlayers.rotation <- Vector(0, -90, 0)
-        // Here if we need to ent_fire something
-        //EntFireByHandle(Entities.FindByName(null, "NAME"), "ACTION", "VALUE", DELAYiny, ACTIVATOR, CALLER)
         // Destroy objects
         Entities.FindByName(null, "fall_fade").Destroy()
         Entities.FindByName(null, "exit_door-close_door_rl").Destroy()
