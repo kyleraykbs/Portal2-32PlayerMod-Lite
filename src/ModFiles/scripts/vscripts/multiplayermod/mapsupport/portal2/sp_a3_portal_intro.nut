@@ -21,7 +21,6 @@ function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSO
         Entities.FindByName(null, "bowl_areaportal").__KeyValueFromString("targetname", "moja7")
         Entities.FindByName(null, "paint_sprayer_2").__KeyValueFromString("targetname", "moja8")
 
-        // Here if we need to ent_fire something
         EntFireByHandle(Entities.FindByClassnameNearest("trigger_once", Vector(2505.95, -48, -2384), 20), "AddOutput", "OnTrigger moja4:Open", 1, null, null)
         EntFireByHandle(Entities.FindByClassnameNearest("trigger_once", Vector(2505.95, -48, -2384), 20), "AddOutput", "OnTrigger moja5:Open", 1, null, null)
         EntFireByHandle(Entities.FindByName(null, "sphere_entrance_lift_train_path_2"), "AddOutput", "OnPass moja8:Start", 1, null, null)
@@ -51,7 +50,7 @@ function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSO
         // Make the elevator teleport the players in
         if (!OnlyOnceSp_A3_Portal_Intro) {
             for (local p = null; p = Entities.FindByClassnameWithin(p, "player", Vector(256, -992, -1104), 100);) {
-                OnlyOnceSp_A3_Portal_Intro <- true
+                OnlyOnceSp_A3_Portal_Intro = true
                 for (local p = null; p = Entities.FindByClassname(p, "player");) {
                     p.SetOrigin(Vector(256, -992, -1254))
                     p.SetAngles(0, 90, 0)

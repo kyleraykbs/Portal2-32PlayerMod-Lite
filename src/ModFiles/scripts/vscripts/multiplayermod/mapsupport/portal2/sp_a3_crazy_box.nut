@@ -10,6 +10,7 @@ WaitDontFizzle <- false
 isopen <- false
 rollang <- 0
 movecube <- false
+alreadyFading <- false
 
 function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSOnPlayerJoin, MSOnDeath, MSOnRespawn) {
     if (MSInstantRun) {
@@ -149,8 +150,11 @@ function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSO
 
         // Elevator changelevel
         for (local p = null; p = Entities.FindByClassnameWithin(p, "player", Vector(640, 174, 2740), 100);) {
-            EntFire("exit_fade", "fade")
             EntFire("p2mm_servercommand", "command", "changelevel sp_a3_transition01", 2)
+            if (!alreadyFading) {
+                EntFire("exit_fade", "fade")
+                alreadyFading = true
+            }
         }
     }
 }

@@ -5,6 +5,8 @@
 // ██████╔╝██║     ██████████╗██║  ██║██████╔╝██████████╗╚█████╔╝██████╔╝
 // ╚═════╝ ╚═╝     ╚═════════╝╚═╝  ╚═╝╚═════╝ ╚═════════╝ ╚════╝ ╚═════╝
 
+alreadyFading <- false
+
 function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSOnPlayerJoin, MSOnDeath, MSOnRespawn) {
     if (MSInstantRun) {
         Entities.FindByName(null, "AutoInstance1-circuit_breaker_lever").__KeyValueFromString("solid", "0")
@@ -28,14 +30,9 @@ function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSO
         EntFireByHandle(hCountdownEnableTrigger, "Disable", "", 0, null, null)
     }
 
-    if (MSPostPlayerSpawn) {
-
-    }
-
     if (MSOnPlayerJoin) {
         // Find all players
         for (local p = null; p = Entities.FindByClassname(p, "player");) {
-            EntFireByHandle(p2mm_clientcommand, "Command", "r_flashlightbrightness 1", 0, p, p)
             EntFireByHandle(p, "setfogcontroller", "@environment_lake_fog", 0, null, null)
         }
     }
@@ -64,8 +61,11 @@ function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSO
 
         // Elevator changelevel
         for (local p = null; p = Entities.FindByClassnameWithin(p, "player", Vector(-3631, 1284, -2100), 100);) {
-            EntFire("exit_fade", "fade")
             EntFire("p2mm_servercommand", "command", "changelevel sp_a3_jump_intro", 2)
+            if (!alreadyFading) {
+                EntFire("exit_fade", "fade")
+                alreadyFading = true
+            }
         }
 
         foreach(player in CreateTrigger("player", -2768, 1792, -1920, -2640, 1744, -2080)) {

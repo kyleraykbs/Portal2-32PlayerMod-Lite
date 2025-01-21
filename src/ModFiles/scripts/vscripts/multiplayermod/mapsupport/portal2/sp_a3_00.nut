@@ -37,7 +37,7 @@ function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSO
         Entities.FindByName(null, "@environment_mines_fog").__KeyValueFromString("fogend", "1")
         Entities.FindByName(null, "@environment_bottomless_pit_falling_fog").__KeyValueFromString("farz", "0")
         // Entities.FindByName(null, "potatos_prop").__KeyValueFromString("solid", "0")
-        EntFire("potatos_end_relay", "AddOutput", "OnTrigger p2mm_servercommand:Command:script EndingTriggered <- true:0")
+        EntFire("potatos_end_relay", "AddOutput", "OnTrigger p2mm_servercommand:Command:script EndingTriggered = true:0")
         Entities.FindByName(null, "@display_chapter_title").__KeyValueFromString("startdisabled", "1")
 
         // Destroy objects
@@ -51,7 +51,7 @@ function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSO
     }
 
     if (MSPostPlayerSpawn) {
-        StartFadeDone <- true
+        StartFadeDone = true
         EntFire("fade_from_black", "Fade", "", 0, null)
 
         EntFire("@display_chapter_title", "Enable")

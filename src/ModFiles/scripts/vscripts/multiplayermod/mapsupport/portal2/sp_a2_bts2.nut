@@ -12,6 +12,7 @@ NoPlayerMadeItOnlyOnceSp_A2_Bts2 <- true
 OnlyOnceSp_A2_Bts2AgainV2 <- true
 WheatleyPlayerLookSP_A2_BTS2 <- true
 DisableLookDisablerSP_A2_BTS2 <- false
+alreadyFading <- false
 
 function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSOnPlayerJoin, MSOnDeath, MSOnRespawn) {
     if (MSInstantRun) {
@@ -143,8 +144,11 @@ function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSO
 
         // Make our own changelevel trigger
         for (local p = null; p = Entities.FindByClassnameWithin(p, "player", Vector(2207, 1983, 689), 150);) {
-            EntFire("exit_fade", "fade")
             EntFire("p2mm_servercommand", "command", "changelevel sp_a2_bts3", 2)
+            if (!alreadyFading) {
+                EntFire("exit_fade", "fade")
+                alreadyFading = true
+            }
         }
 
         // Fix the player's spawn position

@@ -5,6 +5,8 @@
 // ██████╔╝██║     ██████████╗██║  ██║██████╔╝██████████╗██████╦╝╚█████╔╝██║ ╚═╝ ██║██████╦╝██████████╗██║     ███████╗██║██║ ╚███║╚██████╔╝██████╔╝
 // ╚═════╝ ╚═╝     ╚═════════╝╚═╝  ╚═╝╚═════╝ ╚═════════╝╚═════╝  ╚════╝ ╚═╝     ╚═╝╚═════╝ ╚═════════╝╚═╝     ╚══════╝╚═╝╚═╝  ╚══╝ ╚═════╝ ╚═════╝
 
+alreadyFading <- false
+
 function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSOnPlayerJoin, MSOnDeath, MSOnRespawn) {
     if (MSInstantRun) {
         GlobalSpawnClass.m_bUseAutoSpawn <- true
@@ -34,8 +36,11 @@ function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSO
 
         // Elevator changelevel
         for (local p = null; p = Entities.FindByClassnameWithin(p, "player", Vector(-256, 1570, 1288), 100);) { 
-            EntFire("exit_fade", "fade")
             EntFire("p2mm_servercommand", "command", "changelevel sp_a3_crazy_box", 2)
+            if (!alreadyFading) {
+                EntFire("exit_fade", "fade")
+                alreadyFading = true
+            }
         }
     }
 }

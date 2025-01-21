@@ -6,7 +6,6 @@
 //╚═════╝ ╚═╝     ╚═════════╝╚═╝  ╚═╝╚═════╝ ╚═════════╝ ╚════╝ ╚══════╝
 
 HasStartedSp_A3_01 <- false
-OnlyOnceSp_A3_01 <- true
 stoprenable <- false
 
 function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSOnPlayerJoin, MSOnDeath, MSOnRespawn) {
@@ -27,7 +26,7 @@ function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSO
     }
 
     if (MSPostPlayerSpawn) {
-        HasStartedSp_A3_01 <- true
+        HasStartedSp_A3_01 = true
         EntFireByHandle(Entities.FindByName(null, "global_ents-proxy"), "OnProxyRelay8", "", 0, null, null)
         EntFireByHandle(Entities.FindByName(null, "knockout_start"), "Trigger", "", 1, null, null)
 
@@ -42,16 +41,16 @@ function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSO
         EntFire("Sp_A3_01Viewcontrol", "Enable", "", 0, null)
         EntFire("Sp_A3_01ViewcontrolTele", "disable", "", 13, null)
         EntFire("Sp_A3_01Viewcontrol", "AddOutput", "targetname Sp_A3_01ViewcontrolTele", 0.25, null)
-        EntFire("Sp_A3_01ViewcontrolTele", "AddOutput", "targetname Sp_A3_01ViewcontrolDone", 13, null)
+        EntFire("p2mm_servercommand", "RunScriptCode", "endView()", 13)
         EntFire("basement_elevator_complete_rl", "AddOutput", "OnTrigger p2mm_servercommand:command:script UTIL_Team.Pinging(true, 0.5)")
         EntFire("basement_elevator_complete_rl", "AddOutput", "OnTrigger p2mm_servercommand:command:script UTIL_Team.Taunting(true, 0.5)")
     }
 
     if (MSOnPlayerJoin) {
         if (stoprenable) {
-            printlP2MM(0, true, "Player Joined (Reseting Viewcontrols)")
-            EntFire("Sp_A3_01Viewcontrol", "disable", "", 0.5, null)
-            EntFire("Sp_A3_01Viewcontrol", "Disable", "", 0.6, null)
+            printlP2MM(0, true, "Player Joined (Resetting Viewcontrols)")
+            EntFire("Sp_A3_01Viewcontrol", "Disable", "", 0.5, null)
+            EntFire("Sp_A3_01Viewcontrol", "Enable", "", 0.6, null)
         }
     }
 
@@ -76,24 +75,22 @@ function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSO
             }
         }
 
-        if (OnlyOnceSp_A3_01) {
-            if (Entities.FindByName(null, "Sp_A3_01ViewcontrolDone")) {
-                for (local p = null; p = Entities.FindByClassname(p, "player");) {
-                    p.SetOrigin(Vector(-720, -1852, 14))
-                    p.SetAngles(0, 60, 0)
-                }
-                UTIL_Team.Pinging(true, "all", 1)
-                UTIL_Team.Taunting(true, "all", 1)
-                stoprenable <- true
-                Entities.FindByName(null, "knockout-viewcontroller-prop").Destroy()
-                Entities.FindByName(null, "knockout-portalgun").Destroy()
-                OnlyOnceSp_A3_01 <- false
-            }
-        }
 
         // Elevator changelevel
         for (local p = null; p = Entities.FindByClassnameWithin(p, "player", Vector(6016, 4496, -448), 100);) {
             StartCountTransition(p)
         }
     }
+}
+
+function endView() {
+    for (local p = null; p = Entities.FindByClassname(p, "player");) {
+        p.SetOrigin(Vector(-720, -1852, 14))
+        p.SetAngles(0, 60, 0)
+    }
+    UTIL_Team.Pinging(true, "all", 1)
+    UTIL_Team.Taunting(true, "all", 1)
+    stoprenable = true
+    Entities.FindByName(null, "knockout-viewcontroller-prop").Destroy()
+    Entities.FindByName(null, "knockout-portalgun").Destroy()
 }

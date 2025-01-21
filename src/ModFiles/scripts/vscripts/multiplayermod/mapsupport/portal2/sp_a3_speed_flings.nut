@@ -5,6 +5,8 @@
 // ██████╔╝██║     ██████████╗██║  ██║██████╔╝██████████╗██████╔╝██║     ███████╗███████╗██████╔╝██████████╗██║     ███████╗██║██║ ╚███║╚██████╔╝██████╔╝
 // ╚═════╝ ╚═╝     ╚═════════╝╚═╝  ╚═╝╚═════╝ ╚═════════╝╚═════╝ ╚═╝     ╚══════╝╚══════╝╚═════╝ ╚═════════╝╚═╝     ╚══════╝╚═╝╚═╝  ╚══╝ ╚═════╝ ╚═════╝
 
+alreadyFading <- false
+
 function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSOnPlayerJoin, MSOnDeath, MSOnRespawn) {
     if (MSInstantRun) {
         GlobalSpawnClass.m_bUseAutoCountEnd <- true
@@ -36,8 +38,11 @@ function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSO
 
         // Elevator changelevel
         for (local p; p = Entities.FindByClassnameWithin(p, "player", Vector(396, 1152, 656), 100);) {
-            EntFire("exit_fade", "fade")
             EntFire("p2mm_servercommand", "command", "changelevel sp_a3_portal_intro", 2)
+            if (!alreadyFading) {
+                EntFire("exit_fade", "fade")
+                alreadyFading = true
+            }
         }
     }
 }

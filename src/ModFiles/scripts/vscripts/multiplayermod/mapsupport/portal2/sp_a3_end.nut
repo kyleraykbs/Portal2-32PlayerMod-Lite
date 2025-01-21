@@ -5,9 +5,6 @@
 // ██████╔╝██║     ██████████╗██║  ██║██████╔╝██████████╗███████╗██║ ╚███║██████╔╝
 // ╚═════╝ ╚═╝     ╚═════════╝╚═╝  ╚═╝╚═════╝ ╚═════════╝╚══════╝╚═╝  ╚══╝╚═════╝
 
-OnlyOnceSp_A3_End <- false
-OnlyOnceSp_A3_End_1 <- false
-
 function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSOnPlayerJoin, MSOnDeath, MSOnRespawn) {
     if (MSInstantRun) {
         PermaPotato = true
@@ -21,22 +18,21 @@ function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSO
 
         Entities.FindByName(null, "departure_elevator-elevator_1").__KeyValueFromString("dmg", "100")
 
-        // Here if we need to ent_fire something
         EntFireByHandle(Entities.FindByName(null, "entrance_door_button"), "AddOutput", "OnPressed moja1:SetAnimation:open", 1, null, null)
         EntFireByHandle(Entities.FindByClassnameNearest("trigger_once", Vector(192, 256, -3336), 20), "AddOutput", "OnTrigger moja3:Start", 1, null, null)
         EntFireByHandle(Entities.FindByClassnameNearest("trigger_once", Vector(192, 256, -3336), 20), "AddOutput", "OnTrigger moja4:Start", 1, null, null)
         EntFireByHandle(Entities.FindByClassnameNearest("trigger_once", Vector(192, 256, -3336), 20), "AddOutput", "OnTrigger moja5:Start", 1, null, null)
         EntFireByHandle(Entities.FindByClassnameNearest("trigger_once", Vector(-552, 256, -2200), 20), "AddOutput", "OnTrigger moja6:Start", 1, null, null)
-        EntFire("big_door_open_relay", "AddOutput", "OnTrigger big_door_save:kill::57", 0, 0)
         EntFire("pumproom_lift_tracktrain", "spawnflags", "3", 0, null)
         // Fix func_portal_detectors
         for (local ent = null; ent = Entities.FindByClassname(ent, "func_portal_detector");) {
             ent.__KeyValueFromString("CheckAllIDs", "1")
         }
-        // Change name of a thing (look moxxie a thing) so we can yell at him
-        Entities.FindByName(null, "achievement_all_gels_entity").__KeyValueFromString("targetname", "look_moxxie_a_thing")
         // Destroy objects
         Entities.FindByName(null, "fade_to_death").Destroy()
+
+        // Teleport players when finishing platform is reached
+        EntFire("pumproom_lift_ascend_trigger", "AddOutput", "OnTrigger !self:RunScriptCode:startElevator()")
 
         // Make changing levels work
         EntFire("transition_trigger", "AddOutput", "OnStartTouch p2mm_servercommand:Command:changelevel sp_a4_intro:0.3", 0, null)
@@ -65,40 +61,11 @@ function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSO
 
         // Find all players
         for (local p = null; p = Entities.FindByClassname(p, "player");) {
-            EntFireByHandle(p2mm_clientcommand, "Command", "r_flashlightbrightness 1", 0, p, p)
             EntFireByHandle(p, "setfogcontroller", "@environment_lake_fog", 0, null, null)
         }
     }
 
     if (MSLoop) {
-
-        if (!OnlyOnceSp_A3_End) {
-            if (!Entities.FindByName(null, "big_door_save")) {
-                foreach (player in CreateTrigger("player", -1902.8851318359, 373.5451965332, 810.53570556641, -1751.1909179688, 269.85140991211, 954.68353271484)) {
-                    if (player.GetClassname() == "player") {
-                        for (local p = null; p = Entities.FindByClassname(p, "player");) {
-                            p.SetOrigin(Vector(-1833, 317, 870))
-                            p.SetAngles(0, -180, 0)
-                            p.SetVelocity(Vector(0, 0, 0))
-                            EntFire("look_moxxie_a_thing", "kill", "", 25, null)
-                        }
-                        OnlyOnceSp_A3_End <- true
-                    }
-                }
-            }
-        }
-
-        if (!OnlyOnceSp_A3_End_1) {
-            if (!Entities.FindByName(null, "look_moxxie_a_thing")) {
-                for (local p = null; p = Entities.FindByClassname(p, "player");) {
-                    p.SetOrigin(Vector(-1478, 319, 2980))
-                    p.SetAngles(0, 0, 0)
-                    p.SetVelocity(Vector(0, 0, 0))
-                }
-                OnlyOnceSp_A3_End_1 <- true
-            }
-        }
-
         // Goo Damage Code
         try {
             if (GooHurtTimerPred) { printl() }
@@ -117,5 +84,27 @@ function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSO
         foreach (player in CreateTrigger("player", -2000, -896, 3328, -2064, -768, 3456)) {
             StartCountTransition(player)
         }
+    }
+}
+
+
+function startElevator() {
+    foreach (player in CreateTrigger("player", -1902.8851318359, 373.5451965332, 810.53570556641, -1751.1909179688, 269.85140991211, 954.68353271484)) {
+        if (player.GetClassname() == "player") {
+            for (local p = null; p = Entities.FindByClassname(p, "player");) {
+                p.SetOrigin(Vector(-1833, 317, 870))
+                p.SetAngles(0, -180, 0)
+                p.SetVelocity(Vector(0, 0, 0))
+            }
+        }
+    }
+    EntFire("p2mm_servercommand", "RunScriptCode", "teleportFailsafe()", 25)
+}
+
+function teleportFailsafe() {
+    for (local p = null; p = Entities.FindByClassname(p, "player");) {
+        p.SetOrigin(Vector(-1478, 319, 2980))
+        p.SetAngles(0, 0, 0)
+        p.SetVelocity(Vector(0, 0, 0))
     }
 }

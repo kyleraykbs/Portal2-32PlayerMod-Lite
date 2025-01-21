@@ -5,7 +5,7 @@
 // ██████╔╝██║    ██████████╗██║  ██║███████╗██████████╗╚█████╔╝╚█████╔╝██║  ██║███████╗
 // ╚═════╝ ╚═╝    ╚═════════╝╚═╝  ╚═╝╚══════╝╚═════════╝ ╚════╝  ╚════╝ ╚═╝  ╚═╝╚══════╝
 
-EnableMeSp_A2_Core <- false
+viewActive <- false
 TeleportOutInSp_A2_Core <- false
 RoomLookAtPlayerSp_A2_Core <- true
 TempGrabControllerToggled <- false
@@ -132,7 +132,11 @@ function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSO
         for (local p = null; p = Entities.FindByClassname(p, "player");) {
             EntFireByHandle(p, "setfogcontroller", "@environment_darkness_fog", 0, null, null)
         }
-        EntFire("Sp_A2_CoreViewcontrol", "Disable", "", 0.1, null)
+        if (viewActive) {
+            printlP2MM(0, true, "Player joined (resetting viewcontrols)")
+            EntFire("Sp_A2_CoreViewcontrol", "Disable", "", 0, null)
+            EntFire("Sp_A2_CoreViewcontrol", "Enable", "", 0.1, null)
+        }
     }
 
     if (MSPostPlayerSpawn) {
@@ -183,7 +187,7 @@ function MapSupport(MSInstantRun, MSLoop, MSPostPlayerSpawn, MSPostMapSpawn, MSO
             }
         }
 
-        if (EnableMeSp_A2_Core) {
+        if (viewActive) {
             // First teleport behind the panels so players can't be seen from the elevator
             for (local p = null; p = Entities.FindByClassname(p, "player");) {
                 p.SetOrigin(Vector(0, 495, 37))
@@ -270,7 +274,7 @@ function elevatorScene() {
     EntFire("Sp_A2_CoreServerCommand", "command", "changelevel sp_a3_00", 150.8, null)
 
     RoomLookAtPlayerSp_A2_Core = false
-    EnableMeSp_A2_Core = true
+    viewActive = true
 
     EntFire("glados_pointer", "SetTargetEntity", "lookat_exit_elevator_bullseye", 0, null)
 
@@ -309,7 +313,7 @@ function playerInStalemateRoom() {
 
 function teleportFailsafe() {
     // Second teleport into the elevator
-    EnableMeSp_A2_Core = false
+    viewActive = false
     TeleportOutInSp_A2_Core = false
     for (local p = null; p = Entities.FindByClassname(p, "player");) {
         p.SetOrigin(Vector(0, 290, -200))
