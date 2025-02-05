@@ -394,7 +394,7 @@ function P2MMLoop() {
             }
         }
         
-        // Coop Countdown logic
+        // Countdown logic
         if (Config_UseCountdown && GetMapName().find("mp_coop_lobby_") == null) {
             for (local t = null; t = Entities.FindByClassname(t, "trigger_playerteam");) {
                 // having to do this nested check hurts my soul, but the names arent consistent
@@ -408,6 +408,14 @@ function P2MMLoop() {
                 for (local p = null; p = Entities.FindByClassnameWithin(p, "player", Entities.FindByName(null, "coop_man_start_transition").GetOrigin(), 256);) {
                     StartCountTransition(p)
                 }
+            }
+            if (GetMapName().find("sp_a3") != null && GlobalSpawnClass.m_bUseAutoCountEnd == true) {
+                try {
+                    local entryTrigger = Entities.FindByClassnameNearest("trigger_once", hCountdownEnableTrigger.GetOrigin(), 256).GetOrigin()
+                    for (local p = null; p = Entities.FindByClassnameWithin(p, "player", entryTrigger, 256);) {
+                        StartCountTransition(p)
+                    }                
+                } catch (exception) {} // Trigger must not exist anymore (the timer has already ended and someone is in the elevator)
             }
         }
 
@@ -443,9 +451,10 @@ function P2MMLoop() {
                     for (local fade = null; fade = Entities.FindByClassname(fade, "env_fade");) {
                         if (fade.GetName().find("exit") != null) {
                             EntFireByHandle(fade, "fade", "", 0, null, null)
-                            EntFire("p2mm_servercommand", "command", "changelevel " + sInstantTransitionMap, 2)
+                            break
                         }
                     }
+                    EntFire("p2mm_servercommand", "command", "changelevel " + sInstantTransitionMap, 2)
                 }
             }
         }
@@ -674,7 +683,7 @@ function PostPlayerSpawn() {
 
             EntFireByHandle(guessedtrigger, "Disable", "", 0, null, null)
             hCountdownEnableTrigger = guessedtrigger
-            exittrigger <- null
+            local exittrigger = null
             local doornumber = -1
             for (local foundtrigger = null; foundtrigger = Entities.FindByClassname(foundtrigger, "trigger_multiple");) {
                 if (foundtrigger.GetName().find("in_door_trigger") != null && foundtrigger.GetName().find("entry") == null) {
@@ -695,9 +704,8 @@ function PostPlayerSpawn() {
             }
             printlP2MM(0, true, exittrigger.GetName())
             EntFireByHandle(exittrigger, "AddOutput", "OnStartTouch !activator:RunScriptCode:StartCountTransition(activator)", 0, null, null)
-            // EntFireByHandle(Entities.FindByName(null, "@exit_elevator_cleanser"), "AddOutput", "OnStartTouch !activator:RunScriptCode:if(activator!=null){printl(activator)}", 0, null, null)
         } else if (GetMapName().find("sp_a3") != null) {
-            // a3 elevators
+            // a3 elevators (Old Aperture)
             local elevator = null
             for (local bestelevator = null; bestelevator = Entities.FindByClassname(bestelevator, "path_track");) {
                 if (bestelevator.GetName().find("exit_lift_train_path_1") != null) {
@@ -707,7 +715,6 @@ function PostPlayerSpawn() {
             }
             hCountdownEnableTrigger = Entities.FindByClassnameNearest("trigger_once", elevator.GetOrigin(), 32)
             EntFireByHandle(hCountdownEnableTrigger, "Disable", "", 0, null, null)
-            EntFireByHandle(Entities.FindByClassnameWithin(hCountdownEnableTrigger, "trigger_once", hCountdownEnableTrigger.GetOrigin(), 256), "AddOutput", "OnStartTouch !activator:RunScriptCode:StartCountTransition(activator)", 0, null, null)
         }
     } else if (Config_UseCountdown && GetMapName().find("workshop/") == null && GetMapName().find("mp_coop_lobby_") == null) {
         // Coop
